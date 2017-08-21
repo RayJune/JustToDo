@@ -6,7 +6,6 @@ html {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-
 body {
 	margin: 0;
 	height: 100%;
@@ -20,6 +19,10 @@ body {
 	text-rendering: geometricPrecision;
 	-webkit-font-smoothing: antialiased;
 }
+
+h2 {
+  margin-top: 10px;
+} 
 
 .main-nav {
     height: 4.8rem;
@@ -60,8 +63,8 @@ body {
 	font-family: "STFangsong","Songti TC","simsun",Arial,serif;
 	color: #2C3E50;
   background-color: #fff;
-	height: 10rem;
-	line-height: 10rem;
+	height: 9rem;
+	line-height: 9rem;
 	-webkit-animation: fade-in-down 0.6s;
 	animation: fade-in-down 0.6s;
 	-webkit-animation-delay: 0.2s;
@@ -75,6 +78,7 @@ body {
   overflow: hidden;
 }
 
+/*使用flexbox对按钮布局 */
 .main-content{
 	display: flex;
 }
@@ -87,19 +91,21 @@ body {
 .operate-area {
     margin: 3.6rem auto 2rem;
     padding: 2rem;
-    displa: block;
+    padding-bottom: 1rem;
+    display: block;
     width: 66%;
     height: 210px;
     word-wrap: break-word;
     background-color: #fff;
     overflow: hidden;
-
+    font-size: 20px;
     /*box-shadow: 2px 2px 2px 1px #2C3E50;*/
 }
 
 input {
   display: inline-block;
   width: 70%;
+  font-size: 0.88em;
   height: 1.98rem;
   padding: 3.6px;
   margin-right: 1rem;
@@ -108,9 +114,10 @@ input {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 
+
 button {
     padding: 0.8rem 0;
-    font-size: 1rem;
+    font-size: 1.36rem;
     line-height: 1;
     width: 100px;
     color: #ffffff;
@@ -125,8 +132,76 @@ button {
   justify-content: space-between;
 }
 
+#add, #done {
+  background-color: #0D8;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 66%;
+  margin: 3.6rem auto 2rem;
+  background-color: white;
+  padding: 2rem;
+}
+
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  user-select: none; /*用户不能文本选中*/
+}
+
+/* 奇数li颜色不同，为了美观 */
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* hover时背景色改变 */
+ul li:hover {
+  background: #ddd;
+}
+
+/* 当被选中，文字中加横线 */
+ul li.checked {
+  background: #888;
+  color: #fff;
+  text-decoration: line-through;
+}
+
+/* 为被选中的li增加 “对勾” 图标 */
+ul li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}
+
+/* 关闭按钮样式 */
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px
+}
+
+.close:hover {
+  background-color: #0D8;
+  color: white;
+}
+
 footer {
-  padding: 2rem 3.6rem 3.6rem 1rem;
+  padding: 2rem 3.6rem 1.6rem 1rem;
   line-height: 1.4;
   box-sizing: border-box;
   overflow: hidden;

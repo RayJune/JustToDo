@@ -47,11 +47,6 @@
             "y+": this.getFullYear(),
             "M+": this.getMonth() + 1, //月份
             "d+": this.getDate(), //日
-            "h+": this.getHours(), //小时
-            "m+": this.getMinutes(), //分
-            "s+": this.getSeconds(), //秒
-            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-            "S+": this.getMilliseconds() //毫秒
         };
         for (var k in o) {
             if (new RegExp("(" + k + ")").test(fmt)) {
@@ -74,15 +69,15 @@
         var li = document.createElement('li');
         var inputValue = document.getElementById('myInput').value;
         var createDate = new Date();
-        var date = createDate.Format("yyyy年MM月dd日:  ");
+        var date = createDate.Format("yyyy/MM/dd:  ");
         inputValue = date  + " " + " " + inputValue;
         var t = document.createTextNode(inputValue);
         li.appendChild(t);
         if (inputValue === '') {
-            alert('请输入一个具体的任务');
+            alert('亲，请输入一个具体的任务');
         }
         else {
-            document.getElementById('myUl').appendChild(li);
+            document.getElementById('myUl').insertBefore(li, document.getElementById('myUl').firstChild);
         }
         document.getElementById('myInput').value = ''; //清空input输入框
     }

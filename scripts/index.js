@@ -24,20 +24,12 @@
         }
     }
 
-    //清除TODO显示面板上所有的节点
-    function clearAllNodes() {
-        var root = document.getElementById('myUl');
-        while (root.hasChildNodes()) {
-            root.removeChild(root.firstChild);
-        }
-    }
-
     //点击li的时候，加上.checked，再点击则取消
     function ifChecked() {
-        var list = document.querySelector('ul');
-        list.onclick = function(ev) {
-            if(ev.target.tagName === "LI") {
-                ev.target.classList.toggle('checked');
+        var list = document.getElementsByTagName('ul')[0];
+        list.onclick = function(event) {
+            if(event.target.tagName === "LI") {
+                event.target.classList.toggle('checked');
             }
         }
     }
@@ -82,6 +74,14 @@
         document.getElementById('myInput').value = ''; //清空input输入框
     }
 
+    //清除TODO显示面板上所有的节点
+    function clearAllNodes() {
+        var root = document.getElementById('myUl');
+        while (root.hasChildNodes()) {
+            root.removeChild(root.firstChild);
+        }
+    }
+
     //初始化list列表
     function initList() {
         closeBtn();
@@ -103,7 +103,7 @@
         deleteButton.onclick = function() {
             clearAllNodes();
         }
-        //按回车时执行
+        //按回车时同样执行添加
         document.onkeydown = function(event) {
             if(event.keyCode == 13) {
                 newElement();

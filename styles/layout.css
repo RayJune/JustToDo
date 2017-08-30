@@ -97,7 +97,7 @@ h2 {
 }
 
 footer {
-    padding: 2rem 3.6rem 1.6rem 1rem;
+    padding: 1rem 3.6rem 1.6rem 1rem;
     line-height: 1.4;
     box-sizing: border-box;
     overflow: hidden;
@@ -113,5 +113,5 @@ footer a:hover {
 	color: #0D8 !important;
 }
 span {
-    color: #2C3E50 !important;
+    color: #0D8 !important;
 }

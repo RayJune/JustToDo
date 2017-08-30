@@ -1,3 +1,4 @@
+// 暂时不用这个文件
 (function(){
     var i; //index
 

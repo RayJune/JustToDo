@@ -66,7 +66,7 @@ ul {
   margin: 0;
   padding: 0;
   width: 66%;
-  margin: 3.6rem auto 2rem;
+  margin: 3.6rem auto 1rem;
   background-color: white;
   padding: 2rem;
 }
@@ -122,6 +122,6 @@ ul li.checked::before {
 
 .close:hover {
   background-color: #0D8;
-  color: white;
+  color: white !important;
 }
 

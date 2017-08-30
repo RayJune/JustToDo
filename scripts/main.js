@@ -1,3 +1,9 @@
+//清除输入框中的数据
+function clearInput() {
+    var inputComment = document.getElementById('myInput');
+    inputComment.value = "";
+}
+
 var addList = function() {
     var arrangement = setEvent();
     //如果数据为空，那么直接退出
@@ -8,13 +14,14 @@ var addList = function() {
     refreshNode(arrangement);
     clearInput();
 };
+
 //获取输入的数据,并对数据进行处理
 var setEvent = function() {
     console.log(user_id);
-
-    var item = document.getElementById('item').value;
+    
+    var item = document.getElementById('myInput').value;
     var createDate = new Date();
-    var date = createDate.Format("yyyy年MM月dd日 hh:mm:ss");
+    var date = createDate.Format("yyyy年MM月dd日 hh:mm");
     user_id++;
     var arrangement = {
         id: user_id,
@@ -33,10 +40,7 @@ Date.prototype.Format = function(fmt) {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
         "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S+": this.getMilliseconds() //毫秒
+        "m+": this.getMinutes() //分
     };
     for (var k in o) {
         if (new RegExp("(" + k + ")").test(fmt)) {

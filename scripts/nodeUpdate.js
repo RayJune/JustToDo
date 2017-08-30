@@ -1,63 +1,64 @@
 //更新节点的操作
 function refreshNode(user_object) {
     //在网页上更新数据
-    var dataParent = document.getElementById("showData");
+    var dataParent = document.getElementById("myUl");
     //新建文本节点,记录时间和事件的节点，然后给文本节点赋值
-    var textData = document.createTextNode(user_object.user_date);
-    var textEvent = document.createTextNode(user_object.user_event);
-
+    var textDate = document.createTextNode(user_object.user_date + ": " );
+    // var textEvent = document.createTextNode();
+    var textEvent = document.createElement("span");
+    var text = document.createTextNode(" " + user_object.user_event);
+    textEvent.appendChild(text);
     //搭好结构
     //总体
-    var panel = document.createElement("div");
-
-    panel.classList.add("panel");
-
-
-    //head-info 时间  是否完成 删除
-    var panel_head = document.createElement("div");
-    panel_head.classList.add("panel-heading");
-
-    //footer
-    var panel_body = document.createElement("div");
-    panel_body.className = "panel-body";
+    var li = document.createElement("li");
 
     //根据完成的情况添加样式
     //完成的情况
     if (user_object.finished) {
-        panel_body.classList.add("eventDone");
-        panel.classList.add("panel-danger");
-
+        li.classList.add("checked");
     }
-    //未完成的情况
-    else {
-        panel_body.classList.add("eventTodo");
-        panel.classList.add("panel-info");
-    }
+    
     //把文本节点附加上
-    panel_head.appendChild(textData);
-    panel_body.appendChild(textEvent);
+    li.appendChild(textDate);
+    li.appendChild(textEvent);
     //节点附加
-    dataParent.appendChild(panel);
-    panel.appendChild(panel_head);
-    panel.appendChild(panel_body);
+    dataParent.insertBefore(li, dataParent.firstChild); //插入到最前面
+    
+    var i; //index
+    
+    //为每个li后面加上关闭按钮「x」
+    (function closeBtn() {
+        var myNodelist = document.getElementsByTagName('li');
+        for(i = 0; i < myNodelist.length; i++) {
+            var span = document.createElement('span');
+            var txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
+            span.className = 'close';
+            span.appendChild(txt);
+            myNodelist[i].appendChild(span);
+        }
+    })();
+
+    //点击关闭按钮，删除当前li
+    (function closeElement() {
+        var close = document.getElementsByClassName('close');
+        for(i = 0; i < close.length; i++) {
+            close[i].onclick = function() {
+                var div = this.parentElement; //关闭按钮的父元素
+                div.style.display = 'none';
+            }
+        }
+    })();
 
     //添加点击事件
-    panel.addEventListener('click', function() {
+    li.addEventListener('click', function() {
         user_object.finished = !user_object.finished;
         //完成的情况
         if (user_object.finished) {
-            panel_body.classList.remove("eventTodo");
-            panel_body.classList.add('eventDone');
-            panel.classList.remove("panel-info");
-            panel.classList.add("panel-danger");
-
+            li.classList.add('checked');
         }
         //未完成的情况
         else {
-            panel_body.classList.remove('eventDone');
-            panel_body.classList.add("eventTodo");
-            panel.classList.remove("panel-danger");
-            panel.classList.add("panel-info");
+            li.classList.remove('checked');
         }
 
         //把数据同步到数据库
@@ -76,8 +77,9 @@ function refreshNode(user_object) {
 
 //清除TODO显示面板上所有的节点
 function clearAllNodes() {
-    var root = document.getElementById('showData');
+    var root = document.getElementById('myUl');
     while (root.hasChildNodes()) {
         root.removeChild(root.firstChild);
     }
 }
+

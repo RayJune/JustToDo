@@ -13,8 +13,8 @@ function addList() {
 //添加数据
 function addData(data) {
 	var transaction = db.transaction(['user'], 'readwrite'),
-		storeHander = transaction.objectStore('user');
-	var addOpt = storeHander.add(data);
+		storeHander = transaction.objectStore('user'),
+	 	addOpt = storeHander.add(data);
 	addOpt.onerror = function() {
 		console.log('failed');
 	};
@@ -64,9 +64,8 @@ function showDataTodo() {
 function showData() {
 	clearAllNodes();
 	var transaction = db.transaction(['user'], 'readwrite'),
-		storeHander = transaction.objectStore('user');
-
-	var range = IDBKeyRange.lowerBound(0, true);
+		storeHander = transaction.objectStore('user'),
+		range = IDBKeyRange.lowerBound(0, true);
 	storeHander.openCursor(range, 'next').onsuccess = function(e) {
 		var cursor = e.target.result;
 		if (cursor) {

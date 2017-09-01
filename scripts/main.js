@@ -82,7 +82,7 @@
 				cursor.continue();
 			}
 		};
-	}	
+	}
 
 	// 删除某个数据
 	// function deleteThis(key){

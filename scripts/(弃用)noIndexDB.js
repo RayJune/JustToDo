@@ -6,8 +6,9 @@
 	function closeBtn() {
 		var myNodelist = document.getElementsByTagName('li'),
 			span,
-			txt;
-		for(i = 0; i < myNodelist.length; i++) {
+			txt,
+			len = myNodelist.length;
+		for(i = 0; i < len; i++) {
 			span = document.createElement('span');
 			txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
 			span.className = 'close';
@@ -19,8 +20,9 @@
 	//点击关闭按钮，隐藏当前li
 	function closeElement() {
 		var close = document.getElementsByClassName('close'),
-			div;
-		for(i = 0; i < close.length; i++) {
+			div,
+			len = close.length;
+		for(i = 0; i < len; i++) {
 			close[i].onclick = function() {
 				div = this.parentElement; //关闭按钮的父元素
 				div.style.display = 'none';

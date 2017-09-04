@@ -23,8 +23,9 @@ function refreshNode(user_object) {
         
 	//为每个li后面加上关闭按钮「x」
 	(function closeBtn() {
-		var myNodelist = document.getElementsByTagName('li');
-		for(i = 0; i < myNodelist.length; i++) {
+		var myNodelist = document.getElementsByTagName('li'),
+			len = myNodelist.length;
+		for(i = 0; i < len; i++) {
 			var span = document.createElement('span'),
 			    txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
 			span.className = 'close';
@@ -36,8 +37,9 @@ function refreshNode(user_object) {
 	//点击关闭按钮，删除当前li
 	(function closeElement() {
 		var close = document.getElementsByClassName('close'),
-			div;
-		for(i = 0; i < close.length; i++) {
+			div,
+			len = close.length;
+		for(i = 0; i < len; i++) {
 			close[i].onclick = function() {
 				div = this.parentElement; //关闭按钮的父元素
 				div.style.display = 'none';

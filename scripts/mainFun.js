@@ -38,7 +38,7 @@ function showDataDone() {
 				refreshNode(cursor.value);
 			}
 			cursor.continue();
-		} else {}
+		}
 	};
 }
 

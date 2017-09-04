@@ -4,10 +4,11 @@
 
 	//为每个li后面加上关闭按钮「x」
 	function closeBtn() {
-		var myNodelist = document.getElementsByTagName('li'),
+		var myNodelist = document.querySelector('li'),
 			span,
-			txt;
-		for(i = 0; i < myNodelist.length; i++) {
+			txt,
+			len = myNodelist.length;
+		for(i = 0; i < len; i++) {
 			span = document.createElement('span');
 			txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
 			span.className = 'close';
@@ -19,8 +20,9 @@
 	//点击关闭按钮，隐藏当前li
 	function closeElement() {
 		var close = document.getElementsByClassName('close'),
+			len = close.length,
 			div;
-		for(i = 0; i < close.length; i++) {
+		for(i = 0; i < len; i++) {
 			close[i].onclick = function() {
 				div = this.parentElement; //关闭按钮的父元素
 				div.style.display = 'none';
@@ -29,8 +31,9 @@
 	}
 
 	//点击li的时候，加上.checked，再点击则取消
+	//用了事件委托
 	function ifChecked() {
-		var list = document.getElementsByTagName('ul')[0];
+		var list = document.querySelector('ul');
 		list.onclick = function(event) {
 			if(event.target.tagName === 'LI') {
 				event.target.classList.toggle('checked');
@@ -62,7 +65,7 @@
 		return fmt;
 	};
 
-	//点击添加时，创建一个新的ul
+	//点击添加时，创建一个新的li
 	function newElement() {
 		var li = document.createElement('li'),
 			inputValue = document.getElementById('myInput').value,

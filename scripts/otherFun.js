@@ -21,23 +21,28 @@ function refreshNode(user_object) {
 	dataParent.insertBefore(li, dataParent.firstChild); //插入到最前面
         
         
-	//为每个li后面加上关闭按钮「x」
-	(function closeBtn() {
-		var myNodelist = document.getElementsByTagName('li');
-		for(i = 0; i < myNodelist.length; i++) {
-			var span = document.createElement('span'),
-			    txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
-			span.className = 'close';
-			span.appendChild(txt);
-			myNodelist[i].appendChild(span);
-		}
-	})();
+	// 为每个li后面加上关闭按钮「x」
+	// (function closeBtn() {
+	// 	var myNodelist = document.getElementById('myUl'),
+	// 		cloneList = myNodelist.cloneNode(),
+	// 		liList = cloneList.childNodes,
+	// 		len = cloneList.length;
+	// 	for(i = 0; i < len; i++) {
+	// 		var span = document.createElement('span'),
+	// 			txt = document.createTextNode('\u00D7'); //unicode编码下的x符号
+	// 		span.className = 'close';
+	// 		span.appendChild(txt);
+	// 		liList[i].appendChild(span);
+	// 	}
+	// 	document.getElementsByClassName('show')[0].replaceChild(cloneList, myNodelist);
+	// })();
     
 	//点击关闭按钮，删除当前li
 	(function closeElement() {
 		var close = document.getElementsByClassName('close'),
+			len = close.length,
 			div;
-		for(i = 0; i < close.length; i++) {
+		for(i = 0; i < len; i++) {
 			close[i].onclick = function() {
 				div = this.parentElement; //关闭按钮的父元素
 				div.style.display = 'none';

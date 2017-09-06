@@ -1,0 +1,26 @@
+{
+  "name": "just-to-do",
+  "version": "1.0.0",
+  "description": "### 颜值担当",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RayJune/JustToDo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RayJune/JustToDo/issues"
+  },
+  "homepage": "https://github.com/RayJune/JustToDo#readme",
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-react": "^7.3.0"
+  }
+}

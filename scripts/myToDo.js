@@ -90,7 +90,18 @@
 		span.className = 'close';
 		span.appendChild(x);
 		span.addEventListener('click', function() {
-			this.parentElement.style.display = 'none';
+			this.parentElement.style.display = 'none';	//先隐藏起来
+			
+			//再更新数据库
+			var transaction = db.transaction(['user'], 'readwrite'),
+				storeHander = transaction.objectStore('user'),
+				deleteOpt = storeHander.delete(data.id); //将当前选中li的数据从数据库中删除
+			deleteOpt.onerror = function() {
+				console.log('删除'+ data.id+ '到数据库失败');
+			};
+			deleteOpt.onsuccess = function() {
+				console.log('删除'+ data.id +  '到数据库成功');
+			};
 		});
 		li.appendChild(span);
 		
@@ -168,7 +179,8 @@
 	// 添加一条新list数据
 	function addOneList() {
 		//首先获取输入框中的数据
-		var value = document.getElementById('myInput').value,
+		var input = document.getElementById('myInput'),
+			value = input.value,
 			createDate = new Date(),
 			date = createDate.Format('yyyy年MM月dd日 hh:mm');
 		user_id++;
@@ -183,7 +195,7 @@
 			user_date: date
 		};
 		console.log('您添加的数据为：' + arrangement); //打印一下写入的数据
-
+		value = '';
 		// 添加list数据到数据库中
 		var transaction = db.transaction(['user'], 'readwrite'),
 			storeHander = transaction.objectStore('user'),
@@ -201,9 +213,9 @@
 		parent.insertBefore(newList, parent.firstChild);
 
 		// 重置输入框为0
-		value = '';
+		input.value = ''; 
 	}
-	
+
 	// 显示所有 已/未 完成的list
 	function showWhether(whether) {
 		resetNodes(); //重置ul

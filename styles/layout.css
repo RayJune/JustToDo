@@ -46,9 +46,6 @@ h2 {
 	/* color: #0D8; */
 }
 
-.inner {
-	float: right;
-}
 .main-nav .inner .nav-item{
 	display: inline-block;
 	vertical-align: top;
@@ -61,7 +58,8 @@ h2 {
   margin-right: 56rem;
 }
 .main-nav .inner .subscribe {
-  margin-right: 16rem;
+	margin-right: 15rem;
+	float: right;
 }
 
 .page-title {

@@ -18,16 +18,16 @@
     showData(); // 将数据展示
     user_id = getId();
     // 添加事件处理函数
-    document.getElementById('add').addEventListener('click', function () { addOneList(); }, false);
-    document.addEventListener('keydown', function (event) {
-      if (event.keyCode === 13) {
+    document.getElementById('add').addEventListener('click', addOneList, false);
+    document.addEventListener('keydown', function handleEnterEvent(e) {
+      if (e.keyCode === 13) {
         addOneList();
       }
     });
-    document.getElementById('done').addEventListener('click', function () { showDataDone(); }, false);
-    document.getElementById('todo').addEventListener('click', function () { showDataTodo(); }, false);
-    document.getElementById('all').addEventListener('click', function () { showData(); }, false);
-    document.getElementById('delete').addEventListener('click', function () { deleteAllData(); }, false);
+    document.getElementById('done').addEventListener('click', showDataDone, false);
+    document.getElementById('todo').addEventListener('click', showDataTodo, false);
+    document.getElementById('all').addEventListener('click', showData, false);
+    document.getElementById('delete').addEventListener('click', deleteAllData, false);
   };
 
   request.onupgradeneeded = function open(event) { // 在我们请求打开的数据库的版本号和已经存在的数据库版本号不一致的时候调用。
@@ -114,6 +114,16 @@
       } else {
         li.classList.remove('checked');
       }
+
+      // 把数据同步到数据库
+      var transaction = db.transaction(['user'], 'readwrite');
+      var storeHander = transaction.objectStore('user');
+      data.finished = data.finished;
+      console.log(data);
+      // 因为ID是自动增长的，所以使用put会给他增加数据，而不是修改数据
+      storeHander.put(data).onsuccess = function  updateFinishedData() {
+        console.log('修改数据成功');
+      };
     });
     fragment.appendChild(li);
     return li;
@@ -126,9 +136,16 @@
     var len = dataArr.length;
     for (i = 0; i < len; i++) {
       fragment.insertBefore(refreshOneNode(dataArr[i]), fragment.firstChild); // 每一个新加入的元素都排在最前面
+      console.log(fragment.firstChild);
+      // 为每个节点添加data-index属性值
+      if (!fragment.firstChild.getAttribute('data-index')) {
+        fragment.firstChild.setAttribute('data-index', dataArr[i].id);
+      }
+      console.log(fragment.firstChild);
     }
     // 将fragment添加到DOM中
     parent.appendChild(fragment);
+    // 
   }
 
   function showData() { // 取出并展示所有list数据
@@ -183,13 +200,13 @@
     // 首先获取输入框中的数据
     var input = document.querySelector('#myInput');
     var value = input.value;
-
     var date = getNewDate('yyyy年MM月dd日 hh:mm');
     user_id++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
+    // 整合为一个完整的数据
     var arrangement = {
       id: user_id,
       user_event: value,
@@ -210,9 +227,10 @@
     };
 
     // 添加节点
-    var newList = refreshOneNode(arrangement);
+    var newNode = refreshOneNode(arrangement);
+    newNode.setAttribute('data-index', arrangement.id);
     var parent = document.querySelector('#myUl');
-    parent.insertBefore(newList, parent.firstChild);
+    parent.insertBefore(newNode, parent.firstChild);
 
     // 重置输入框为0
     input.value = '';
@@ -220,21 +238,23 @@
   }
 
   // 显示所有 已/未 完成的list
-  function showWhether(whether) {
+  function showWhetherDone(whether) {
     resetNodes(); // 重置ul
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
     var dataArr = [];
-    storeHander.openCursor(range, 'next').onsuccess = function showWhetherData(e) {
+    storeHander.openCursor(range, 'next').onsuccess = function showWhetherDoneData(e) {
       var cursor = e.target.result;
       if (cursor) {
         if (whether) {
           if (cursor.value.finished) {
-            dataArr.push();
+            dataArr.push(cursor.value);
           }
-        } else if (!cursor.value.finished) {
-          dataArr.push();
+        } else if (!whether) {
+          if (!cursor.value.finished) {
+            dataArr.push(cursor.value);
+          }
         }
         cursor.continue();
       }
@@ -244,12 +264,12 @@
 
   // 显示所有已完成的list
   function showDataDone() {
-    showWhether(true);
+    showWhetherDone(true);
   }
 
   // 显示所有未完成的list
   function showDataTodo() {
-    showWhether(false);
+    showWhetherDone(false);
   }
 
   // 删除所有list数据

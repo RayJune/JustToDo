@@ -2,10 +2,12 @@
 (function myToDo() {
   /* 配置数据库，并在数据库调用成功后开始添加事件处理函数  */
 
-  //首先检测浏览器indexedDB可用性
+  // 首先检测浏览器indexedDB可用性
   if (!window.indexedDB) {
     window.alert('Your browser doesn\'t support a stable version of IndexedDB. Such and such feature will not be available.');
+    return false;
   }
+
   var cfg = {
     dbname: 'justToDo',
     dbVersion: '1'
@@ -56,8 +58,10 @@
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0);
+
     storeHander.openCursor(range, 'next').onsuccess = function get(e) {
       var cursor = e.target.result;
+
       if (cursor) {
         cursor.continue();
         userId = cursor.value.id;
@@ -70,6 +74,7 @@
   // 重置所有节点为0
   function resetNodes() { // 重置ul为0
     var root = document.querySelector('#myUl');
+
     while (root.hasChildNodes()) {
       root.removeChild(root.firstChild); // 这是最快的清除所有子节点的方法
     }
@@ -77,14 +82,15 @@
 
   // showData同时也是all的事件处理函数
   function showData() { // 取出并展示所有list数据
-    resetNodes(); // 先重置ul
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
-    var cursor;
     var dataArr = [];
+
+    resetNodes(); // 先重置ul
     storeHander.openCursor(range, 'next').onsuccess = function getAllData(e) {
-      cursor = e.target.result;
+      var cursor = e.target.result;
+
       if (cursor) {
         dataArr.push(cursor.value);
         cursor.continue();
@@ -96,17 +102,15 @@
   }
 
   function refreshNodes(dataArr) { // 刷新一组节点
-    var parent = document.querySelector('#myUl');
-
-    // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
-    var fragment = document.createDocumentFragment(); 
+    var fragment = document.createDocumentFragment();  // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
     var i;
     var len = dataArr.length;
+
     for (i = 0; i < len; i++) {
       fragment.insertBefore(refreshOneNode(dataArr[i]), fragment.firstChild); // 每一个新加入的元素都排在最前面
     }
     // 将fragment添加到DOM中，只操纵这一次DOM
-    parent.appendChild(fragment);
+    document.querySelector('#myUl').appendChild(fragment);
     console.log('数据添加到DOM完毕');
   }
 
@@ -115,6 +119,8 @@
     var textWrap = document.createElement('span');
     var text = document.createTextNode(' ' + data.userEvent);
     var li = document.createElement('li');
+
+    // 包装节点
     textWrap.appendChild(text);
     li.appendChild(textDate);
     li.appendChild(textWrap);
@@ -129,9 +135,11 @@
     var x = document.createTextNode('\u00D7'); // unicode下的【x】
     span.className = 'close';
     span.appendChild(x);
+
     // 为每个[x]添加data-x属性值
     span.setAttribute('data-x', data.id);
     li.appendChild(span);
+
     // 为每个节点添加data-index属性值
     if (!li.getAttribute('data-index')) {
       li.setAttribute('data-index', data.id);
@@ -148,13 +156,17 @@
     var input = document.querySelector('#myInput');
     var value = input.value;
     var date = getNewDate('yyyy年MM月dd日 hh:mm');
+    var newData;
+    var newNode;
+    var parent = document.querySelector('#myUl');
+
     userId++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
     // 整合为一个完整的数据
-    var arrangement = {
+    newData = {
       id: userId,
       userEvent: value,
       finished: false,
@@ -164,30 +176,29 @@
     // 添加list数据到数据库中
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
-    var addOpt = storeHander.add(arrangement);
+    var addOpt = storeHander.add(newData);
     addOpt.onerror = function error() {
       console.log('添加到数据库失败');
     };
     addOpt.onsuccess = function success() {
       console.log('添加到数据库成功');
-      console.log('您添加的数据为：' + arrangement.userDate + ':  ' + arrangement.userEvent); // 打印一下写入的数据
+      console.log('您添加的数据为：' + newData.userDate + ':  ' + newData.userEvent); // 打印一下写入的数据
     };
 
     // 添加节点
-    var newNode = refreshOneNode(arrangement);
-    newNode.setAttribute('data-index', arrangement.id);
-    var parent = document.querySelector('#myUl');
+    newNode = refreshOneNode(newData);
+    newNode.setAttribute('data-index', newData.id);
     parent.insertBefore(newNode, parent.firstChild);
 
     // 重置输入框为0
     input.value = '';
     return 0;
   }
-  
+
   // 格式化日期，用来格式化li中的日期
   function getNewDate(fmt) {
     var newDate = new Date();
-    // var newfmt;
+    var newfmt = fmt;
     var o = {
       'y+': newDate.getFullYear(),
       'M+': newDate.getMonth() + 1, // 月份
@@ -196,21 +207,21 @@
       'm+': newDate.getMinutes() // 分
     };
     for (var k in o) {
-      if (new RegExp('(' + k + ')').test(fmt)) {
+      if (new RegExp('(' + k + ')').test(newfmt)) {
         if (k === 'y+') {
-          fmt = fmt.replace(RegExp.$1, ('' + o[k]).substr(4 - RegExp.$1.length));
+          newfmt = newfmt.replace(RegExp.$1, ('' + o[k]).substr(4 - RegExp.$1.length));
         } else if (k === 'S+') {
           var lens = RegExp.$1.length;
           lens = lens === 1 ? 3 : lens;
-          fmt = fmt.replace(RegExp.$1, ('00' + o[k]).substr(('' + o[k]).length - 1, lens));
+          newfmt = newfmt.replace(RegExp.$1, ('00' + o[k]).substr(('' + o[k]).length - 1, lens));
         } else {
-          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+          newfmt = newfmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
         }
       }
     }
-    return fmt;
+    return newfmt;
   }
-  
+
 
   /* 键盘回车添加list的事件处理函数  */
 
@@ -222,20 +233,25 @@
 
 
   /* 点击li的事件处理函数  */
-  
+
   // 利用事件代理，将本来绑定在每个li上的事件处理函数绑定在ul上
   function handleLiClickDelagation(e) {
+    var that = e.target;
+    var dataIndex;
+    var transaction;
+    var storeHander;
+    var getDataIndex;
     var nodeData;
-    if (e.target.getAttribute('data-index')) {
-      var dataIndex = e.target.getAttribute('data-index'); // 获得对应id值
-      dataIndex = parseInt(dataIndex, 10); // 将字符串转化为数字，方便查询
 
-      var transaction = db.transaction(['user']);
-      var storeHander = transaction.objectStore('user');
-      var getDataIndex = storeHander.get(dataIndex);  // 在数据库中获取到相应的对象数值
-      var that = e.target;
+
+    if (that.getAttribute('data-index')) {
+      dataIndex = parseInt(that.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
+      transaction = db.transaction(['user']);
+      storeHander = transaction.objectStore('user');
+      getDataIndex = storeHander.get(dataIndex);  // 在数据库中获取到相应的对象数值
+
       getDataIndex.onerror = function getDataIndexError() {
-        console.log('failed');
+        console.log('查找数据失败');
       };
       getDataIndex.onsuccess = function getDataIndexSuccess() {
         console.log('查找数据成功');
@@ -246,6 +262,7 @@
   }
 
   function switchLi(data, that) {
+
     that.finished = !data.finished; // 切换
     if (that.finished) {
       that.classList.add('checked');
@@ -254,15 +271,17 @@
     }
 
     // 把数据同步到数据库
-    var transaction = db.transaction(['user'], 'readwrite');
-    var storeHander = transaction.objectStore('user');
+    var transaction;
+    var storeHander;
+    transaction = db.transaction(['user'], 'readwrite');
+    storeHander = transaction.objectStore('user');
     data.finished = that.finished;
     console.log(data);
     // 因为ID是自动增长的，所以使用put会给他增加数据，而不是修改数据
     var putStore = storeHander.put(data);
     putStore.onerror = function putStoreError() {
       console.log('修改数据失败');
-    }
+    };
     putStore.onsuccess = function putStoreSuccess() {
       console.log('修改数据成功');
     };
@@ -270,16 +289,17 @@
 
 
   /* li上[x]点击的事件处理函数（删除这一条list）  */
-  
+
   function handleXClickDelagation(e) {
     if (e.target.className === 'close') {
-      var dataX = e.target.getAttribute('data-x');
-      dataX = parseInt(dataX, 10);
+      var dataX = parseInt(e.target.getAttribute('data-x'), 10);
       var transaction = db.transaction(['user']);
       var storeHander = transaction.objectStore('user');
       var getDataIndex = storeHander.get(dataX);
+      var nodeData;
+
       getDataIndex.onerror = function getDataIndexError() {
-        console.log('failed');
+        console.log('查找数据失败');
       };
       getDataIndex.onsuccess = function getDataIndexSuccess() {
         console.log('查找数据成功');
@@ -293,6 +313,7 @@
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var deleteOpt = storeHander.delete(nodeData.id); // 将当前选中li的数据从数据库中删除
+
     deleteOpt.onerror = function error() {
       console.log('删除' + nodeData.id + '到数据库失败');
     };
@@ -304,17 +325,17 @@
 
 
   /* 显示所有 已/未 完成list的事件处理函数  */
-  
-  function showWhetherDone(whether) {
-    resetNodes(); // 重置ul
 
-    // TODO: 在这里打上断点，如果在断点中一直点击下一步运行则最后数据会展示出来，否则没有断点，正常操作则不显示数据
+  function showWhetherDone(whether) {
     var dataArr = []; // 用数组来存储每一条符合要求的数据，最后再统一加入文档节点
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
+
+    resetNodes(); // 重置ul
     storeHander.openCursor(range, 'next').onsuccess = function showWhetherDoneData(e) {
       var cursor = e.target.result;
+
       if (cursor) {
         if (whether) {
           if (cursor.value.finished) {
@@ -326,9 +347,11 @@
           }
         }
         cursor.continue();
+      } else {
+        refreshNodes(dataArr);  // 将符合条件的li数据整合为数组传入refreshNodes函数
       }
     };
-    refreshNodes(dataArr);  // 将符合条件的li数据整合为数组传入refreshNodes函数
+    
     console.log('显示数据完毕');
   }
 
@@ -350,9 +373,11 @@
     var transaction = request.result.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
+
     storeHander.openCursor(range, 'next').onsuccess = function deleteData(e) {
       var cursor = e.target.result;
       var requestDel;
+
       if (cursor) {
         requestDel = cursor.delete();
         requestDel.onsuccess = function success() {
@@ -366,4 +391,5 @@
       }
     };
   }
+  return 0;
 }());

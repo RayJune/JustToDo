@@ -237,32 +237,24 @@
   // 利用事件代理，将本来绑定在每个li上的事件处理函数绑定在ul上
   function handleLiClickDelagation(e) {
     var that = e.target;
-    var dataIndex;
-    var transaction;
-    var storeHander;
-    var getDataIndex;
-    var nodeData;
-
 
     if (that.getAttribute('data-index')) {
-      dataIndex = parseInt(that.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
-      transaction = db.transaction(['user']);
-      storeHander = transaction.objectStore('user');
-      getDataIndex = storeHander.get(dataIndex);  // 在数据库中获取到相应的对象数值
+      var dataIndex = parseInt(that.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
+      var transaction = db.transaction(['user']);
+      var storeHander = transaction.objectStore('user');
+      var getDataIndex = storeHander.get(dataIndex);  // 在数据库中获取到相应的对象数值
 
       getDataIndex.onerror = function getDataIndexError() {
         console.log('查找数据失败');
       };
       getDataIndex.onsuccess = function getDataIndexSuccess() {
         console.log('查找数据成功');
-        nodeData = getDataIndex.result;
-        switchLi(nodeData, that);
+        switchLi(getDataIndex.result, that);
       };
     }
   }
 
   function switchLi(data, that) {
-
     that.finished = !data.finished; // 切换
     if (that.finished) {
       that.classList.add('checked');
@@ -292,33 +284,21 @@
 
   function handleXClickDelagation(e) {
     if (e.target.className === 'close') {
-      var dataX = parseInt(e.target.getAttribute('data-x'), 10);
-      var transaction = db.transaction(['user']);
-      var storeHander = transaction.objectStore('user');
-      var getDataIndex = storeHander.get(dataX);
-      var nodeData;
-
-      getDataIndex.onerror = function getDataIndexError() {
-        console.log('查找数据失败');
-      };
-      getDataIndex.onsuccess = function getDataIndexSuccess() {
-        console.log('查找数据成功');
-        nodeData = getDataIndex.result;
-        deleteOneData(nodeData);
-      };
+      var nodeId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
+      deleteOneData(nodeId);
     }
   }
 
-  function deleteOneData(nodeData) {
+  function deleteOneData(nodeId) {
     var transaction = db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
-    var deleteOpt = storeHander.delete(nodeData.id); // 将当前选中li的数据从数据库中删除
+    var deleteOpt = storeHander.delete(nodeId); // 将当前选中li的数据从数据库中删除
 
     deleteOpt.onerror = function error() {
-      console.log('删除' + nodeData.id + '到数据库失败');
+      console.log('删除' + nodeId + '到数据库失败');
     };
     deleteOpt.onsuccess = function success() {
-      console.log('删除' + nodeData.id +  '到数据库成功');
+      console.log('删除' + nodeId +  '到数据库成功');
     };
     showData(); // 从修改后的数据库中重新展示list
   }
@@ -351,7 +331,7 @@
         refreshNodes(dataArr);  // 将符合条件的li数据整合为数组传入refreshNodes函数
       }
     };
-    
+
     console.log('显示数据完毕');
   }
 

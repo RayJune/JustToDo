@@ -15,7 +15,22 @@ function MyIndexedDB(cfg) {
     // 异步处理成功后才能获取到
     request.onsuccess = function success(event) {
       this.db = event.target.result;
-      this.userId = this.getId(); // FIXEM this.getId is not a function
+      this.userId = (function getId() {
+        var transaction = this.db.transaction(['user'], 'readwrite'); // FIXME: Cannot read property 'transaction' of undefined
+        var storeHander = transaction.objectStore('user');
+        var range = IDBKeyRange.lowerBound(0);
+    
+        storeHander.openCursor(range, 'next').onsuccess = function get(e) {
+          var cursor = e.target.result;
+    
+          if (cursor) {
+            cursor.continue();
+            this.userId = cursor.value.id;
+          } else {
+            console.log('现在的id为:' + this.userId);
+          }
+        }
+      }());
       func();  // 配置数据库，并在数据库调用成功后开始添加事件处理函数
     };
 
@@ -34,24 +49,6 @@ function MyIndexedDB(cfg) {
       });
     };
     return 0;
-  };
-
-  // 获取当前的ID值
-  this.getId = function getId() {
-    var transaction = this.db.transaction(['user'], 'readwrite');
-    var storeHander = transaction.objectStore('user');
-    var range = IDBKeyRange.lowerBound(0);
-
-    storeHander.openCursor(range, 'next').onsuccess = function get(e) {
-      var cursor = e.target.result;
-
-      if (cursor) {
-        cursor.continue();
-        this.userId = cursor.value.id;
-      } else {
-        console.log('现在的id为:' + this.userId);
-      }
-    };
   };
 
   /* 操作数据库用到的函数 CRUD */

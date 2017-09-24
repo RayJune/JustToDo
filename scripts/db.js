@@ -1,5 +1,7 @@
 // 创建MyIndexedDB '类'
 function MyIndexedDB(cfg) { 
+  var that = this;  // 绑定this
+  
   this.init = function initDB(func) {
     // 首先检测浏览器indexedDB可用性
     if (!window.indexedDB) {
@@ -14,31 +16,32 @@ function MyIndexedDB(cfg) {
     };
     // 异步处理成功后才能获取到
     request.onsuccess = function success(event) {
-      this.db = event.target.result;
-      this.userId = (function getId() {
-        var transaction = this.db.transaction(['user'], 'readwrite'); // FIXME: Cannot read property 'transaction' of undefined
+      that.db = event.target.result;
+      that.userId = (function getId() {
+        var transaction = that.db.transaction(['user'], 'readwrite'); // FIXME: Cannot read property 'transaction' of undefined
         var storeHander = transaction.objectStore('user');
         var range = IDBKeyRange.lowerBound(0);
     
-        storeHander.openCursor(range, 'next').onsuccess = function get(e) {
+        storeHander.openCursor(range, 'next').onsuccess = function getUserID(e) {
           var cursor = e.target.result;
-    
+
           if (cursor) {
             cursor.continue();
-            this.userId = cursor.value.id;
+            that.userId = cursor.value.id;
           } else {
-            console.log('现在的id为:' + this.userId);
+            console.log('现在的id为:' + that.userId);
           }
         }
       }());
+
       func();  // 配置数据库，并在数据库调用成功后开始添加事件处理函数
     };
 
     request.onupgradeneeded = function schemaChanged(event) { // 在我们请求打开的数据库的版本号和已经存在的数据库版本号不一致的时候调用。
-      this.db = event.target.result;
-      if (!this.db.objectStoreNames.contains('user')) {
+      that.db = event.target.result;
+      if (!that.db.objectStoreNames.contains('user')) {
         // 在这里可以设置键值，也可以是auto
-        var store = this.db.createObjectStore('user', { keyPath: 'id', autoIncrement: true }); // 创建db
+        var store = that.db.createObjectStore('user', { keyPath: 'id', autoIncrement: true }); // 创建db
       }
       // 在这里新建好一个数据库demo
       store.add({
@@ -57,7 +60,7 @@ function MyIndexedDB(cfg) {
   // 添加一个数据到数据库中
   this.createOneDataToDB = function createOneDataToDB(newData) {
     // 添加list数据到数据库中
-    var transaction = this.db.transaction(['user'], 'readwrite');
+    var transaction = that.db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var addOpt = storeHander.add(newData);
     addOpt.onerror = function error() {
@@ -71,8 +74,8 @@ function MyIndexedDB(cfg) {
 
   // Retrieve: 读取
   // 根据一个index值读取数据库的一个数据，并在读取后调用回调函数
-  this.retrieveOneDataFromDB = function retrieveOneDataFromDB(index, func, that) {
-    var transaction = this.db.transaction(['user']);
+  this.retrieveOneDataFromDB = function retrieveOneDataFromDB(index, func, thatdata) {
+    var transaction = that.db.transaction(['user']);
     var storeHander = transaction.objectStore('user');
     var getDataIndex = storeHander.get(index);  // 在数据库中获取到相应的对象数值
 
@@ -81,14 +84,14 @@ function MyIndexedDB(cfg) {
     };
     getDataIndex.onsuccess = function getDataIndexSuccess() {
       console.log('查找数据成功');
-      func(getDataIndex.result, that);  // 获取数据成功后调用回调函数
+      func(getDataIndex.result, thatdata);  // 获取数据成功后调用回调函数
     };
   };
 
   // 根据传入的条件，读取 未/已 完成的数据，并在读取后调用回调函数
   this.retrieveDataWhetherDoneFromDB = function retrieveDataWhetherDoneFromDB(whether, func) {
     var dataArr = []; // 用数组来存储每一条符合要求的数据，最后再统一加入文档节点
-    var transaction = this.db.transaction(['user'], 'readwrite');
+    var transaction = that.db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
 
@@ -114,7 +117,7 @@ function MyIndexedDB(cfg) {
 
   // 获取数据库的所有数据
   this.retrieveAllDataFromDB = function retrieveAllDataFromDB(refresh) {
-    var transaction = this.db.transaction(['user'], 'readwrite');
+    var transaction = that.db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
     var allDataArr = [];
@@ -153,7 +156,7 @@ function MyIndexedDB(cfg) {
 
   // 删除数据库中的一个数据
   this.deleteOneDataInDB = function deleteOneDataInDB(dataId) {
-    var transaction = this.db.transaction(['user'], 'readwrite');
+    var transaction = that.db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var deleteOpt = storeHander.delete(dataId); // 将当前选中li的数据从数据库中删除
 
@@ -167,7 +170,7 @@ function MyIndexedDB(cfg) {
 
   // 删除数据库中的所有数据
   this.deleteAllDataInDB = function deleteAllDataInDB() {
-    var transaction = this.db.transaction(['user'], 'readwrite');
+    var transaction = that.db.transaction(['user'], 'readwrite');
     var storeHander = transaction.objectStore('user');
     var range = IDBKeyRange.lowerBound(0, true);
 

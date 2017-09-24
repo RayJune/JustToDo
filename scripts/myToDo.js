@@ -4,7 +4,7 @@
     dbVersion: '1'
   };
 
-  var myDB = new MyIndexedDB(cfg);
+  var myDB = new MyIndexedDB(cfg);  // 传入要操作使用的数据库配置参数，并创建一个MyIndexedDB实例
 
   // 启动indexedDB
 
@@ -234,4 +234,4 @@
     resetNodes();         // 重置DOM节点，先从视觉上删除
     myDB.deleteAllDataInDB();  // 从数据库中删除，真正的删除数据
   }
-}());  // 传入单例
+}());  

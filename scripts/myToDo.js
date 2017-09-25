@@ -1,14 +1,9 @@
-(function letsToDo() {
-  var cfg = {
-    dbname: 'justToDo',
-    dbVersion: '1'
-  };
-
-  var myDB = new MyIndexedDB(cfg);  // 传入要操作使用的数据库配置参数，并创建一个MyIndexedDB实例
-
+(function goToDo() {
+  var myDB = myIndexedDB; // 导入模块并重命名
   // 启动indexedDB
 
   myDB.init(addEventListeners); // 启动indexedDB，并调用展示数据函数、添加所有事件处理的函数
+
 
   /* 经常调用的函数  */
 
@@ -234,4 +229,4 @@
     resetNodes();         // 重置DOM节点，先从视觉上删除
     myDB.deleteAllDataInDB();  // 从数据库中删除，真正的删除数据
   }
-}());  
+}());

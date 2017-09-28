@@ -1,5 +1,6 @@
+'use strict';
 // use module pattern
-var myIndexedDB = (function db() {
+module.exports = (function myIndexedDB() {
   /* 初始化db用到的函数 */
 
   function initDB(func) {

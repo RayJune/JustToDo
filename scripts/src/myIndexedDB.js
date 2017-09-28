@@ -1,6 +1,6 @@
 'use strict';
 // use module pattern
-module.exports = (function myIndexedDB() {
+var myIndexedDB = (function db() {
   /* 初始化db用到的函数 */
 
   function initDB(func) {
@@ -215,3 +215,5 @@ module.exports = (function myIndexedDB() {
     deleteAllDataInDB: deleteAllDataInDB
   };
 }());
+
+module.exports = myIndexedDB;

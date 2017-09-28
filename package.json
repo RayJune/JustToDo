@@ -4,7 +4,10 @@
   "description": "### 颜值担当",
   "main": ".eslintrc.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build&npm run uglify&npm run sourcemap",
+    "build": "browserify ./scripts/src/main.js -o ./scripts/dist/bundle.js",
+    "uglify": "uglifyjs ./scripts/dist/bundle.js -m -c -o ./scripts/dist/bundle.min.js",
+    "sourcemap": "uglifyjs ./scripts/dist/bundle.js -o ./scripts/dist/bundle.min.js --source-map"
   },
   "repository": {
     "type": "git",
@@ -18,10 +21,12 @@
   "homepage": "https://github.com/RayJune/JustToDo#readme",
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "browserify": "^14.4.0",
     "eslint": "^4.6.1",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-react": "^7.3.0"
+    "eslint-plugin-react": "^7.3.0",
+    "uglify-js": "^3.1.2"
   }
 }

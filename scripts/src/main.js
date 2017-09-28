@@ -1,5 +1,6 @@
+'use strict';
 (function goToDo() {
-  var myDB = myIndexedDB; // 导入模块并重命名
+  var myDB = require('./myIndexedDB'); // 导入模块并重命名
   // 启动indexedDB
 
   myDB.init(addEventListeners); // 启动indexedDB，并调用展示数据函数、添加所有事件处理的函数

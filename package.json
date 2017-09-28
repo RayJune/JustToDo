@@ -4,8 +4,10 @@
   "description": "### 颜值担当",
   "main": ".eslintrc.js",
   "scripts": {
+    "start": "npm run build&npm run uglify&npm run sourcemap",
     "build": "browserify ./scripts/src/main.js -o ./scripts/dist/bundle.js",
-    "uglify": "uglifyjs ./scripts/dist/bundle.js -m -c -o ./scripts/dist/bundle.min.js"
+    "uglify": "uglifyjs ./scripts/dist/bundle.js -m -c -o ./scripts/dist/bundle.min.js",
+    "sourcemap": "uglifyjs ./scripts/dist/bundle.js -o ./scripts/dist/bundle.min.js --source-map"
   },
   "repository": {
     "type": "git",

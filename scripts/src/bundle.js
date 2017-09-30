@@ -109,15 +109,16 @@
     var newNodeData;
     var newNode;
     var parent = document.querySelector('#myUl');
+    var dataId = DB.getUserId();
 
-    DB.userId++;
+    dataId++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
     // 整合为一个完整的数据
     newNodeData = {
-      id: DB.userId,
+      id: dataId,
       userEvent: value,
       finished: false,
       userDate: date
@@ -237,7 +238,6 @@
     showWhetherDone(false);
   }
 
-
   /* 删除所有数据的事件处理函数  */
 
   // 删除所有list数据
@@ -252,6 +252,8 @@
 // use module pattern
 var myIndexedDB = (function handleIndexedDB() {
   /* 初始化db用到的函数 */
+  var userID;
+  var dbResult;
 
   function init(dbConfig, initCallback) {
     // 首先检测浏览器indexedDB可用性
@@ -274,32 +276,32 @@ var myIndexedDB = (function handleIndexedDB() {
     };
     // 异步处理成功后才能获取到
     request.onsuccess = function success(e) {
-      myIndexedDB.db = e.target.result;
-      myIndexedDB.userId = getId();
+      dbResult = e.target.result;
+      getId();
       if (openDBCallback) {
         openDBCallback();
       }
     };
 
     request.onupgradeneeded = function schemaChanged(e) { // 在我们请求打开的数据库的版本号和已经存在的数据库版本号不一致的时候调用。
-      myIndexedDB.db = e.target.result;
-      if (!myIndexedDB.db.objectStoreNames.contains('user')) {
+      dbResult = e.target.result;
+      if (!dbResult.objectStoreNames.contains('user')) {
         // 在这里可以设置键值，也可以是auto
-        var store = myIndexedDB.db.createObjectStore('user', { keyPath: 'id', autoIncrement: true }); // 创建db
+        var store = dbResult.createObjectStore('user', { keyPath: 'id', autoIncrement: true }); // 创建db
       }
       // 在这里新建好一个数据库demo
       store.add(dbConfig.dataDemo);
     };
   }
 
-  // private method
+  /* private method */
 
   function handleTransaction(whetherWrite) {
     var transaction;
     if (whetherWrite) {
-      transaction = myIndexedDB.db.transaction(['user'], 'readwrite');
+      transaction = dbResult.transaction(['user'], 'readwrite');
     } else {
-      transaction = myIndexedDB.db.transaction(['user']);
+      transaction = dbResult.transaction(['user']);
     }
     return transaction.objectStore('user');
   }
@@ -318,9 +320,9 @@ var myIndexedDB = (function handleIndexedDB() {
 
       if (cursor) {
         cursor.continue();
-        myIndexedDB.userId = cursor.value.id;
+        userID = cursor.value.id;
       } else {
-        console.log('现在的id为:' + myIndexedDB.userId);
+        console.log('现在的id为:' + userID);
       }
     };
   }
@@ -494,6 +496,9 @@ var myIndexedDB = (function handleIndexedDB() {
     };
   }
 
+  function getUserId() {
+    return userID;
+  }
 
   /* public interface */
   return {
@@ -504,7 +509,8 @@ var myIndexedDB = (function handleIndexedDB() {
     retrieveAllData: retrieveAllData,
     updateDate: updateDate,
     deleteOneData: deleteOneData,
-    deleteAllData: deleteAllData
+    deleteAllData: deleteAllData,
+    getUserId: getUserId
   };
 }());
 

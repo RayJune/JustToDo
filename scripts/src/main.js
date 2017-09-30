@@ -108,15 +108,16 @@
     var newNodeData;
     var newNode;
     var parent = document.querySelector('#myUl');
+    var dataId = DB.getUserId();
 
-    DB.userId++;
+    dataId++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
     // 整合为一个完整的数据
     newNodeData = {
-      id: DB.userId,
+      id: dataId,
       userEvent: value,
       finished: false,
       userDate: date
@@ -235,7 +236,6 @@
   function showDataTodo() {
     showWhetherDone(false);
   }
-
 
   /* 删除所有数据的事件处理函数  */
 

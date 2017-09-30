@@ -1,9 +1,18 @@
 'use strict';
 (function goToDo() {
-  var myDB = require('./myIndexedDB'); // 导入模块并重命名
-  // 启动indexedDB
+  var DB = require('./myIndexedDB'); // 导入模块并重命名
+  var dbConfig = {  // 创建数据库配置参数
+    name: 'justToDo',
+    version: '1'
+  };
+  dbConfig.dataDemo = { // 配置想要的数据结构存入数据库
+    id: 0,
+    userEvent: 0,
+    finished: true,
+    date: 0
+  };
 
-  myDB.init(addEventListeners); // 启动indexedDB，并调用展示数据函数、添加所有事件处理的函数
+  DB.init(dbConfig, addEventListeners); // 启动indexedDB，并调用展示数据函数、添加所有事件处理的函数
 
 
   /* 经常调用的函数  */
@@ -35,7 +44,7 @@
   // showData同时也是all的事件处理函数
   function showData() { // 取出并展示所有list数据
     resetNodes(); // 先重置ul
-    myDB.retrieveAllDataFromDB(refreshNodes); // 向retrieveAllDataFromDB传入回调函数
+    DB.retrieveAllData(refreshNodes); // 向retrieveAllData传入回调函数
     // 这样数据库一旦数据查询完毕/数据装在到数组中，就调用refreshNodes来展示数据
   }
 
@@ -100,14 +109,14 @@
     var newNode;
     var parent = document.querySelector('#myUl');
 
-    myDB.userId++;
+    DB.userId++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
     // 整合为一个完整的数据
     newNodeData = {
-      id: myDB.userId,
+      id: DB.userId,
       userEvent: value,
       finished: false,
       userDate: date
@@ -122,7 +131,7 @@
     input.value = '';
 
     // 将新节点的数据添加到数据库中
-    myDB.createOneDataToDB(newNodeData);
+    DB.createOneData(newNodeData);
     return 0;
   }
 
@@ -137,6 +146,7 @@
       'h+': newDate.getHours(), // 小时
       'm+': newDate.getMinutes() // 分
     };
+
     for (var k in o) {
       if (new RegExp('(' + k + ')').test(newfmt)) {
         if (k === 'y+') {
@@ -150,6 +160,7 @@
         }
       }
     }
+
     return newfmt;
   }
 
@@ -167,26 +178,28 @@
 
   // 利用事件代理，将本来绑定在每个li上的事件处理函数绑定在ul上
   function handleLiClickDelegation(e) {
-    var that = e.target;
+    var thisLi = e.target;
 
-    if (that.getAttribute('data-index')) {
-      var dataIndex = parseInt(that.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
-      myDB.retrieveOneDataFromDB(dataIndex, switchLi, that);
+    if (thisLi.getAttribute('data-index')) {
+      var dataIndex = parseInt(thisLi.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
+      console.log(dataIndex);
+      console.log(typeof dataIndex);
+      DB.retrieveOneData(dataIndex, switchLi, [thisLi]);
     }
   }
 
-  function switchLi(data, that) {
-    that.finished = !data.finished; // 切换
-    if (that.finished) {  // 添加样式
-      that.classList.add('checked');
+  function switchLi(data, thisLi) {
+    console.log(data);
+    thisLi.finished = !data.finished; // 切换
+    if (thisLi.finished) {  // 添加样式
+      thisLi.classList.add('checked');
     } else {
-      that.classList.remove('checked');
+      thisLi.classList.remove('checked');
     }
-
-    data.finished = that.finished;  // 修改数据
+    data.finished = thisLi.finished;  // 修改数据
 
     // 把数据同步到数据库
-    myDB.updateDateInDB(data);
+    DB.updateDate(data);
   }
 
 
@@ -200,15 +213,16 @@
   }
 
   function deleteOneData(nodeId) {
-    myDB.deleteOneDataInDB(nodeId); // 从数据库中删除，并在删除后调用
+    DB.deleteOneData(nodeId); // 从数据库中删除，并在删除后调用
     showData(); // 从修改后的数据库中重新展示list
   }
 
   /* 显示所有 已/未 完成list的事件处理函数  */
 
   function showWhetherDone(whether) {
+    var key = 'finished'; // 设置key为finished
     resetNodes();   // 先重置ul列表
-    myDB.retrieveDataWhetherDoneFromDB(whether, refreshNodes); // 从数据库中获取数据并用回调函数来展示
+    DB.retrieveDataWhetherDone(whether, key, refreshNodes); // 从数据库中获取数据并用回调函数来展示
     console.log('显示数据完毕');
   }
 
@@ -228,6 +242,6 @@
   // 删除所有list数据
   function deleteAllData() {
     resetNodes();         // 重置DOM节点，先从视觉上删除
-    myDB.deleteAllDataInDB();  // 从数据库中删除，真正的删除数据
+    DB.deleteAllData();  // 从数据库中删除，真正的删除数据
   }
 }());

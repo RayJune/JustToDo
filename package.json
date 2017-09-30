@@ -4,10 +4,7 @@
   "description": "### 颜值担当",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "npm run build&npm run uglify&npm run sourcemap",
-    "build": "browserify ./scripts/src/main.js -o ./scripts/dist/bundle.js",
-    "uglify": "uglifyjs ./scripts/dist/bundle.js -m -c -o ./scripts/dist/bundle.min.js",
-    "sourcemap": "uglifyjs ./scripts/dist/bundle.js -o ./scripts/dist/bundle.min.js --source-map"
+    "build": "browserify ./scripts/src/main.js -o ./scripts/src/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +24,8 @@
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-react": "^7.3.0",
-    "uglify-js": "^3.1.2"
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0"
   }
 }

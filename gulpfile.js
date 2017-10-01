@@ -21,7 +21,7 @@ gulp.task('uglify', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['scripts/src/bundle.js'], ['uglify']);
+  gulp.watch(['scripts/src/main.js'], ['uglify']);
 });
 
 gulp.task('default', ['uglify', 'watch']);

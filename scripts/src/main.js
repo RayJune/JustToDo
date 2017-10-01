@@ -108,7 +108,7 @@
     var newNodeData;
     var newNode;
     var parent = document.querySelector('#myUl');
-    var dataId = DB.getUserId();
+    var dataId = DB.getPresentId();
 
     dataId++;
     if (value === '') {
@@ -200,7 +200,7 @@
     data.finished = thisLi.finished;  // 修改数据
 
     // 把数据同步到数据库
-    DB.updateDate(data);
+    DB.updateOneDate(data);
   }
 
 

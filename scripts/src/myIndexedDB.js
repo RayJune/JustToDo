@@ -1,50 +1,54 @@
 'use strict';
 // use module pattern
-var myIndexedDB = (function handleIndexedDB() {
-  /* 初始化db用到的函数 */
+var handleIndexedDB = (function handleIndexedDB() {
+  /* initial indexedDB functions */
+
+  // two private property
   var userID;
   var dbResult;
 
-  function init(dbConfig, initCallback) {
-    // 首先检测浏览器indexedDB可用性
+  function init(dbConfig, callback) {
+    // firstly inspect browser's support for indexedDB
     if (!window.indexedDB) {
       window.alert('Your browser doesn\'t support a stable version of IndexedDB. Such and such feature will not be available.');
       return 0;
     }
-    if (initCallback) {
-      openDB(dbConfig, initCallback);  // 启动indexedDB
+    if (callback) {
+      openDB(dbConfig, callback);  // while it's ok, oepn it
     }
 
     return 0;
   }
 
-  function openDB(dbConfig, openDBCallback) {
-    var request = indexedDB.open(dbConfig.name, dbConfig.version); // 打开数据库
+  function openDB(dbConfig, callback) {
+    var request = indexedDB.open(dbConfig.name, dbConfig.version); // open indexedDB
 
     request.onerror = function error() {
-      console.log('indexDB加载失败');
+      console.log('fail to load indexedDB');
     };
-    // 异步处理成功后才能获取到
+    // callback
     request.onsuccess = function success(e) {
       dbResult = e.target.result;
       getId();
-      if (openDBCallback) {
-        openDBCallback();
+      if (callback) {
+        callback();
       }
     };
 
-    request.onupgradeneeded = function schemaChanged(e) { // 在我们请求打开的数据库的版本号和已经存在的数据库版本号不一致的时候调用。
+    // When you create a new database or increase the version number of an existing database 
+    // (by specifying a higher version number than you did previously, when Opening a database
+    request.onupgradeneeded = function schemaChanged(e) { 
       dbResult = e.target.result;
       if (!dbResult.objectStoreNames.contains('user')) {
-        // 在这里可以设置键值，也可以是auto
+        // set id as keyPath
         var store = dbResult.createObjectStore('user', { keyPath: 'id', autoIncrement: true }); // 创建db
       }
-      // 在这里新建好一个数据库demo
+      // add a new db demo
       store.add(dbConfig.dataDemo);
     };
   }
 
-  /* private method */
+  /* two private method */
 
   function handleTransaction(whetherWrite) {
     var transaction;
@@ -60,7 +64,7 @@ var myIndexedDB = (function handleIndexedDB() {
     return IDBKeyRange.lowerBound(0, true);
   }
 
-  // 获取当前的ID值，openDB中要用
+  // set now id value to userId (the private property) 
   function getId() {
     var storeHander = handleTransaction(true);
     var range = rangeToAll();
@@ -71,58 +75,55 @@ var myIndexedDB = (function handleIndexedDB() {
       if (cursor) {
         cursor.continue();
         userID = cursor.value.id;
-      } else {
-        console.log('现在的id为:' + userID);
       }
     };
   }
 
-  /* 操作数据库用到的函数 CRUD */
+  /* CRUD */
 
-  // Create 增加
-  // 添加一个数据到数据库中
-  function createOneData(newData, createOneDataCallback, callbackParaArr) {
-    // 添加list数据到数据库中
+  // Create 
+  function createOneData(newData, callback, callbackParaArr) {
     var storeHander = handleTransaction(true);
     var addOpt = storeHander.add(newData);
     addOpt.onerror = function error() {
-      console.log('添加到数据库失败');
+      console.log('Pity, failed to add one data to indexedDB');
     };
     addOpt.onsuccess = function success() {
-      console.log('添加到数据库成功');
-      if (createOneDataCallback) { // 如果传入回调函数，则数据库添加成功后调用回调函数
+      console.log('Bravo, success to add one data to indexedDB');
+      if (callback) { // if has callback been input, execute it 
         if (!callbackParaArr) {
-          createOneDataCallback();
-        } else {
-          createOneDataCallback.apply(null, callbackParaArr);
+          callback();
+        } else {    
+          callback.apply(null, callbackParaArr); // it has callback's parameters been input, get it
         }
       }
     };
   }
 
-  // Retrieve: 读取
-  // 根据一个index值读取数据库的一个数据，并在读取后调用回调函数
-  function retrieveOneData(index, retrieveOneDataCallback, callbackParaArr) {
+  // Retrieve
+
+  // retrieve one data
+  function retrieveOneData(index, callback, callbackParaArr) {
     var storeHander = handleTransaction(false);
-    var getDataIndex = storeHander.get(index);  // 在数据库中获取到相应的对象数值
+    var getDataIndex = storeHander.get(index);  // get it by index
 
     getDataIndex.onerror = function getDataIndexError() {
-      console.log('查找数据失败');
+      console.log('Great, get data succeed');
     };
     getDataIndex.onsuccess = function getDataIndexSuccess() {
-      console.log('查找数据成功');
+      console.log('Pity, get data faild');
       if (!callbackParaArr) {
-        retrieveOneDataCallback(getDataIndex.result);  // 获取数据成功后调用回调函数
+        callback(getDataIndex.result);  
       } else {
-        callbackParaArr.unshift(getDataIndex.result); // 将获取到的数据添加到数组头
-        retrieveOneDataCallback.apply(null, callbackParaArr);
+        callbackParaArr.unshift(getDataIndex.result); 
+        callback.apply(null, callbackParaArr);
       }
     };
   }
 
-  // 根据传入的条件，读取 未/已 完成的数据，并在读取后调用回调函数
-  function retrieveDataWhetherDone(whether, key, retrieveDataWhetherDoneCallback, callbackParaArr) {
-    var dataArr = []; // 用数组来存储每一条符合要求的数据，最后再统一加入文档节点
+  // retrieve eligible data (boolean condition)
+  function retrieveDataWhetherDone(whether, key, callback, callbackParaArr) {
+    var dataArr = []; // use an array to storage eligible data
     var storeHander = handleTransaction(true);
     var range = rangeToAll();
 
@@ -140,19 +141,19 @@ var myIndexedDB = (function handleIndexedDB() {
           }
         }
         cursor.continue();
-      } else if (retrieveDataWhetherDoneCallback) {
+      } else if (callback) {
         if (!callbackParaArr) {
-          retrieveDataWhetherDoneCallback(dataArr);  // 将符合条件的li数据整合为数组传入回调函数
+          callback(dataArr);  // put the eligible array to callback as parameter
         } else {
           callbackParaArr.unshift(dataArr);
-          retrieveDataWhetherDoneCallback.apply(null, callbackParaArr);
+          callback.apply(null, callbackParaArr);
         }
       }
     };
   }
 
-  // 获取数据库的所有数据
-  function retrieveAllData(retrieveAllDataCallback, callbackParaArr) {
+  // retrieve all
+  function retrieveAllData(callback, callbackParaArr) {
     var storeHander = handleTransaction(true);
     var range = rangeToAll();
     var allDataArr = [];
@@ -163,63 +164,62 @@ var myIndexedDB = (function handleIndexedDB() {
       if (cursor) {
         allDataArr.push(cursor.value);
         cursor.continue();
-      } else if (retrieveAllDataCallback) {
+      } else if (callback) {
         if (!callbackParaArr) {
-          retrieveAllDataCallback(allDataArr);  // 此时数据装载完毕，执行回调函数
+          callback(allDataArr);  
         } else {
           callbackParaArr.unshift(allDataArr);
-          retrieveAllDataCallback.apply(null, callbackParaArr);
+          callback.apply(null, callbackParaArr);
         }
       }
     };
   }
 
-  // Update: 更新
-  // 更新一个数据同步到数据库中
-  function updateDate(changedData, updateDateCallback, callbackParaArr) {
+  // Update one
+  function updateOneDate(changedData, callback, callbackParaArr) {
     var storeHander = handleTransaction(true);
 
     console.log(changedData);
     var putStore = storeHander.put(changedData);
     putStore.onerror = function putStoreError() {
-      console.log('修改数据失败');
+      console.log('Pity, modify failed');
     };
     putStore.onsuccess = function putStoreSuccess() {
-      console.log('修改数据成功');
-      if (updateDateCallback) {
+      console.log('Aha, modify succeed');
+      if (callback) {
         if (!callbackParaArr) {
-          updateDateCallback();
+          callback();
         } else {
-          updateDateCallback.apply(null, callbackParaArr);
+          callback.apply(null, callbackParaArr);
         }
       }
     };
   }
 
-  // Delete 删除
+  // Delete 
 
-  // 删除数据库中的一个数据
-  function deleteOneData(dataId, deleteOneDataCallback, callbackParaArr) {
+  // delete one
+  function deleteOneData(index, callback, callbackParaArr) {
     var storeHander = handleTransaction(true);
-    var deleteOpt = storeHander.delete(dataId); // 将当前选中li的数据从数据库中删除
+    var deleteOpt = storeHander.delete(index); // 将当前选中li的数据从数据库中删除
 
     deleteOpt.onerror = function error() {
-      console.log('删除' + dataId + '到数据库失败');
+      console.log('delete ' + index + 'faild');
     };
     deleteOpt.onsuccess = function success() {
-      console.log('删除' + dataId +  '到数据库成功');
-      if (deleteOneDataCallback) {
+      console.log('delete' + index +  'succeed');
+      if (callback) {
         if (!callbackParaArr) {
-          deleteOneDataCallback();
+          callback();
         } else {
-          deleteOneDataCallback.apply(callbackParaArr);
+          callback.apply(callbackParaArr);
         }
       }
     };
   }
 
-  // 删除数据库中的所有数据
-  function deleteAllData(deleteAllDataCallback, callbackParaArr) {
+  // delete all
+  function deleteAllData(callback, callbackParaArr) {
     var storeHander = handleTransaction(true);
     var range = rangeToAll();
 
@@ -230,23 +230,24 @@ var myIndexedDB = (function handleIndexedDB() {
       if (cursor) {
         requestDel = cursor.delete();
         requestDel.onsuccess = function success() {
-          console.log('删除数据成功');
+          console.log('Great, delete all data succeed');
         };
         requestDel.onerror = function error() {
-          console.log('删除全部数据失败');
+          console.log('Pity, delete all data faild');
         };
         cursor.continue();
-      } else if (deleteAllDataCallback) {
+      } else if (callback) {
         if (!callbackParaArr) {
-          deleteAllDataCallback();
+          callback();
         } else {
-          deleteAllDataCallback.apply(null, this);
+          callback.apply(null, this);
         }
       }
     };
   }
 
-  function getUserId() {
+  // get present id
+  function getPresentId() {
     return userID;
   }
 
@@ -257,11 +258,11 @@ var myIndexedDB = (function handleIndexedDB() {
     retrieveOneData: retrieveOneData,
     retrieveDataWhetherDone: retrieveDataWhetherDone,
     retrieveAllData: retrieveAllData,
-    updateDate: updateDate,
+    updateOneDate: updateOneDate,
     deleteOneData: deleteOneData,
     deleteAllData: deleteAllData,
-    getUserId: getUserId
+    getPresentId: getPresentId
   };
 }());
 
-module.exports = myIndexedDB;
+module.exports = handleIndexedDB;

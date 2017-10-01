@@ -110,7 +110,6 @@
     var parent = document.querySelector('#myUl');
     var dataId = DB.getPresentId();
 
-    dataId++;
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
@@ -183,8 +182,6 @@
 
     if (thisLi.getAttribute('data-index')) {
       var dataIndex = parseInt(thisLi.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
-      console.log(dataIndex);
-      console.log(typeof dataIndex);
       DB.retrieveOneData(dataIndex, switchLi, [thisLi]);
     }
   }

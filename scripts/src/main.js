@@ -3,7 +3,7 @@
   var DB = require('indexeddb-crud'); // 导入模块并重命名
   var dbConfig = { // 创建数据库配置参数
     name: 'justToDo',
-    version: '1',
+    version: '5',
     key: 'id',
     storeName: 'user'
   };

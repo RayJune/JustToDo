@@ -1,13 +1,15 @@
 'use strict';
 (function goToDo() {
   var DB = require('indexeddb-crud'); // 导入模块并重命名
-  var dbConfig = {  // 创建数据库配置参数
+  var dbConfig = { // 创建数据库配置参数
     name: 'justToDo',
-    version: '1'
+    version: '1',
+    key: 'id',
+    storeName: 'user'
   };
   dbConfig.dataDemo = { // 配置想要的数据结构存入数据库
     id: 0,
-    userEvent: 0,
+    event: 0,
     finished: true,
     date: 0
   };
@@ -15,7 +17,7 @@
   DB.init(dbConfig, addEventListeners); // 启动indexedDB，并调用展示数据函数、添加所有事件处理的函数
 
 
-  /* 经常调用的函数  */
+  /* 经常调用的函数 */
 
   // 数据库启动完成后显示数据，以及添加事件处理函数
   function addEventListeners() {
@@ -44,12 +46,12 @@
   // showData同时也是all的事件处理函数
   function showData() { // 取出并展示所有list数据
     resetNodes(); // 先重置ul
-    DB.retrieveAllData(refreshNodes); // 向retrieveAllData传入回调函数
+    DB.getAll(refreshNodes); // 向retrieveAllData传入回调函数
     // 这样数据库一旦数据查询完毕/数据装在到数组中，就调用refreshNodes来展示数据
   }
 
   function refreshNodes(dataArr) { // 刷新一组节点，并展示出来
-    var fragment = document.createDocumentFragment();  // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
+    var fragment = document.createDocumentFragment(); // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
     var i;
     var len = dataArr.length;
 
@@ -64,7 +66,7 @@
   function refreshOneNode(data) { // 刷新一个list节点，并返回一个fragment
     var textDate = document.createTextNode(data.userDate + ': ');
     var textWrap = document.createElement('span');
-    var text = document.createTextNode(' ' + data.userEvent);
+    var text = document.createTextNode(' ' + data.event);
     var li = document.createElement('li');
     var span;
     var x;
@@ -89,15 +91,15 @@
     span.setAttribute('data-x', data.id);
     li.appendChild(span);
 
-    // 为每个节点添加data-index属性值，方便对li添加事件处理函数（准确的说是事件代理）
-    if (!li.getAttribute('data-index')) {
-      li.setAttribute('data-index', data.id);
+    // 为每个节点添加data-id属性值，方便对li添加事件处理函数（准确的说是事件代理）
+    if (!li.getAttribute('data-id')) {
+      li.setAttribute('data-id', data.id);
     }
-    return li;  // 返回创建的节点，进行进一步操作
+    return li; // 返回创建的节点，进行进一步操作
   }
 
 
-  /* add的事件处理函数  */
+  /* add的事件处理函数 */
 
   // 添加一条新list数据
   function addOneList() {
@@ -108,7 +110,7 @@
     var newNodeData;
     var newNode;
     var parent = document.querySelector('#myUl');
-    var dataId = DB.getPresentId();
+    var dataId = DB.getKey();
 
     if (value === '') {
       alert('请亲传入数据后重新提交~');
@@ -117,21 +119,21 @@
     // 整合为一个完整的数据
     newNodeData = {
       id: dataId,
-      userEvent: value,
+      event: value,
       finished: false,
       userDate: date
     };
 
     // 添加节点
     newNode = refreshOneNode(newNodeData);
-    newNode.setAttribute('data-index', newNodeData.id);
+    newNode.setAttribute('data-id', newNodeData.id);
     parent.insertBefore(newNode, parent.firstChild);
 
     // 重置输入框为0
     input.value = '';
 
     // 将新节点的数据添加到数据库中
-    DB.createOneData(newNodeData);
+    DB.add(newNodeData);
     return 0;
   }
 
@@ -165,7 +167,7 @@
   }
 
 
-  /* 添加回车键触发list的事件处理函数  */
+  /* 添加回车键触发list的事件处理函数 */
 
   function handleEnterEvent(e) {
     if (e.keyCode === 13) {
@@ -174,53 +176,52 @@
   }
 
 
-  /* 点击li的事件处理函数  */
+  /* 点击li的事件处理函数 */
 
   // 利用事件代理，将本来绑定在每个li上的事件处理函数绑定在ul上
   function handleLiClickDelegation(e) {
     var thisLi = e.target;
 
-    if (thisLi.getAttribute('data-index')) {
-      var dataIndex = parseInt(thisLi.getAttribute('data-index'), 10); // 获得对应id值, 并转化为数字，方便查询
-      DB.retrieveOneData(dataIndex, switchLi, [thisLi]);
+    if (thisLi.getAttribute('data-id')) {
+      var dataId = parseInt(thisLi.getAttribute('data-id'), 10); // 获得对应id值, 并转化为数字，方便查询
+      DB.get(dataId, switchLi, [thisLi]);
     }
   }
 
   function switchLi(data, thisLi) {
-    console.log(data);
     thisLi.finished = !data.finished; // 切换
-    if (thisLi.finished) {  // 添加样式
+    if (thisLi.finished) { // 添加样式
       thisLi.classList.add('checked');
     } else {
       thisLi.classList.remove('checked');
     }
-    data.finished = thisLi.finished;  // 修改数据
+    data.finished = thisLi.finished; // 修改数据
 
     // 把数据同步到数据库
-    DB.updateOneDate(data);
+    DB.update(data);
   }
 
 
-  /* li上[x]点击的事件处理函数（删除这一条list）  */
+  /* li上[x]点击的事件处理函数（删除这一条list） */
 
   function handleXClickDelagation(e) {
     if (e.target.className === 'close') {
-      var nodeId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
-      deleteOneData(nodeId);
+      var dataId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
+      deleteOneData(dataId);
     }
   }
 
-  function deleteOneData(nodeId) {
-    DB.deleteOneData(nodeId); // 从数据库中删除，并在删除后调用
+  function deleteOneData(dataId) {
+    DB.delete(dataId); // 从数据库中删除，并在删除后调用
     showData(); // 从修改后的数据库中重新展示list
   }
 
-  /* 显示所有 已/未 完成list的事件处理函数  */
+  /* 显示所有 已/未 完成list的事件处理函数 */
 
   function showWhetherDone(whether) {
     var key = 'finished'; // 设置key为finished
-    resetNodes();   // 先重置ul列表
-    DB.retrieveDataWhetherDone(whether, key, refreshNodes); // 从数据库中获取数据并用回调函数来展示
+    resetNodes(); // 先重置ul列表
+    DB.getWhether(whether, key, refreshNodes); // 从数据库中获取数据并用回调函数来展示
     console.log('显示数据完毕');
   }
 
@@ -234,11 +235,11 @@
     showWhetherDone(false);
   }
 
-  /* 删除所有数据的事件处理函数  */
+  /* 删除所有数据的事件处理函数 */
 
   // 删除所有list数据
   function deleteAllData() {
-    resetNodes();         // 重置DOM节点，先从视觉上删除
-    DB.deleteAllData();  // 从数据库中删除，真正的删除数据
+    resetNodes(); // 重置DOM节点，先从视觉上删除
+    DB.deleteAll(); // 从数据库中删除，真正的删除数据
   }
 }());

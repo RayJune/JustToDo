@@ -66,7 +66,7 @@ var handleIndexedDB = (function handleIndexedDB() {
 
   function getId(callback) {
     var storeHander = handleTransaction(true);
-    var range = rangeToAll();
+    var range = IDBKeyRange.lowerBound(0);
 
     storeHander.openCursor(range, 'next').onsuccess = function (e) {
       var cursor = e.target.result;
@@ -74,12 +74,30 @@ var handleIndexedDB = (function handleIndexedDB() {
       if (cursor) {
         cursor.continue();
         userID = cursor.value.id;
+        console.log(userID);
       } else {
         console.log('now id is:' +  userID);
         callback();
       }
     };
   }
+
+  // function getId() {
+  //   var transaction = myIndexedDB.db.transaction(['user'], 'readwrite');
+  //   var storeHander = transaction.objectStore('user');
+  //   var range = IDBKeyRange.lowerBound(0);
+
+  //   storeHander.openCursor(range, 'next').onsuccess = function get(e) {
+  //     var cursor = e.target.result;
+
+  //     if (cursor) {
+  //       cursor.continue();
+  //       myIndexedDB.userId = cursor.value.id;
+  //     } else {
+  //       console.log('现在的id为:' + myIndexedDB.userId);
+  //     }
+  //   };
+  // }
 
 
   /* CRUD */

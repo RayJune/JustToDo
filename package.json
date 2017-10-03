@@ -4,7 +4,7 @@
   "description": "### 颜值担当",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "browserify ./scripts/src/main.js -o ./scripts/src/bundle.js"
+    "build": "browserify ./scripts/src/main.js -o ./scripts/src/bundle.js"
   },
   "repository": {
     "type": "git",

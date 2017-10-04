@@ -3,7 +3,7 @@
   var DB = require('indexeddb-crud'); // 导入模块并重命名
   var dbConfig = { // 创建数据库配置参数
     name: 'justToDo',
-    version: '5',
+    version: '6',
     key: 'id',
     storeName: 'user'
   };
@@ -60,7 +60,7 @@
     }
     // 将fragment添加到DOM中，因为运用了fragment，所以只用操纵这一次DOM就好
     document.querySelector('#myUl').appendChild(fragment);
-    console.log('刷新，并展示DOM完毕');
+    console.log('刷新，并展示数据完毕');
   }
 
   function refreshOneNode(data) { // 刷新一个list节点，并返回一个fragment
@@ -95,6 +95,7 @@
     if (!li.getAttribute('data-id')) {
       li.setAttribute('data-id', data.id);
     }
+
     return li; // 返回创建的节点，进行进一步操作
   }
 
@@ -110,7 +111,6 @@
     var newNodeData;
     var newNode;
     var parent = document.querySelector('#myUl');
-    var dataId = DB.getKey();
 
     if (value === '') {
       alert('请亲传入数据后重新提交~');
@@ -118,7 +118,7 @@
     }
     // 整合为一个完整的数据
     newNodeData = {
-      id: dataId,
+      id: DB.getKey(),
       event: value,
       finished: false,
       userDate: date
@@ -131,9 +131,9 @@
 
     // 重置输入框为0
     input.value = '';
-
     // 将新节点的数据添加到数据库中
     DB.add(newNodeData);
+
     return 0;
   }
 
@@ -181,9 +181,10 @@
   // 利用事件代理，将本来绑定在每个li上的事件处理函数绑定在ul上
   function handleLiClickDelegation(e) {
     var thisLi = e.target;
+    var dataId;
 
     if (thisLi.getAttribute('data-id')) {
-      var dataId = parseInt(thisLi.getAttribute('data-id'), 10); // 获得对应id值, 并转化为数字，方便查询
+      dataId = parseInt(thisLi.getAttribute('data-id'), 10); // 获得对应id值, 并转化为数字，方便查询
       DB.get(dataId, switchLi, [thisLi]);
     }
   }
@@ -205,8 +206,10 @@
   /* li上[x]点击的事件处理函数（删除这一条list） */
 
   function handleXClickDelagation(e) {
+    var dataId;
+
     if (e.target.className === 'close') {
-      var dataId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
+      dataId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
       deleteOneData(dataId);
     }
   }

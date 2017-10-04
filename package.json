@@ -30,6 +30,6 @@
     "gulp-watch": "^4.3.11"
   },
   "dependencies": {
-    "indexeddb-crud": "^1.1.2"
+    "indexeddb-crud": "^1.2.0"
   }
 }

@@ -21,9 +21,10 @@
 
   // 数据库启动完成后显示数据，以及添加事件处理函数
   function addEventListeners() {
+    var myUl = document.querySelector('#myUl');
+
     showData(); // 将数据展示
     // 添加事件处理函数
-    var myUl = document.querySelector('#myUl');
     myUl.addEventListener('click', handleLiClickDelegation, false);
     myUl.addEventListener('click', handleXClickDelagation, false);
     document.getElementById('add').addEventListener('click', addOneList, false);
@@ -223,6 +224,7 @@
 
   function showWhetherDone(whether) {
     var key = 'finished'; // 设置key为finished
+
     resetNodes(); // 先重置ul列表
     DB.getWhether(whether, key, refreshNodes); // 从数据库中获取数据并用回调函数来展示
     console.log('显示数据完毕');

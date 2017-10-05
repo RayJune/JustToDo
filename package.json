@@ -10,8 +10,8 @@
     "uglifyjs": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js",
     "postuglifyjs": "npm run sourcemap",
     "sourcemap": "uglifyjs ./dist/scripts/bundle.js -o ./dist/scripts/bundle.min.js --source-map",
-    "build:css": "npm run postcss-cli",
-    "postcss-cli": "postcss ./src/styles/*.css --r",
+    "build:css": "npm run autoprefixer",
+    "autoprefixer": "postcss src/styles/*.css --use autoprefixer -r --no-map",
     "postbuild:css": "npm run cleancss",
     "cleancss": "cleancss -o ./dist/styles/basic.min.css ./src/styles/basic.css"
   },
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/RayJune/JustToDo#readme",
   "devDependencies": {
+    "autoprefixer": "^7.1.4",
     "babel-eslint": "^7.2.3",
     "browserify": "^14.4.0",
     "clean-css-cli": "^4.1.10",

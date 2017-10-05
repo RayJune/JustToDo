@@ -1,3 +1,1 @@
-gulpfile.js
-scripts/src/bundle.js
-scripts/dist
+./dist/scripts/*.js

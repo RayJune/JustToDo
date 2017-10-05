@@ -23,16 +23,16 @@
   function addEventListeners() {
     var myUl = document.querySelector('#myUl');
 
-    showData(); // 将数据展示
+    show(); // 将数据展示
     // 添加事件处理函数
     myUl.addEventListener('click', handleLiClickDelegation, false);
     myUl.addEventListener('click', handleXClickDelagation, false);
-    document.querySelector('#add').addEventListener('click', addOneList, false);
+    document.querySelector('#add').addEventListener('click', addList, false);
     document.addEventListener('keydown', handleEnterEvent, true);
-    document.querySelector('#done').addEventListener('click', showDataDone, false);
-    document.querySelector('#todo').addEventListener('click', showDataTodo, false);
-    document.querySelector('#all').addEventListener('click', showData, false);
-    document.querySelector('#delete').addEventListener('click', deleteAllData, false);
+    document.querySelector('#done').addEventListener('click', showDone, false);
+    document.querySelector('#todo').addEventListener('click', showTodo, false);
+    document.querySelector('#all').addEventListener('click', show, false);
+    document.querySelector('#delete').addEventListener('click', clear, false);
   }
 
   // 重置所有节点为0
@@ -44,8 +44,8 @@
     }
   }
 
-  // showData同时也是all的事件处理函数
-  function showData() { // 取出并展示所有list数据
+  // show同时也是all的事件处理函数
+  function show() { // 取出并展示所有list数据
     resetNodes(); // 先重置ul
     DB.getAll(refreshNodes); // 向retrieveAllData传入回调函数
     // 这样数据库一旦数据查询完毕/数据装在到数组中，就调用refreshNodes来展示数据
@@ -85,14 +85,7 @@
     li.appendChild(textWrap);
     // 在li的末尾添加span [x]
     addX(li, data.id);
-    // 根据完成的情况来确定是否添加完成样式
-    if (data.finished) {
-      li.classList.add('checked');
-    }
-    // 为每个节点添加data-id属性值，方便对li添加事件处理函数（准确的说是事件代理）
-    if (!li.getAttribute('data-id')) {
-      li.setAttribute('data-id', data.id);
-    }
+    decorateLi(li, data.finished, data.id);
 
     return li; // 返回创建的节点，进行进一步操作
   }
@@ -112,10 +105,21 @@
     li.appendChild(span);
   }
 
+  function decorateLi(li, finished, id) {
+    // 根据完成的情况来确定是否添加完成样式
+    if (finished) {
+      li.classList.add('checked');
+    }
+    // 为每个节点添加data-id属性值，方便对li添加事件处理函数（准确的说是事件代理）
+    if (!li.getAttribute('data-id')) {
+      li.setAttribute('data-id', id);
+    }
+  }
+
   /* add的事件处理函数 */
 
   // 添加一条新list数据
-  function addOneList() {
+  function addList() {
     var newNode;
     var parent = document.querySelector('#myUl');
     var newNodeData = integrateNewNodeData();
@@ -138,6 +142,7 @@
       return false;
     }
     input.value = '';
+    // 返回组装好的数据
     return {
       id: DB.getKey(),
       event: value,
@@ -180,7 +185,7 @@
 
   function handleEnterEvent(e) {
     if (e.keyCode === 13) {
-      addOneList();
+      addList();
     }
   }
 
@@ -207,7 +212,7 @@
     }
     data.finished = thisLi.finished; // 修改数据
     // 把数据同步到数据库
-    DB.update(data, showData); // 数据库修改完成后刷新列表，将完成的数据沉入列表下方
+    DB.update(data, show); // 数据库修改完成后刷新列表，将完成的数据沉入列表下方
   }
 
 
@@ -218,13 +223,13 @@
 
     if (e.target.className === 'close') {
       dataId = parseInt(e.target.getAttribute('data-x'), 10); // 取得之前设置的自定义属性，保存的就是数据库中对应的id
-      deleteOneData(dataId);
+      deleteList(dataId);
     }
   }
 
-  function deleteOneData(dataId) {
+  function deleteList(dataId) {
     DB.delete(dataId); // 从数据库中删除，并在删除后调用
-    showData(); // 从修改后的数据库中重新展示list
+    show(); // 从修改后的数据库中重新展示list
   }
 
   /* 显示所有 已/未 完成list的事件处理函数 */
@@ -238,20 +243,20 @@
   }
 
   // 显示所有已完成的list
-  function showDataDone() {
+  function showDone() {
     showWhetherDone(true);
   }
 
   // 显示所有未完成的list
-  function showDataTodo() {
+  function showTodo() {
     showWhetherDone(false);
   }
 
   /* 删除所有数据的事件处理函数 */
 
   // 删除所有list数据
-  function deleteAllData() {
+  function clear() {
     resetNodes(); // 重置DOM节点，先从视觉上删除
-    DB.deleteAll(); // 从数据库中删除，真正的删除数据
+    DB.clear(); // 从数据库中删除，真正的删除数据
   }
 }());

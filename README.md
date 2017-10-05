@@ -15,7 +15,7 @@
 - [x] 使用 event delegation
 - [x] `重构`再重构
 - [x] 使用 Eslint (airbnb-ES5) 以及其他好的 javascript pattern 来规范化代码，`提高代码可读性`
-- [x] `将操作 indexedDB 数据库的函数封装出来成为一个 npm package，实现解耦`，package 托管在： https://github.com/RayJune/indexeddb-crud （这是自己发表的第一个 npm package，very delight :smile: ）
+- [x] `将操作 indexedDB 数据库的函数封装出来成为一个 npm package，实现解耦`，package 托管在： https://www.npmjs.com/package/indexeddb-crud （这是自己发表的第一个 npm package，very delight :smile: ）
 - [x] 使用 gulp 包来组建 npm 的 workflow
 - [x] 抛弃 gulp，`构建 npm workflow 的本质就是 npm scripts`，用 npm scripts 重构 workflow (主要是使用 commonJS 以及 压缩 JS 和 CSS)
 - [ ] 把 webpack 拿来当做普通的 shell 一样使用

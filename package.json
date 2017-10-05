@@ -4,17 +4,17 @@
   "description": "就是去做",
   "main": ".eslintrc.js",
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js",
-    "postbuild:js": "npm run uglifyjs",
-    "uglifyjs": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js",
-    "postuglifyjs": "npm run sourcemap",
-    "sourcemap": "uglifyjs ./dist/scripts/bundle.js -o ./dist/scripts/bundle.min.js --source-map",
-    "build:css": "npm run autoprefixer",
-    "autoprefixer": "postcss src/styles/*.css --use autoprefixer -r --no-map",
-    "postbuild:css": "npm run cleancss",
-    "cleancss": "cleancss -o ./dist/styles/basic.min.css ./src/styles/basic.css"
-  },
+    "clean": "rm -rf dist/**/*",
+
+    "prebuild": "npm run clean",
+    "build": "npm run build:scripts && npm run build:styles",
+
+    "prebuild:scripts": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js",
+    "build:scripts": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js --source-map",
+
+    "prebuild:styles": "postcss src/styles/*.css --use autoprefixer -r --no-map",
+    "build:styles": "cleancss -o ./dist/styles/basic.min.css ./src/styles/basic.css"
+  },  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RayJune/JustToDo.git"
@@ -31,7 +31,7 @@
     "browserify": "^14.4.0",
     "clean-css-cli": "^4.1.10",
     "eslint": "^4.6.1",
-    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-config-airbnb-base": "^12.0.2",
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-react": "^7.3.0",
@@ -39,6 +39,6 @@
     "uglify-js": "^3.1.3"
   },
   "dependencies": {
-    "indexeddb-crud": "^1.2.0"
+    "indexeddb-crud": "^1.2.1"
   }
 }

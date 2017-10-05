@@ -113,10 +113,10 @@ var handleIndexedDB = (function handleIndexedDB() {
     var getDataKey = storeHander.get(key);  // get it by index
 
     getDataKey.onerror = function getDataKeyError() {
-      console.log('Pity, get (key:' + key + '\'s) data' + ' faild');
+      console.log('Pity, get (key:' + key + '\')s data' + ' faild');
     };
     getDataKey.onsuccess = function getDataKeySuccess() {
-      console.log('Great, get (key:' + key + '\'s) data succeed');
+      console.log('Great, get (key:' + key + '\')s data succeed');
       if (!callbackParaArr) {
         callback(getDataKey.result);
       } else {
@@ -208,10 +208,10 @@ var handleIndexedDB = (function handleIndexedDB() {
     var deleteOpt = storeHander.delete(key); // 将当前选中li的数据从数据库中删除
 
     deleteOpt.onerror = function error() {
-      console.log('delete (key:' + key + '\'s) value faild');
+      console.log('delete (key:' + key + '\')s value faild');
     };
     deleteOpt.onsuccess = function success() {
-      console.log('delete (key: ' + key +  '\'s) value succeed');
+      console.log('delete (key: ' + key +  '\')s value succeed');
       if (callback) {
         if (!callbackParaArr) {
           callback();
@@ -303,12 +303,12 @@ module.exports = handleIndexedDB;
     // 添加事件处理函数
     myUl.addEventListener('click', handleLiClickDelegation, false);
     myUl.addEventListener('click', handleXClickDelagation, false);
-    document.getElementById('add').addEventListener('click', addOneList, false);
+    document.querySelector('#add').addEventListener('click', addOneList, false);
     document.addEventListener('keydown', handleEnterEvent, true);
-    document.getElementById('done').addEventListener('click', showDataDone, false);
-    document.getElementById('todo').addEventListener('click', showDataTodo, false);
-    document.getElementById('all').addEventListener('click', showData, false);
-    document.getElementById('delete').addEventListener('click', deleteAllData, false);
+    document.querySelector('#done').addEventListener('click', showDataDone, false);
+    document.querySelector('#todo').addEventListener('click', showDataTodo, false);
+    document.querySelector('#all').addEventListener('click', showData, false);
+    document.querySelector('#delete').addEventListener('click', deleteAllData, false);
   }
 
   // 重置所有节点为0
@@ -328,13 +328,22 @@ module.exports = handleIndexedDB;
   }
 
   function refreshNodes(dataArr) { // 刷新一组节点，并展示出来
-    var fragment = document.createDocumentFragment(); // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
+    var fragmentUnfishied = document.createDocumentFragment(); // 利用fragment来包裹li们，这样可以将多次DOM操作减少为一次DOM操作
+    var fragmentFinished = document.createDocumentFragment();
+    var fragment = document.createDocumentFragment();
     var i;
     var len = dataArr.length;
 
+    // 将已完成的 list 沉入列表下方
     for (i = 0; i < len; i++) {
-      fragment.insertBefore(refreshOneNode(dataArr[i]), fragment.firstChild); // 每一个新加入的元素都排在最前面
+      if (dataArr[i].finished) {
+        fragmentFinished.insertBefore(refreshOneNode(dataArr[i]), fragmentFinished.firstChild); // 每一个新加入的元素都排在最前面
+      } else {
+        fragmentUnfishied.insertBefore(refreshOneNode(dataArr[i]), fragmentUnfishied.firstChild); // 每一个新加入的元素都排在最前面
+      }
     }
+    fragment.appendChild(fragmentUnfishied);
+    fragment.appendChild(fragmentFinished);
     // 将fragment添加到DOM中，因为运用了fragment，所以只用操纵这一次DOM就好
     document.querySelector('#myUl').appendChild(fragment);
     console.log('刷新，并展示数据完毕');
@@ -345,29 +354,17 @@ module.exports = handleIndexedDB;
     var textWrap = document.createElement('span');
     var text = document.createTextNode(' ' + data.event);
     var li = document.createElement('li');
-    var span;
-    var x;
 
     // 包装节点
     textWrap.appendChild(text);
     li.appendChild(textDate);
     li.appendChild(textWrap);
-
+    // 在li的末尾添加span [x]
+    addX(li, data.id);
     // 根据完成的情况来确定是否添加完成样式
     if (data.finished) {
       li.classList.add('checked');
     }
-
-    // 给每个li后面加上关闭按钮，并添加【x】删除事件
-    span = document.createElement('span');
-    x = document.createTextNode('\u00D7'); // unicode下的【x】
-    span.className = 'close';
-    span.appendChild(x);
-
-    // 为每个[x]添加data-x属性值，方便对span[x]添加事件处理函数（准确的说是事件代理）
-    span.setAttribute('data-x', data.id);
-    li.appendChild(span);
-
     // 为每个节点添加data-id属性值，方便对li添加事件处理函数（准确的说是事件代理）
     if (!li.getAttribute('data-id')) {
       li.setAttribute('data-id', data.id);
@@ -376,42 +373,53 @@ module.exports = handleIndexedDB;
     return li; // 返回创建的节点，进行进一步操作
   }
 
+  // 给一个li节点添加 span 【x】
+  function addX(li, id) {
+    var span;
+    var x;
+
+    // 给每个li后面加上关闭按钮
+    span = document.createElement('span');
+    x = document.createTextNode('\u00D7'); // unicode下的【x】
+    span.className = 'close';
+    span.appendChild(x);
+    // 为每个[x]添加data-x属性值，方便对span[x]添加事件处理函数（准确的说是事件代理）
+    span.setAttribute('data-x', id);
+    li.appendChild(span);
+  }
 
   /* add的事件处理函数 */
 
   // 添加一条新list数据
   function addOneList() {
-    // 首先获取输入框中的数据
+    var newNode;
+    var parent = document.querySelector('#myUl');
+    var newNodeData = integrateNewNodeData();
+
+    // 向DOM中添加节点
+    newNode = refreshOneNode(newNodeData);
+    newNode.setAttribute('data-id', newNodeData.id);
+    parent.insertBefore(newNode, parent.firstChild);
+    // 将新节点的数据添加到数据库中
+    DB.add(newNodeData);
+  }
+
+  function integrateNewNodeData() {
     var input = document.querySelector('#myInput');
     var value = input.value;
     var date = getNewDate('yyyy年MM月dd日 hh:mm');
-    var newNodeData;
-    var newNode;
-    var parent = document.querySelector('#myUl');
 
     if (value === '') {
       alert('请亲传入数据后重新提交~');
       return false;
     }
-    // 整合为一个完整的数据
-    newNodeData = {
+    input.value = '';
+    return {
       id: DB.getKey(),
       event: value,
       finished: false,
       userDate: date
     };
-
-    // 添加节点
-    newNode = refreshOneNode(newNodeData);
-    newNode.setAttribute('data-id', newNodeData.id);
-    parent.insertBefore(newNode, parent.firstChild);
-
-    // 重置输入框为0
-    input.value = '';
-    // 将新节点的数据添加到数据库中
-    DB.add(newNodeData);
-
-    return 0;
   }
 
   // 格式化日期，用来格式化li中的日期显示
@@ -462,7 +470,7 @@ module.exports = handleIndexedDB;
 
     if (thisLi.getAttribute('data-id')) {
       dataId = parseInt(thisLi.getAttribute('data-id'), 10); // 获得对应id值, 并转化为数字，方便查询
-      DB.get(dataId, switchLi, [thisLi]);
+      DB.get(dataId, switchLi, [thisLi]); // 获得DB的值，并传入回调函数 switchLi，以及参数 thisLi
     }
   }
 
@@ -474,9 +482,8 @@ module.exports = handleIndexedDB;
       thisLi.classList.remove('checked');
     }
     data.finished = thisLi.finished; // 修改数据
-
     // 把数据同步到数据库
-    DB.update(data);
+    DB.update(data, showData); // 数据库修改完成后刷新列表，将完成的数据沉入列表下方
   }
 
 

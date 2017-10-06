@@ -5,10 +5,15 @@
   "main": ".eslintrc.js",
   "scripts": {
     "clean": "rm -rf dist/**/*",
+
     "prebuild": "npm run clean",
     "build": "npm run build:scripts && npm run build:styles",
+
+    "testpipe": "browserify -o < ./src/scripts/main.js | uglifyjs -m -c -o > ./dist/scripts/bundle.min.js --source-map",
+
     "prebuild:scripts": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js",
     "build:scripts": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js --source-map",
+
     "prebuild:styles": "postcss src/styles/*.css --use autoprefixer -r --no-map",
     "build:styles": "cleancss -o ./dist/styles/basic.min.css ./src/styles/basic.css"
   },

@@ -54,29 +54,46 @@
   // refresh lists of node, and show it
   function refreshNodes(dataArr) {
     // use fragment to reduce DOM operating
-    var fragmentUnfishied = document.createDocumentFragment();
-    var fragmentFinished = document.createDocumentFragment();
+    var unfishiedFragment = document.createDocumentFragment();
+    var finishedFragment = document.createDocumentFragment();
     var fragment = document.createDocumentFragment();
 
     // put the finished item to the bottom
     dataArr.map(function manageData(data) {
       if (data.finished) {
-        fragmentFinished.insertBefore(refreshOneNode(data), fragmentFinished.firstChild);
+        finishedFragment.insertBefore(createNode(data), finishedFragment.firstChild);
       } else {
-        fragmentUnfishied.insertBefore(refreshOneNode(data), fragmentUnfishied.firstChild);
+        unfishiedFragment.insertBefore(createNode(data), unfishiedFragment.firstChild);
       }
     });
 
-    fragment.appendChild(fragmentUnfishied);
-    fragment.appendChild(fragmentFinished);
-    // operate DOM
-    document.querySelector('#myUl').appendChild(fragment);
+    fragment.appendChild(unfishiedFragment);
+    fragment.appendChild(finishedFragment);
+    document.querySelector('#myUl').appendChild(fragment); // operate DOM
     console.log('Refresh list, and show succeed');
   }
 
   // accept a data, and return a li node
-  function refreshOneNode(data) {
+  function createNode(data) {
     var li = document.createElement('li');
+
+    decorateLi(li, data); // decorate li
+
+    return li; // return a li node
+  }
+
+  // add span [x] to li's tail
+  function addXToLi(li, id) {
+    var span = document.createElement('span');
+    var x = document.createTextNode('\u00D7'); // unicode -> x
+
+    span.appendChild(x);
+    span.className = 'close'; // add style
+    setDataProperty(span, 'data-x', id); // add property to span (data-x), for handleXClickDelagation
+    li.appendChild(span);
+  }
+
+  function decorateLi(li, data) {
     var textDate = document.createTextNode(data.userDate + ': ');
     var textWrap = document.createElement('span');
     var text = document.createTextNode(' ' + data.event);
@@ -85,36 +102,16 @@
     textWrap.appendChild(text);
     li.appendChild(textDate);
     li.appendChild(textWrap);
-    // add span [x] to li's tail
-    addX(li, data.id);
-    // decorate li
-    decorateLi(li, data.finished, data.id);
-
-    return li; // return a node
-  }
-
-  // add span [x] to li's tail
-  function addX(li, id) {
-    var span = document.createElement('span');
-    var x = document.createTextNode('\u00D7'); // unicode -> x
-
-    span.appendChild(x);
-    // add style
-    span.className = 'close';
-    // add property to span (data-x), for handleXClickDelagation
-    span.setAttribute('data-x', id);
-    li.appendChild(span);
-  }
-
-  function decorateLi(li, finished, id) {
-    // add css-style to it (according to it's data.finished value)
-    if (finished) {
+    if (data.finished) {  // add css-style to it (according to it's data.finished value)
       li.classList.add('checked');
     }
-    // add property to li (data-id)，for  handleLiClickDelegation
-    li.setAttribute('data-id', id);
+    setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  handleLiClickDelegation
+    addXToLi(li, data.id); // add span [x] to li's tail
   }
 
+  function setDataProperty(target, name, data) {
+    target.setAttribute(name, data);
+  }
 
   /* add's event handler */
 
@@ -130,10 +127,10 @@
       return false;
     }
     newNodeData = integrateNewNodeData(inputValue); // integrate a NewNode data
-    newNode = refreshOneNode(newNodeData);  // generate a new li node
+    newNode = createNode(newNodeData);  // generate a new li node
     parent.insertBefore(newNode, parent.firstChild);
+    inputValue = '';  // reset input'values
     DB.add(newNodeData);  // add to DB
-    inputValue = '';
 
     return 0;
   }
@@ -166,8 +163,7 @@
     var dataId;
 
     if (thisLi.getAttribute('data-id')) {
-      // use previously stored data
-      dataId = parseInt(thisLi.getAttribute('data-id'), 10);
+      dataId = parseInt(thisLi.getAttribute('data-id'), 10); // use previously stored data
       DB.get(dataId, switchLi, [thisLi]); // pass switchLi and param [thisLi] as callback
     }
   }
@@ -179,8 +175,7 @@
     } else {
       thisLi.classList.remove('checked');
     }
-    data.finished = thisLi.finished;  // toggle
-
+    data.finished = thisLi.finished;  // toggle data.finished
     DB.update(data, show); // update DB
   }
 

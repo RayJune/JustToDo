@@ -20,19 +20,19 @@
 
   /* common use functions */
 
-  // handle eventListeners when db is opened succeed
+  // when db is opened succeed, add EventListeners
   function addEventListeners() {
     var myUl = document.querySelector('#myUl');
 
     show(); // show data
     // add all eventListener
-    myUl.addEventListener('click', handleLiClickDelegation, false);
-    myUl.addEventListener('click', handleXClickDelagation, false);
+    myUl.addEventListener('click', liClickDelegationHandler, false);
+    myUl.addEventListener('click', xClickDelagationHandler, false);
     document.querySelector('#add').addEventListener('click', addList, false);
-    document.addEventListener('keydown', handleEnterEvent, true);
+    document.addEventListener('keydown', enterEventHandler, true);
     document.querySelector('#done').addEventListener('click', showDone, false);
     document.querySelector('#todo').addEventListener('click', showTodo, false);
-    document.querySelector('#all').addEventListener('click', show, false);
+    document.querySelector('#show').addEventListener('click', show, false);
     document.querySelector('#clear').addEventListener('click', clear, false);
   }
 
@@ -89,7 +89,7 @@
 
     span.appendChild(x);
     span.className = 'close'; // add style
-    setDataProperty(span, 'data-x', id); // add property to span (data-x), for handleXClickDelagation
+    setDataProperty(span, 'data-x', id); // add property to span (data-x), for xClickDelagationHandler
     li.appendChild(span);
   }
 
@@ -105,7 +105,7 @@
     if (data.finished) {  // add css-style to it (according to it's data.finished value)
       li.classList.add('checked');
     }
-    setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  handleLiClickDelegation
+    setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  liClickDelegationHandler
     addXToLi(li, data.id); // add span [x] to li's tail
   }
 
@@ -138,7 +138,7 @@
   function integrateNewNodeData(value) {
     // return integrated data
     return {
-      id: DB.getKey(),
+      id: DB.getNewDataKey(),
       event: value,
       finished: false,
       userDate: getNewDate('yyyy年MM月dd日 hh:mm')
@@ -148,7 +148,7 @@
 
   /* enter's event handler */
 
-  function handleEnterEvent(e) {
+  function enterEventHandler(e) {
     if (e.keyCode === 13) {
       addList();
     }
@@ -158,7 +158,7 @@
   /* li's event handler */
 
   // use event-delegation
-  function handleLiClickDelegation(e) {
+  function liClickDelegationHandler(e) {
     var thisLi = e.target;
     var dataId;
 
@@ -183,7 +183,7 @@
   /* [x]'s event handler */
 
   // use event-delegation, too
-  function handleXClickDelagation(e) {
+  function xClickDelagationHandler(e) {
     var dataId;
 
     if (e.target.className === 'close') {

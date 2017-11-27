@@ -25,12 +25,12 @@ h2 {
 } 
 
 .main-nav {
-    height: 3.8rem;
-    line-height: 3.8rem;
-    background-color: #456;
-    overflow: hidden;
-    color: #fff;
-    text-align: center;
+	height: 3.8rem;
+	line-height: 3.8rem;
+	background-color: #456;
+	overflow: hidden;
+	color: #fff;
+	text-align: center;
 }
 
 .main-nav .inner a {
@@ -95,22 +95,22 @@ h2 {
 }
 
 footer {
-    padding: 1rem 3.6rem 1.6rem 1rem;
-    line-height: 1.4;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    overflow: hidden;
-    position:relative;
-    top: 5.6rem;
-    right: -6rem;
-  }
+	padding: 1rem 3.6rem 1.6rem 1rem;
+	line-height: 1.4;
+	-webkit-box-sizing: border-box;
+					box-sizing: border-box;
+	overflow: hidden;
+	position:relative;
+	top: 5.6rem;
+}
 footer a {
-    text-decoration: none;
-    color: #2C3E50 !important;
+	text-decoration: none;
+	color: #2C3E50 !important;
 }
 footer a:hover {
 	color: #0D8 !important;
 }
 span {
-    color: #0D8 !important;
+	color: #0D8 !important;
+	padding-left: 6px;
 }

@@ -1,13 +1,13 @@
 'use strict';
 (function goToDo() {
   var DB = require('indexeddb-crud'); // import module
-  var dbConfig = { // config db parameters
+  var dbConfig = {
     name: 'justToDo',
     version: '6',
     key: 'id',
     storeName: 'user'
   };
-  dbConfig.dataDemo = { // config data structure
+  dbConfig.dataDemo = {
     id: 0,
     event: 0,
     finished: true,
@@ -18,18 +18,18 @@
   DB.init(dbConfig, addEventListeners);
 
 
-  /* common use functions */
+  /* common functions */
 
   // when db is opened succeed, add EventListeners
   function addEventListeners() {
     var myUl = document.querySelector('#myUl');
 
-    show(); // show data
+    show();
     // add all eventListener
     myUl.addEventListener('click', liClickDelegationHandler, false);
     myUl.addEventListener('click', xClickDelagationHandler, false);
     document.querySelector('#add').addEventListener('click', addList, false);
-    document.addEventListener('keydown', enterEventHandler, true);
+    document.addEventListener('keydown', enterEventHandler, false);
     document.querySelector('#done').addEventListener('click', showDone, false);
     document.querySelector('#todo').addEventListener('click', showTodo, false);
     document.querySelector('#show').addEventListener('click', show, false);
@@ -38,11 +38,11 @@
 
   // get all data from DB and show it
   function show() {
-    resetNodes(); // reset dom first
-    DB.getAll(refreshNodes); // pass callback to it
+    resetNodes();
+    DB.getAll(refreshNodes); // pass refreshNodes as a callback
   }
 
-  // reset all nodes (just reset dom tempory, not db)
+  // reset all nodes (just reset DOM, not db)
   function resetNodes() {
     var root = document.querySelector('#myUl');
 
@@ -51,38 +51,50 @@
     }
   }
 
-  // refresh lists of node, and show it
   function refreshNodes(dataArr) {
     // use fragment to reduce DOM operating
     var unfishiedFragment = document.createDocumentFragment();
     var finishedFragment = document.createDocumentFragment();
-    var fragment = document.createDocumentFragment();
+    var mainFragment = document.createDocumentFragment();
 
     // put the finished item to the bottom
-    dataArr.map(function manageData(data) {
+    dataArr.map(function classifyData(data) {
       if (data.finished) {
         finishedFragment.insertBefore(createNode(data), finishedFragment.firstChild);
       } else {
         unfishiedFragment.insertBefore(createNode(data), unfishiedFragment.firstChild);
       }
     });
-
-    fragment.appendChild(unfishiedFragment);
-    fragment.appendChild(finishedFragment);
-    document.querySelector('#myUl').appendChild(fragment); // operate DOM
+    mainFragment.appendChild(unfishiedFragment);
+    mainFragment.appendChild(finishedFragment);
+    document.querySelector('#myUl').appendChild(mainFragment); // add it to DOM
     console.log('Refresh list, and show succeed');
   }
 
-  // accept a data, and return a li node
   function createNode(data) {
     var li = document.createElement('li');
 
     decorateLi(li, data); // decorate li
 
-    return li; // return a li node
+    return li;
   }
 
-  // add span [x] to li's tail
+  function decorateLi(li, data) {
+    var textDate = document.createTextNode(data.userDate + ': ');
+    var textWrap = document.createElement('span');
+    var text = document.createTextNode(' ' + data.event);
+
+    // wrap as a node
+    textWrap.appendChild(text);
+    li.appendChild(textDate);
+    li.appendChild(textWrap);
+    if (data.finished) {  // add css-style to it (according to it's data.finished value)
+      li.classList.add('checked'); // add style
+    }
+    addXToLi(li, data.id); // add span [x] to li's tail
+    setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  liClickDelegationHandler
+  }
+
   function addXToLi(li, id) {
     var span = document.createElement('span');
     var x = document.createTextNode('\u00D7'); // unicode -> x
@@ -93,50 +105,36 @@
     li.appendChild(span);
   }
 
-  function decorateLi(li, data) {
-    var textDate = document.createTextNode(data.userDate + ': ');
-    var textWrap = document.createElement('span');
-    var text = document.createTextNode(' ' + data.event);
-
-    // wrap node
-    textWrap.appendChild(text);
-    li.appendChild(textDate);
-    li.appendChild(textWrap);
-    if (data.finished) {  // add css-style to it (according to it's data.finished value)
-      li.classList.add('checked');
-    }
-    setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  liClickDelegationHandler
-    addXToLi(li, data.id); // add span [x] to li's tail
-  }
-
   function setDataProperty(target, name, data) {
     target.setAttribute(name, data);
   }
 
+
   /* add's event handler */
 
-  // add one new list
   function addList() {
-    var inputValue = document.querySelector('#myInput').value;
-    var parent = document.querySelector('#myUl');
+    var inputValue = document.querySelector('#input').value;
+    var parent;
     var newNodeData;
     var newNode;
 
     if (inputValue === '') {
       alert('please input a real data~');
+
       return false;
     }
-    newNodeData = integrateNewNodeData(inputValue); // integrate a NewNode data
-    newNode = createNode(newNodeData);  // generate a new li node
-    parent.insertBefore(newNode, parent.firstChild);
-    inputValue = '';  // reset input'values
-    DB.add(newNodeData);  // add to DB
+
+    newNodeData = integrateNewNodeData(inputValue);
+    newNode = createNode(newNodeData);
+    parent = document.querySelector('#myUl');
+    parent.insertBefore(newNode, parent.firstChild); // push newNode to first
+    document.querySelector('#input').value = '';  // reset input's values
+    DB.add(newNodeData);
 
     return 0;
   }
 
   function integrateNewNodeData(value) {
-    // return integrated data
     return {
       id: DB.getNewDataKey(),
       event: value,
@@ -169,14 +167,14 @@
   }
 
   function switchLi(data, thisLi) {
-    thisLi.finished = !data.finished; // switch
+    thisLi.finished = !data.finished;
     if (thisLi.finished) {
       thisLi.classList.add('checked');
     } else {
       thisLi.classList.remove('checked');
     }
     data.finished = thisLi.finished;  // toggle data.finished
-    DB.update(data, show); // update DB
+    DB.update(data, show);
   }
 
 
@@ -203,17 +201,15 @@
   function showWhetherDone(whether) {
     var condition = 'finished'; // set 'finished' as condition
 
-    resetNodes(); // reset nodes firstly
-    DB.getWhether(whether, condition, refreshNodes); // pass callback function
+    resetNodes();
+    DB.getWhether(whether, condition, refreshNodes); // pass refreshNodes as callback function
     console.log('Aha, show data succeed');
   }
 
-  // show item done
   function showDone() {
     showWhetherDone(true);
   }
 
-  // show item todo
   function showTodo() {
     showWhetherDone(false);
   }

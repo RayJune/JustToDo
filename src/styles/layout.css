@@ -1,7 +1,6 @@
-html {
+:root {
 	height: 100%;
 	max-height: 100%;
-	font-size: 10px;
 	font-size: 62.5%;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -11,7 +10,7 @@ body {
 	height: 100%;
 	max-height: 100%;
 	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-	font-size: 16px;
+	font-size: 1.6rem;
 	line-height: 1.6;
 	color: #3A4145;
 	background: #ECF0F1;
@@ -21,7 +20,7 @@ body {
 }
 
 h2 {
-  margin-top: 10px;
+  margin-top: 1rem;
 } 
 
 .main-nav {
@@ -36,10 +35,11 @@ h2 {
 .main-nav .inner a {
 	text-decoration: none;
 	color: #fff;
-	transition:background-color .66s;
-	-moz-transition:background-color .66s; /* Firefox 4 */
-	-webkit-transition:background-color .66s; /* Safari and Chrome */
-	-o-transition:background-color .66s; /* Opera */
+	border-radius: 0.6rem;
+	transition:background-color 0.66s;
+	-moz-transition:background-color 0.66s; /* Firefox 4 */
+	-webkit-transition:background-color 0.66s; /* Safari and Chrome */
+	-o-transition:background-color 0.66s; /* Opera */
 }
 .main-nav .inner a:hover {
 	background-color: #0D8;
@@ -64,13 +64,10 @@ h2 {
 
 .page-title {
 	margin:0 auto;
-	font-size: 5rem;
-	font-weight: 700;
+	font-weight: bold;
 	font-family: "STFangsong","Songti TC","simsun",Arial,serif;
-	color: #2C3E50;
   background-color: #fff;
 	height: 8rem;
-	line-height: 8rem;
 	-webkit-animation: fade-in-down 0.6s;
 	animation: fade-in-down 0.6s;
 	-webkit-animation-delay: 0.2s;
@@ -78,10 +75,10 @@ h2 {
 	text-align: center;
 }
 
-
 .page-title a {
-  margin: 0 auto;
-  color: #2C3E50 !important;
+	line-height: 8rem;
+	font-size: 5rem;
+	color: #2C3E50;
   text-decoration: none;
 	overflow: hidden;
 	transition:color .88s;
@@ -91,7 +88,7 @@ h2 {
 }
 
 .page-title a:hover {
-	color: #0D8 !important;
+	color: #0D8;
 }
 
 footer {
@@ -105,12 +102,12 @@ footer {
 }
 footer a {
 	text-decoration: none;
-	color: #2C3E50 !important;
+	color: #2C3E50;
 }
 footer a:hover {
-	color: #0D8 !important;
+	color: #0D8;
 }
 span {
-	color: #0D8 !important;
-	padding-left: 6px;
+	color: #0D8;
+	padding-left: 0.6rem;
 }

@@ -317,7 +317,7 @@ module.exports = indexedDBHandler;
     var mainFragment = document.createDocumentFragment();
 
     // put the finished item to the bottom
-    dataArr.map(function classifyData(data) {
+    dataArr.forEach(function classifyData(data) {
       if (data.finished) {
         finishedFragment.insertBefore(createNode(data), finishedFragment.firstChild);
       } else {

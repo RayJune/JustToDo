@@ -281,12 +281,12 @@ module.exports = indexedDBHandler;
 
   // when db is opened succeed, add EventListeners
   function addEventListeners() {
-    var myUl = document.querySelector('#myUl');
+    var list = document.querySelector('#list');
 
     show();
     // add all eventListener
-    myUl.addEventListener('click', liClickDelegationHandler, false);
-    myUl.addEventListener('click', xClickDelagationHandler, false);
+    list.addEventListener('click', liClickDelegationHandler, false);
+    list.addEventListener('click', xClickDelagationHandler, false);
     document.querySelector('#add').addEventListener('click', addList, false);
     document.addEventListener('keydown', enterEventHandler, false);
     document.querySelector('#done').addEventListener('click', showDone, false);
@@ -303,7 +303,7 @@ module.exports = indexedDBHandler;
 
   // reset all nodes (just reset DOM, not db)
   function resetNodes() {
-    var root = document.querySelector('#myUl');
+    var root = document.querySelector('#list');
 
     while (root.hasChildNodes()) {
       root.removeChild(root.firstChild); // this is the best way to clean childNodes
@@ -326,7 +326,7 @@ module.exports = indexedDBHandler;
     });
     mainFragment.appendChild(unfishiedFragment);
     mainFragment.appendChild(finishedFragment);
-    document.querySelector('#myUl').appendChild(mainFragment); // add it to DOM
+    document.querySelector('#list').appendChild(mainFragment); // add it to DOM
     console.log('Refresh list, and show succeed');
   }
 
@@ -385,7 +385,7 @@ module.exports = indexedDBHandler;
 
     newNodeData = integrateNewNodeData(inputValue);
     newNode = createNode(newNodeData);
-    parent = document.querySelector('#myUl');
+    parent = document.querySelector('#list');
     parent.insertBefore(newNode, parent.firstChild); // push newNode to first
     document.querySelector('#input').value = '';  // reset input's values
     DB.add(newNodeData);

@@ -1,26 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Just To Do</title>
     <link rel="stylesheet" type="text/css" href="./dist/styles/main.min.css">
 </head>
 <body>
-    <nav class="main-nav">
+    <header class="clearfix">
       <div class="inner">
         <a href="" class="nav-item design">设计理念</a>
         <a role="about" class="nav-item about" href="http://rayjune.xyz/about">关于RayJune</a>
         <a role="subscribe" class="nav-item subscribe" href="http://rayjune.xyz/atom.xml">订阅Blog</a>
       </div>
-    </nav>
+      <div class="page-title"><a href="http://rayjune.xyz">就是去做</a></div>
+    </header>
 
-    <section class="page-title"><a href="http://rayjune.xyz">就是去做</a></section>
-
-    <section class="operate-area">
+    <div class="operate-area">
         <h2>Just Do It</h2>
-        <input class="form-control " id="input" autofocus type="text " placeholder="做点什么罢骚年 ">
+        <input id="input" autofocus type="text" placeholder="Just do something, bro">
         <button id="add">添加事项</button>
         <div class="buttons">
           <button id="done">已完成</button>
@@ -28,23 +27,24 @@
           <button id="show">显示所有</button>
           <button id="clear">删除所有</button>
         </div>
-    </section>
+    </div>
 
-    <section class="show-area">
-    <ul id="myUl">
-      <li>2017/08/22: 六点起床</li>
-      <li class="checked">2017/08/20: 睡醒两道算法题</li>
-      <li>2017/08/01: 图书馆呆一天</li>
-      <li>2017/07/01: 睡前回顾今天所学</li>
-    </ul>
-    </section>
+    <div class="show-area">
+      <ul id="list">
+        <li>2017/08/22: 六点起床</li>
+        <li class="checked">2017/08/20: 睡醒两道算法题</li>
+        <li>2017/08/01: 图书馆呆一天</li>
+        <li>2017/07/01: 睡前回顾今天所学</li>
+      </ul>
+    </div>
 
     <footer>
       <a href="">就是去做</a> © 2017 All rights reserved.
-      <div class="author">Created by <strong><span><a href="https://github.com/rayjune">RayJune</a></strong> </em></section>
+      <div class="author">
+        Created by <strong><span><a href="https://github.com/rayjune">RayJune</a></span></strong>
+      </div>
     </footer>
     <script src="./dist/scripts/bundle.min.js"></script>
     
-</body>
-
+  </body>
 </html>

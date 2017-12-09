@@ -1,9 +1,13 @@
-/*使用flexbox对按钮布局 */
+h2 {
+  margin-top: 1rem;
+} 
+
 .main-content{
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
 }
+
 .content{
 	-webkit-box-flex:1;
 	    -ms-flex:1;
@@ -12,17 +16,17 @@
 }
 
 .operate-area {
-    margin: 15.6rem auto 2rem;
-    padding: 2rem;
-    padding-top: 0.8rem;
-    padding-bottom: 0.66rem;
-    display: block;
-    width: 66%;
-    height: 21rem;
-    word-wrap: break-word;
-    background-color: #fff;
-    overflow: hidden;
-    font-size: 2rem;
+  margin: 15.6rem auto 2rem;
+  padding: 2rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.66rem;
+  display: block;
+  width: 66%;
+  height: 21rem;
+  word-wrap: break-word;
+  background-color: #fff;
+  overflow: hidden;
+  font-size: 2rem;
 }
 
 input {
@@ -88,6 +92,7 @@ ul li {
   padding: 1.2rem 0.8rem 1.2rem 4rem;
   background: #eee;
   font-size: 1.8rem;
+  position: relative; /* for .close */
   -webkit-transition: 0.2s;
   transition: 0.2s;
   -webkit-user-select: none;

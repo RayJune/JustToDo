@@ -1,17 +1,22 @@
 :root {
-	height: 100%;
 	font-size: 62.5%;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
 }
 
 body {
-	max-height: 100%;
+	height: calc(100% - 15.6rem - 7.5rem); /* subtract header and footer margin */
 	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 	font-size: 1.6rem;
 	line-height: 1.6;
 	color: #3A4145;
 	background: #ECF0F1;
-	font-weight: normal;
 	text-rendering: geometricPrecision;
 	-webkit-font-smoothing: antialiased;
 }
@@ -36,12 +41,11 @@ a {
 	-webkit-transition:color 0.36s; /* Safari and Chrome */
 	-o-transition:color 0.36s; /* Opera */
 }
-
 a:hover {
 	color: #0D8;
 }
 
-header nav a {
+nav a {
 	font-size: 1.66rem;
 	color: #fff;
 	border-radius: 0.6rem;
@@ -50,26 +54,25 @@ header nav a {
 	-webkit-transition:background-color 0.66s; /* Safari and Chrome */
 	-o-transition:background-color 0.66s; /* Opera */
 }
-
-header nav a:hover {
+nav a:hover {
 	background-color: #0D8;
 	color: #fff;
 }
 
-header #design {
+.design {
 	float: left;
 	margin-left: 5%;
 }
-header #about {
+.about {
 	float: left;
-	margin-left: 2%;
+	margin-left: 3%;
 }
-header #subscribe {
+.subscribe {
 	float: right;
-	margin-right: 6%;
+	margin-right: 7%;
 }
 
-header .page-title {
+.page-title {
 	margin-left: auto;
 	margin-right: auto;
 	font-family: "STFangsong","Songti TC","simsun",Arial,serif;
@@ -79,7 +82,7 @@ header .page-title {
 	height: 8rem;
 }
 
-header .page-title a {
+.page-title a {
 	line-height: 8rem;
 	font-size: 5rem;
 	transition:color 0.88s;
@@ -89,9 +92,9 @@ header .page-title a {
 }
 
 footer {
-	margin-top: 2rem;
+	height: 7.5rem;
 	padding: 1rem 3.6rem 1.6rem 1rem;
-	line-height: 1.4;
+	line-height: 1.5;
 }
 
 .clearfix::before, .clearfix::after {

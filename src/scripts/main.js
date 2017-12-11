@@ -39,7 +39,7 @@
   // get all data from DB and show it
   function show() {
     resetNodes();
-    DB.getAll(refreshNodes); // pass refreshNodes as a callback
+    DB.getAll(refresh); // pass refresh as a callback
   }
 
   // reset all nodes (just reset DOM, not db)
@@ -51,12 +51,30 @@
     }
   }
 
+  function refresh(dataArr) {
+    if (dataArr.length === 0) {
+      initListShow();
+    } else {
+      refreshNodes(dataArr);
+    }
+  }
+
+  function initListShow() {
+    var initList = document.createElement('li');
+    var text = document.createTextNode('Welcome~, try to add your first to-do list : )');
+
+    setDataProperty(initList, 'data-id', 'init');
+    initList.appendChild(text);
+
+    document.querySelector('#list').appendChild(initList);
+    console.log('init list');
+  }
+
   function refreshNodes(dataArr) {
     // use fragment to reduce DOM operating
     var unfishiedFragment = document.createDocumentFragment();
     var finishedFragment = document.createDocumentFragment();
     var mainFragment = document.createDocumentFragment();
-
     // put the finished item to the bottom
     dataArr.forEach(function classifyData(data) {
       if (data.finished) {
@@ -110,6 +128,14 @@
   }
 
 
+  /* enter's event handler */
+
+  function enterEventHandler(e) {
+    if (e.keyCode === 13) {
+      addList();
+    }
+  }
+
   /* add's event handler */
 
   function addList() {
@@ -120,10 +146,9 @@
 
     if (inputValue === '') {
       alert('please input a real data~');
-
       return false;
     }
-
+    checkInitList();
     newNodeData = integrateNewNodeData(inputValue);
     newNode = createNode(newNodeData);
     parent = document.querySelector('#list');
@@ -134,6 +159,12 @@
     return 0;
   }
 
+  function checkInitList() {
+    if (document.querySelector('#list').firstChild.getAttribute('data-id') === 'init') {
+      resetNodes();
+    }
+  }
+
   function integrateNewNodeData(value) {
     return {
       id: DB.getNewDataKey(),
@@ -141,15 +172,6 @@
       finished: false,
       userDate: getNewDate('yyyy年MM月dd日 hh:mm')
     };
-  }
-
-
-  /* enter's event handler */
-
-  function enterEventHandler(e) {
-    if (e.keyCode === 13) {
-      addList();
-    }
   }
 
 
@@ -202,7 +224,7 @@
     var condition = 'finished'; // set 'finished' as condition
 
     resetNodes();
-    DB.getWhether(whether, condition, refreshNodes); // pass refreshNodes as callback function
+    DB.getWhether(whether, condition, refreshNodes); // pass refresh as callback function
     console.log('Aha, show data succeed');
   }
 
@@ -221,7 +243,6 @@
     resetNodes(); // clear nodes visually
     DB.clear(); // clear data indeed
   }
-
 
   /* other function */
 

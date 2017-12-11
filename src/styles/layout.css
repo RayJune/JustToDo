@@ -11,14 +11,12 @@
 }
 
 body {
-	height: calc(100% - 15.6rem - 7.5rem); /* subtract header and footer margin */
+	height: calc(100% - 15.6rem);
 	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 	font-size: 1.6rem;
 	line-height: 1.6;
 	color: #3A4145;
 	background: #ECF0F1;
-	text-rendering: geometricPrecision;
-	-webkit-font-smoothing: antialiased;
 }
 
 header {
@@ -36,10 +34,8 @@ header {
 a {
 	text-decoration: none;
 	color: #2c3e50;
+	-webkit-transition:color 0.36s;
 	transition:color 0.36s;
-	-moz-transition:color 0.36s; /* Firefox 4 */
-	-webkit-transition:color 0.36s; /* Safari and Chrome */
-	-o-transition:color 0.36s; /* Opera */
 }
 a:hover {
 	color: #0D8;
@@ -49,16 +45,15 @@ nav a {
 	font-size: 1.66rem;
 	color: #fff;
 	border-radius: 0.6rem;
+	-webkit-transition:background-color 0.66s;
 	transition:background-color 0.66s;
-	-moz-transition:background-color 0.66s; /* Firefox 4 */
-	-webkit-transition:background-color 0.66s; /* Safari and Chrome */
-	-o-transition:background-color 0.66s; /* Opera */
 }
 nav a:hover {
 	background-color: #0D8;
 	color: #fff;
 }
 
+/* 导航栏上三个元素的位置设置 */
 .design {
 	float: left;
 	margin-left: 5%;
@@ -85,10 +80,8 @@ nav a:hover {
 .page-title a {
 	line-height: 8rem;
 	font-size: 5rem;
+	-webkit-transition:color 0.88s;
 	transition:color 0.88s;
-	-moz-transition:color 0.88s; /* Firefox 4 */
-	-webkit-transition:color 0.88s; /* Safari and Chrome */
-	-o-transition:color 0.88s; /* Opera */
 }
 
 footer {

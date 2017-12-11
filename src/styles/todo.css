@@ -1,18 +1,19 @@
 /* 用来设置 sticky footer */
 .content-area {
-  min-height: 100%;
+  min-height: calc(100% - 7.5rem); /* 减去 header 和 footer  */
+  margin-top: 15.6rem;
 }
 
 /* 操作区样式 */
 .operate-area {
-  margin: 15.6rem auto 0;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0.8rem 2rem 0.66rem;
-  display: block;
   width: 66%;
   height: 22.46rem;
+  font-size: 2rem;
   word-wrap: break-word;
   background-color: #fff;
-  font-size: 2rem;
 }
 
 h2 {
@@ -35,6 +36,7 @@ h2 {
 
 /* button 的统一样式 */
 button {
+  cursor: pointer;
   padding: 0.8rem 0;
   font-size: 1.56rem;
   line-height: 1;
@@ -75,7 +77,7 @@ ul {
   background-color: #fff;
 }
 
-ul li {
+li {
   cursor: pointer;
   padding: 1.2rem 0.8rem 1.2rem 4rem;
   background: #eee;
@@ -90,24 +92,24 @@ ul li {
 }
 
 /* 奇数时使用不同的颜色 */
-ul li:nth-child(odd) {
+li:nth-child(odd) {
   background: #f9f9f9;
 }
 
 /* hover时背景色改变 */
-ul li:hover {
+li:hover {
   background: #ddd;
 }
 
 /* 当被选中，文字中加横线 */
-ul li.checked {
+li.checked {
   background: #888;
   color: #fff;
   text-decoration: line-through;
 }
 
 /* 为被选中的li增加 “对勾” 图标 */
-ul li.checked::before {
+li.checked::before {
   content: '';
   position: absolute;
   border-color: #fff;

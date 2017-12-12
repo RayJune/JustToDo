@@ -123,6 +123,13 @@ li.checked::before {
   width: 0.7rem;
 }
 
+li.aphorism {
+  font-size: 2rem;
+  text-align: center;
+  color: #2c3e50;
+  font-style: italic;
+}
+
 /* 关闭按钮样式 */
 .close {
   position: absolute;

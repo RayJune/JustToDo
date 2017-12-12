@@ -3,24 +3,24 @@
   var DB = require('indexeddb-crud');
   var dbConfig = require('./dbConfig.js');
   var handler = require('./eventHandler.js');
-  var show = require('./show.js');
 
   // open DB, and when DB open succeed, invoke initial function
   DB.init(dbConfig, addEventListeners);
 
   // when db is opened succeed, add EventListeners
   function addEventListeners() {
-    var list = document.querySelector('#list');
+    var list;
 
-    show.init(DB);
+    handler.showInit(); // init show
     // add all eventListener
-    list.addEventListener('click', handler.li, false);
-    list.addEventListener('click', handler.delete, false);
-    document.querySelector('#add').addEventListener('click', handler.add, false);
+    list = document.querySelector('#list');
+    list.addEventListener('click', handler.clickLi, false);
+    list.addEventListener('click', handler.deleteLi, false);
     document.addEventListener('keydown', handler.enter, false);
-    document.querySelector('#done').addEventListener('click', handler.showDone, false);
-    document.querySelector('#todo').addEventListener('click', handler.showToDo, false);
-    document.querySelector('#show').addEventListener('click', handler.show, false);
-    document.querySelector('#clear').addEventListener('click', handler.clear, false);
+    document.querySelector('#add').addEventListener('click', handler.add, false);
+    document.querySelector('#showDone').addEventListener('click', handler.showDone, false);
+    document.querySelector('#showTodo').addEventListener('click', handler.showTodo, false);
+    document.querySelector('#showAll').addEventListener('click', handler.show, false);
+    document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
   }
 }());

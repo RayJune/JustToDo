@@ -1,4 +1,5 @@
-var createNode = (function node() {
+var createNode = (function nodeGenerator() {
+  /* private methods */
   function _decorateLi(li, data) {
     var textDate = document.createTextNode(data.userDate + ': ');
     var textWrap = document.createElement('span');
@@ -29,6 +30,8 @@ var createNode = (function node() {
     target.setAttribute(name, data);
   }
 
+
+  /* interface */
   return function create(data) {
     var li = document.createElement('li');
 

@@ -2,13 +2,28 @@
 var show = (function showGenerator() {
   var createNode = require('./createNode.js');
 
-  // init show
-  function init(db) {
-    clear();
-    db.getAll(_refreshInit);
+  function init(dataArr) {
+    _refresh(dataArr, _initSentence);
   }
 
-  // clear all nodes (just clear DOM, not db)
+  function all(dataArr) {
+    _refresh(dataArr, randomAphorism);
+  }
+
+  function part(dataArr) {
+    if (dataArr.length === 0) {
+      randomAphorism();
+    } else {
+      var nodes = dataArr.reduce(function nodeGenerator(result, data) {
+        result.insertBefore(createNode(data), result.firstChild);
+
+        return result;
+      }, document.createDocumentFragment());
+
+      document.querySelector('#list').appendChild(nodes); // add it to DOM
+    }
+  }
+
   function clear() {
     var root = document.querySelector('#list');
 
@@ -17,16 +32,55 @@ var show = (function showGenerator() {
     }
   }
 
-  function _refreshInit(dataArr) {
-    _refresh(dataArr, _initSentence);
+  function randomAphorism() {
+    var aphorisms = [
+      'Yesterday You Said Tomorrow',
+      'Why are we here?',
+      'All in, or nothing',
+      'You Never Try, You Never Know',
+      'The unexamined life is not worth living. -- Socrates'
+    ];
+    var randomIndex = Math.floor(Math.random() * aphorisms.length);
+    var text = document.createTextNode(aphorisms[randomIndex]);
+
+    _sentenceGenerator(text);
   }
+
+
+  /* private methods */
 
   function _refresh(dataArr, sentenceFunc) {
     if (dataArr.length === 0) {
       sentenceFunc();
     } else {
-      _refreshPart(dataArr);
+      _refreshShow(dataArr);
     }
+  }
+
+  function _refreshShow(dataArr) {
+    var result = _classifyData(dataArr);
+
+    document.querySelector('#list').appendChild(result); // add it to DOM
+  }
+
+  function _classifyData(dataArr) {
+    // use fragment to reduce DOM operate
+    var unfishied = document.createDocumentFragment();
+    var finished = document.createDocumentFragment();
+    var fusion = document.createDocumentFragment();
+
+    // put the finished item to the bottom
+    dataArr.forEach(function classify(data) {
+      if (data.finished) {
+        finished.insertBefore(createNode(data), finished.firstChild);
+      } else {
+        unfishied.insertBefore(createNode(data), unfishied.firstChild);
+      }
+    });
+    fusion.appendChild(unfishied);
+    fusion.appendChild(finished);
+
+    return fusion;
   }
 
   function _initSentence() {
@@ -43,54 +97,12 @@ var show = (function showGenerator() {
     document.querySelector('#list').appendChild(li);
   }
 
-  function _refreshPart(dataArr) {
-    // use fragment to reduce DOM operate
-    var unfishied = document.createDocumentFragment();
-    var finished = document.createDocumentFragment();
-    var fusion = document.createDocumentFragment();
 
-    // put the finished item to the bottom
-    dataArr.forEach(function classifyData(data) {
-      if (data.finished) {
-        console.log(createNode(data));
-        finished.insertBefore(createNode(data), finished.firstChild);
-      } else {
-        unfishied.insertBefore(createNode(data), unfishied.firstChild);
-      }
-    });
-    fusion.appendChild(unfishied);
-    fusion.appendChild(finished);
-    document.querySelector('#list').appendChild(fusion); // add it to DOM
-    console.log('refresh list, and show succeed');
-  }
-
-  // get all data from DB and show it
-  function all(db) {
-    clear();
-    db.getAll(_refreshAll);
-  }
-
-  function _refreshAll(dataArr) {
-    _refresh(dataArr, randomAphorism);
-  }
-
-  function randomAphorism() {
-    var aphorisms = [
-      'Yesterday You Said Tomorrow',
-      'Why are we here?',
-      'All in, or nothing',
-      'You Never Try, You Never Know',
-      'The unexamined life is not worth living. -- Socrates'
-    ];
-    var randomIndex = Math.floor(Math.random() * (aphorisms.length + 1));
-    var text = document.createTextNode(aphorisms[randomIndex]);
-
-    _sentenceGenerator(text);
-  }
-
+  /* interface */
   return {
     init: init,
     all: all,
+    part: part,
     clear: clear,
     random: randomAphorism
   };

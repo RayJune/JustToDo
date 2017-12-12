@@ -7,7 +7,7 @@
     "build": "npm run build:scripts && npm run build:styles",
     "clean": "rm -rf dist/**/*",
     "prebuild": "npm run clean",
-    "prebuild:scripts": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js",
+    "prebuild:scripts": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js --debug",
     "build:scripts": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js --source-map",
     "prebuild:styles": "postcss src/styles/*.css --use autoprefixer -r --no-map",
     "build:styles": "cleancss -o ./dist/styles/main.min.css ./src/styles/main.css"

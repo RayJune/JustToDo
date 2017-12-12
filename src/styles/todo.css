@@ -1,6 +1,6 @@
 /* 用来设置 sticky footer */
 .content-area {
-  min-height: calc(100% - 7.5rem); /* 减去 header 和 footer  */
+  min-height: calc(100% - 7.5rem); /*  减去 footer  */
   margin-top: 15.6rem;
 }
 
@@ -121,6 +121,13 @@ li.checked::before {
           transform: rotate(45deg);
   height: 1.5rem;
   width: 0.7rem;
+}
+
+li.aphorism {
+  font-size: 2rem;
+  text-align: center;
+  color: #2c3e50;
+  font-style: italic;
 }
 
 /* 关闭按钮样式 */

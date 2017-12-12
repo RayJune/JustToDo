@@ -1,6 +1,6 @@
 /* 用来设置 sticky footer */
 .content-area {
-  min-height: calc(100% - 7.5rem); /* 减去 header 和 footer  */
+  min-height: calc(100% - 7.5rem); /*  减去 footer  */
   margin-top: 15.6rem;
 }
 

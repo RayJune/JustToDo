@@ -1,3 +1,4 @@
+'use strict';
 var createNode = (function nodeGenerator() {
   /* private methods */
   function _decorateLi(li, data) {

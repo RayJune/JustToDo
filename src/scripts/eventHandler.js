@@ -1,7 +1,7 @@
 'use strict';
 var eventHandler = (function handlerGenerator() {
   var DB = require('indexeddb-crud');
-  var show = require('./show.js');
+  var refresh = require('./refresh.js');
   var createNode = require('./createNode');
 
   function add() {
@@ -20,7 +20,7 @@ var eventHandler = (function handlerGenerator() {
     list = document.querySelector('#list');
     list.insertBefore(newNode, list.firstChild); // push newNode to first
     document.querySelector('#input').value = '';  // reset input's values
-    DB.add(newData);
+    DB.addItem(newData);
 
     return 0;
   }
@@ -37,24 +37,25 @@ var eventHandler = (function handlerGenerator() {
 
     if (e.target.className === 'close') { // use event delegation
       // use previously stored data
-      id = parseInt(e.target.getAttribute('data-x'), 10); // #TODO: Does parentNode can do this?
-      DB.delete(id, showAll); // delete in DB and show list again
+      refresh.disappear(e.target.parentNode);
+      id = parseInt(e.target.getAttribute('data-x'), 10);
+      DB.removeItem(id, showAll);
     }
   }
 
   function showInit() {
-    show.clear();
-    DB.getAll(show.init);
+    refresh.clear();
+    DB.getAll(refresh.init);
   }
 
   function showAll() {
-    show.clear();
-    DB.getAll(show.all);
+    refresh.clear();
+    DB.getAll(refresh.all);
   }
 
   function showClear() {
-    show.clear(); // clear nodes visually
-    show.random();
+    refresh.clear(); // clear nodes visually
+    refresh.random();
     DB.clear(); // clear data indeed
   }
 
@@ -73,7 +74,7 @@ var eventHandler = (function handlerGenerator() {
 
     if (targetLi.getAttribute('data-id')) {
       id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-      DB.get(id, _switchLi, [targetLi]); // pass _switchLi and param [e.target] as callback
+      DB.getItem(id, _switchLi, [targetLi]); // pass _switchLi and param [e.target] as callback
     }
   }
 
@@ -89,7 +90,7 @@ var eventHandler = (function handlerGenerator() {
 
   function _integrateNewData(value) {
     return {
-      id: DB.getNewDataKey(),
+      id: DB.getNewKey(),
       event: value,
       finished: false,
       userDate: _getNewDate('yyyy年MM月dd日 hh:mm')
@@ -129,8 +130,8 @@ var eventHandler = (function handlerGenerator() {
   function _showWhetherDone(whether) {
     var condition = 'finished'; // set 'finished' as condition
 
-    show.clear();
-    DB.getWhether(whether, condition, show.part); // pass refresh as callback function
+    refresh.clear();
+    DB.getConditionItem(condition, whether, refresh.part); // pass refresh as callback function
   }
 
   function _switchLi(data, targetLi) {
@@ -140,8 +141,8 @@ var eventHandler = (function handlerGenerator() {
     } else {
       targetLi.classList.remove('checked');
     }
-    data.finished = targetLi.finished;  // toggle data.finished
-    DB.update(data, showAll);
+    data.finished = !data.finished;  // toggle data.finished
+    DB.updateItem(data, showAll);
   }
 
   /* interface */

@@ -1,13 +1,13 @@
 'use strict';
-var show = (function showGenerator() {
+var refresh = (function refreshGenerator() {
   var createNode = require('./createNode.js');
 
   function init(dataArr) {
-    _refresh(dataArr, _initSentence);
+    _show(dataArr, _initSentence);
   }
 
   function all(dataArr) {
-    _refresh(dataArr, randomAphorism);
+    _show(dataArr, randomAphorism);
   }
 
   function part(dataArr) {
@@ -18,10 +18,14 @@ var show = (function showGenerator() {
         result.insertBefore(createNode(data), result.firstChild);
 
         return result;
-      }, document.createDocumentFragment());
+      }, document.createDocumentFragment()); // brilliant arr.reduce() + documentFragment
 
       document.querySelector('#list').appendChild(nodes); // add it to DOM
     }
+  }
+
+  function disappear(element) {
+    element.style.display = 'none';
   }
 
   function clear() {
@@ -49,15 +53,15 @@ var show = (function showGenerator() {
 
   /* private methods */
 
-  function _refresh(dataArr, sentenceFunc) {
+  function _show(dataArr, sentenceFunc) {
     if (dataArr.length === 0) {
       sentenceFunc();
     } else {
-      _refreshShow(dataArr);
+      _showRefresh(dataArr);
     }
   }
 
-  function _refreshShow(dataArr) {
+  function _showRefresh(dataArr) {
     var result = _classifyData(dataArr);
 
     document.querySelector('#list').appendChild(result); // add it to DOM
@@ -104,8 +108,9 @@ var show = (function showGenerator() {
     all: all,
     part: part,
     clear: clear,
+    disappear: disappear,
     random: randomAphorism
   };
 }());
 
-module.exports = show;
+module.exports = refresh;

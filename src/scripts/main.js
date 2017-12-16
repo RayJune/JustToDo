@@ -20,7 +20,7 @@
     document.querySelector('#add').addEventListener('click', handler.add, false);
     document.querySelector('#showDone').addEventListener('click', handler.showDone, false);
     document.querySelector('#showTodo').addEventListener('click', handler.showTodo, false);
-    document.querySelector('#showAll').addEventListener('click', handler.show, false);
+    document.querySelector('#showAll').addEventListener('click', handler.showAll, false);
     document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
   }
 }());

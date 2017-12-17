@@ -1,6 +1,6 @@
 'use strict';
 var refresh = (function refreshGenerator() {
-  var createNode = require('./createNode.js');
+  var createLi = require('./createLi.js');
 
   function init(dataArr) {
     _show(dataArr, _initSentence);
@@ -11,17 +11,23 @@ var refresh = (function refreshGenerator() {
   }
 
   function part(dataArr) {
-    if (dataArr.length === 0) {
+    var nodes;
+
+    if (!dataArr || dataArr.length === 0) {
       randomAphorism();
     } else {
-      var nodes = dataArr.reduce(function nodeGenerator(result, data) {
-        result.insertBefore(createNode(data), result.firstChild);
+      nodes = dataArr.reduce(function nodeGenerator(result, data) {
+        result.insertBefore(createLi(data), result.firstChild);
 
         return result;
       }, document.createDocumentFragment()); // brilliant arr.reduce() + documentFragment
 
       document.querySelector('#list').appendChild(nodes); // add it to DOM
     }
+  }
+
+  function appear(element) {
+    element.style.display = 'block';
   }
 
   function disappear(element) {
@@ -54,7 +60,7 @@ var refresh = (function refreshGenerator() {
   /* private methods */
 
   function _show(dataArr, sentenceFunc) {
-    if (dataArr.length === 0) {
+    if (!dataArr || dataArr.length === 0) {
       sentenceFunc();
     } else {
       _showRefresh(dataArr);
@@ -76,9 +82,9 @@ var refresh = (function refreshGenerator() {
     // put the finished item to the bottom
     dataArr.forEach(function classify(data) {
       if (data.finished) {
-        finished.insertBefore(createNode(data), finished.firstChild);
+        finished.insertBefore(createLi(data), finished.firstChild);
       } else {
-        unfishied.insertBefore(createNode(data), unfishied.firstChild);
+        unfishied.insertBefore(createLi(data), unfishied.firstChild);
       }
     });
     fusion.appendChild(unfishied);
@@ -108,6 +114,7 @@ var refresh = (function refreshGenerator() {
     all: all,
     part: part,
     clear: clear,
+    appear: appear,
     disappear: disappear,
     random: randomAphorism
   };

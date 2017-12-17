@@ -102,14 +102,14 @@ li:hover {
 }
 
 /* 当被选中，文字中加横线 */
-li.checked {
+li.finished {
   background: #888;
   color: #fff;
   text-decoration: line-through;
 }
 
 /* 为被选中的li增加 “对勾” 图标 */
-li.checked::before {
+li.finished::before {
   content: '';
   position: absolute;
   border-color: #fff;

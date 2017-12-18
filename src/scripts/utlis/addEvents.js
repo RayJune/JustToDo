@@ -1,11 +1,9 @@
 'use strict';
 var addEvents = (function addEventsGenerator() {
   function _whetherSuccess(whetherSuccess) {
-    console.log(whetherSuccess);
-
     function _whetherSuccessHandler(whether) {
-      var eventHandler = require('./eventHandler.js');
-      var handler = whether ? eventHandler.success : eventHandler.fail;
+      var eventHandler = require('./eventHandler/eventHandler.js');
+      var handler = whether ? eventHandler.dbSuccess : eventHandler.dbFail;
       var list;
 
       handler.showInit();
@@ -21,18 +19,15 @@ var addEvents = (function addEventsGenerator() {
       document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
     }
 
-    return function () {
+    return function wrapHandler() {
       _whetherSuccessHandler(whetherSuccess);
     };
   }
 
   return {
-    success: _whetherSuccess(true),
-    fail: _whetherSuccess(false)
+    dbSuccess: _whetherSuccess(true),
+    dbFail: _whetherSuccess(false)
   };
 }());
-console.dir(addEvents);
-// console.log(addEvents.fail());
-// console.log(addEvents.success());
 
 module.exports = addEvents;

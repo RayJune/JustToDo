@@ -16,13 +16,12 @@ var createLi = (function liGenerator() {
     _setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  clickLi
   }
 
-  function _addX(li, id) {
+  function _addX(li) {
     var span = document.createElement('span');
     var x = document.createTextNode('\u00D7'); // unicode -> x
 
     span.appendChild(x);
     span.className = 'close'; // add style
-    _setDataProperty(span, 'data-x', id); // add property to span (data-x), for deleteLi
     li.appendChild(span);
   }
 

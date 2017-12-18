@@ -6,5 +6,5 @@
 
   // open DB, and when DB open succeed, invoke initial function
   // DB.init(listDBConfig, addEvents.success, addEvents.fail);
-  addEvents.fail();
+  addEvents.dbFail();
 }());

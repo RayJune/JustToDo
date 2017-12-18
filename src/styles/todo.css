@@ -124,9 +124,11 @@ li.finished::before {
 }
 
 li.aphorism {
+  cursor: default;
   font-size: 2rem;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
+  background-color: #456;
   font-style: italic;
 }
 

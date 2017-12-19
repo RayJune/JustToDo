@@ -1,8 +1,8 @@
 'use strict';
-module.exports = (function dbConfigGenerator() {
-  var dbConfig = {
+module.exports = (function listDBConfigGenerator() {
+  var listDBConfig = {
     name: 'JustToDo',
-    version: '11',
+    version: '10',
     key: 'id',
     storeName: 'list',
     initialData: [{
@@ -20,5 +20,5 @@ module.exports = (function dbConfigGenerator() {
     initialDataUseful: false
   };
 
-  return dbConfig;
+  return listDBConfig;
 }());

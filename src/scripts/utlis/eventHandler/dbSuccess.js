@@ -16,7 +16,7 @@ var dbSuccess = (function dbSuccessGenerator() {
       return 0;
     }
     general.ifEmpty.removeInit();
-    newData = _integrateNewData(inputValue);
+    newData = general.dataGenerator(DB.getNewKey(), inputValue);
     newLi = createLi(newData);
     list = document.querySelector('#list');
     list.insertBefore(newLi, list.firstChild); // push newLi to first
@@ -29,6 +29,19 @@ var dbSuccess = (function dbSuccessGenerator() {
   function enterAdd(e) {
     if (e.keyCode === 13) {
       add();
+    }
+  }
+
+  function clickLi(e) {
+    var id;
+    var targetLi = e.target;
+    // use event delegation
+
+    if (!targetLi.classList.contains('aphorism')) {
+      if (targetLi.getAttribute('data-id')) {
+        id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
+        DB.getItem(id, _toggleLi, [targetLi]); // pass _toggleLi and param [e.target] as callback
+      }
     }
   }
 
@@ -67,26 +80,6 @@ var dbSuccess = (function dbSuccessGenerator() {
     _showWhetherDone(false);
   }
 
-  function clickLi(e) {
-    var id;
-    var targetLi = e.target;
-    // use event delegation
-
-    if (targetLi.getAttribute('data-id')) {
-      id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-      DB.getItem(id, _toggleLi, [targetLi]); // pass _toggleLi and param [e.target] as callback
-    }
-  }
-
-  function _integrateNewData(value) {
-    return {
-      id: DB.getNewKey(),
-      event: value,
-      finished: false,
-      userDate: general.getNewDate('yyyy年MM月dd日 hh:mm')
-    };
-  }
-
   function _showWhetherDone(whetherDone) {
     var condition = 'finished';
 
@@ -99,6 +92,7 @@ var dbSuccess = (function dbSuccessGenerator() {
     data.finished = !data.finished;  // toggle data.finished
     DB.updateItem(data, showAll);
   }
+
 
   return {
     add: add,

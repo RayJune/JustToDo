@@ -12,11 +12,12 @@ var dbFail = (function dbFailGenerator() {
     var newLi;
 
     if (inputValue === '') {
-      alert('please input a real data~');
+      window.alert('please input a real data~');
       return 0;
     }
-    general.ifEmpty.removeInit();
-    newData = _integrateNewData(inputValue);
+    _removeRandom();
+    _id += 1;
+    newData = general.dataGenerator(_id, inputValue);
     newLi = createLi(newData);
     list = document.querySelector('#list');
     list.insertBefore(newLi, list.firstChild); // push newLi to first
@@ -25,36 +26,85 @@ var dbFail = (function dbFailGenerator() {
     return 0;
   }
 
+  function _removeRandom() {
+    var list = document.querySelector('#list');
+    var listItems = document.querySelectorAll('#list li');
+    var keys = Object.keys(listItems);
+
+    return keys.forEach(function testEveryItem(index) {
+      if (listItems[keys[index]].classList.contains('aphorism')) {
+        list.removeChild(listItems[keys[index]]);
+      }
+    });
+  }
+
   function enterAdd(e) {
     if (e.keyCode === 13) {
       add();
     }
   }
 
-  // li's [x]'s delete
-  function removeLi(e) {
-    var id;
+  function clickLi(e) {
+    var targetLi = e.target;
+    // use event delegation
 
-    if (e.target.className === 'close') { // use event delegation
-      // use previously stored data
-      id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
-      _traverseListItems(function disappearItem(element, index) {
-        if (parseInt(element.getAttribute('data-id'), 10) === id) {
-          _remove(index);
-          general.ifEmpty.addRandom();
-        }
-      });
+    if (targetLi.getAttribute('data-id')) {
+      _toggleLi(targetLi);
+      showAll();
     }
   }
 
-  function _traverseListItems(func) {
-    Array.prototype.forEach.call(document.querySelectorAll('#list li'), func);
+  function _toggleLi(targetLi) {
+    targetLi.classList.toggle('finished');
   }
 
-  function _remove(index) {
+  // li's [x]'s delete
+  function removeLi(e) {
+    var id;
+    var DOMIndex;
+    var list;
+    var listItems;
+
+    if (e.target.className === 'close') { // use event delegation
+      // use previously stored data
+      list = document.querySelector('#list');
+      listItems = document.querySelectorAll('#list li');
+      id = e.target.parentNode.getAttribute('data-id');
+      DOMIndex = _getDOMIndex(id);
+      list.removeChild(listItems[DOMIndex]);
+      general.ifEmpty.addRandom();
+    }
+  }
+
+  function _getDOMIndex(id) {
+    var i;
+    var listItems = document.querySelectorAll('#list li');
+    var keys = Object.keys(listItems);
+
+    for (i in keys) {
+      if (listItems[keys[i]].getAttribute('data-id') === id) {
+        return keys[i];
+      }
+    }
+
+    return 'Wrong id, not found in DOM tree';
+  }
+
+  general.ifEmpty.addRandom = function addRandom() {
     var list = document.querySelector('#list');
 
-    list.removeChild(list.childNodes[index]);
+    if (!list.firstChild || _isAllNone()) {
+      refresh.random();
+    }
+  };
+
+  function _isAllNone() {
+    var listItems = document.querySelectorAll('#list li');
+    var keys = Object.keys(listItems);
+
+    return keys.every(function testEveryItem(index) {
+      return listItems[keys[index]].style.display === 'none';
+    });
   }
 
   function showInit() {
@@ -63,17 +113,18 @@ var dbFail = (function dbFailGenerator() {
   }
 
   function showAll() {
-    var finished = [];
+    var keys = Object.keys(document.querySelectorAll('#list li'));
 
-    _traverseListItems(function appearAll(element, index) {
+    keys.forEach(function appearAll(index) {
+      var list = document.querySelector('#list');
+      var listItems = document.querySelectorAll('#list li');
+      var element = listItems[keys[index]];
+
       refresh.appear(element);
       if (element.classList.contains('finished')) {
-        document.querySelector('#list').appendChild(element);
-        finished.push(index);
+        list.removeChild(list.childNodes[keys[index]]);
+        list.appendChild(element);
       }
-    });
-    finished.forEach(function removeFinished(element) {
-      _remove(element);
     });
   }
 
@@ -90,42 +141,18 @@ var dbFail = (function dbFailGenerator() {
     _showWhetherDone(false);
   }
 
-  function clickLi(e) {
-    var targetLi = e.target;
-    var id = parseInt(targetLi.getAttribute('data-id'), 10);
-    // use event delegation
-
-    if (id !== void 0) {
-      _toggleLi(targetLi, id);
-    }
-  }
-
-  function _integrateNewData(value) {
-    return {
-      id: (_id += 1),
-      event: value,
-      finished: false,
-      userDate: general.getNewDate('yyyy年MM月dd日 hh:mm')
-    };
-  }
-
   function _showWhetherDone(whetherDone) {
-    _traverseListItems(function whetherDoneAppear(element, index) {
+    Array.prototype.forEach.call(document.querySelectorAll('#list li'), function whetherDoneAppear(element) {
       if (whetherDone) {
         element.classList.contains('finished') ? refresh.appear(element) : refresh.disappear(element);
       } else {
         element.classList.contains('finished') ? refresh.disappear(element) : refresh.appear(element);
       }
     });
+    _removeRandom();
+    general.ifEmpty.addRandom();
   }
 
-  function _toggleLi(targetLi, id) {
-    targetLi.classList.toggle('finished');
-    if (targetLi.classList.contains('finished')) {
-      _remove(id);
-      document.querySelector('#list').appendChild(targetLi);
-    }
-  }
 
   return {
     add: add,

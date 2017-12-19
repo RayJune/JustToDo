@@ -1,6 +1,4 @@
 var general = (function generalGenerator() {
-  var refresh = require('../refresh.js');
-
   var ifEmpty = {
     removeInit: function removeInit() {
       var list = document.querySelector('#list');
@@ -8,19 +6,20 @@ var general = (function generalGenerator() {
       if (list.firstChild.className === 'aphorism') {
         list.removeChild(list.firstChild);
       }
-    },
-    addRandom: function addRandom() {
-      var list = document.querySelector('#list');
-
-      if (list.firstChild) {
-        refresh.random();
-      }
     }
   };
 
+  function dataGenerator(key, value) {
+    return {
+      id: key,
+      event: value,
+      finished: false,
+      userDate: _getNewDate('yyyy年MM月dd日 hh:mm')
+    };
+  }
 
   // Format date
-  function getNewDate(fmt) {
+  function _getNewDate(fmt) {
     var newDate = new Date();
     var newfmt = fmt;
     var o = {
@@ -51,7 +50,7 @@ var general = (function generalGenerator() {
 
   return {
     ifEmpty: ifEmpty,
-    getNewDate: getNewDate
+    dataGenerator: dataGenerator
   };
 }());
 

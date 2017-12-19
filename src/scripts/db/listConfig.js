@@ -2,7 +2,7 @@
 module.exports = (function listDBConfigGenerator() {
   var listDBConfig = {
     name: 'JustToDo',
-    version: '10',
+    version: '11',
     key: 'id',
     storeName: 'list',
     initialData: [{

@@ -1,26 +1,26 @@
 [
   {
-    "id": 0,
+    "id": 1,
     "content": "Welcome~, try to add your first to-do list : )"
   },
   {
-    "id": 1,
+    "id": 2,
     "content": "Yesterday You Said Tomorrow"
   },
   {
-    "id": 2,
+    "id": 3,
     "content": "Why are we here?"
   },
   {
-    "id": 3,
+    "id": 4,
     "content": "All in, or nothing"
   },
   {
-    "id": 4,
+    "id": 5,
     "content": "You Never Try, You Never Know"
   },
   {
-    "id": 5,
+    "id": 6,
     "content": "The unexamined life is not worth living. -- Socrates"
   }
 ]

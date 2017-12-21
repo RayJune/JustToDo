@@ -33,7 +33,6 @@ module.exports = (function aphorismDBConfigGenerator() {
   //     "content": "The unexamined life is not worth living. -- Socrates"
   //   }
   // ];
-  aphorismDBConfig.initialDataUseful = true;
 
   return aphorismDBConfig;
 }());

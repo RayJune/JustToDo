@@ -1,2 +1,2 @@
-#忽略node_modules目录下的所有文件
+.DS_Store
 node_modules

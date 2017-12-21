@@ -1,7 +1,7 @@
 'use strict';
 var createLi = (function liGenerator() {
   function _decorateLi(li, data) {
-    var textDate = document.createTextNode(data.userDate + ': ');
+    var textDate = document.createTextNode(data.date + ': ');
     var textWrap = document.createElement('span');
     var text = document.createTextNode(' ' + data.event);
 
@@ -12,7 +12,7 @@ var createLi = (function liGenerator() {
     if (data.finished) {  // add css-style to it (according to it's data.finished value)
       li.classList.add('finished'); // add style
     }
-    _addX(li, data.id); // add span [x] to li's tail
+    _addX(li); // add span [x] to li's tail
     _setDataProperty(li, 'data-id', data.id); // add property to li (data-id)，for  clickLi
   }
 

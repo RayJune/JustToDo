@@ -14,7 +14,7 @@ var general = (function generalGenerator() {
       id: key,
       event: value,
       finished: false,
-      userDate: _getNewDate('yyyy年MM月dd日 hh:mm')
+      date: _getNewDate('yyyy年MM月dd日 hh:mm')
     };
   }
 

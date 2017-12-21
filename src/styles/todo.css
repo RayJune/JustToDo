@@ -81,7 +81,7 @@ li {
   cursor: pointer;
   padding: 1.2rem 0.8rem 1.2rem 4rem;
   background: #eee;
-  font-size: 1.8rem;
+  font-size: 1.66rem;
   position: relative; /* for .close */
   -webkit-transition: 0.2s;
   transition: 0.2s;
@@ -89,6 +89,11 @@ li {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none; /* 用户不能选中文本 */
+}
+
+li span {
+  font-size: 1.88rem;
+  font-weight: bold;
 }
 
 /* 奇数时使用不同的颜色 */

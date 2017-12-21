@@ -5,7 +5,6 @@ module.exports = {
   key: 'id',
   storeName: 'list',
   initialData: [
-    { id: 1, event: 'dosomething', finished: true, date: 0 },
-    { id: 2, event: 'dosomething', finished: false, date: 0 }
+    { id: 0, event: 'JustDemo', finished: true, date: 0 }
   ]
 };

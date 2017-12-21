@@ -39,8 +39,9 @@ var dbSuccess = (function dbSuccessGenerator() {
 
     if (!targetLi.classList.contains('aphorism')) {
       if (targetLi.getAttribute('data-id')) {
+        targetLi.classList.toggle('finished'); // toggle appearance
         id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-        DB.getItem(id, _toggleLiGenerator.bind(targetLi)); // pass _toggleLi and param [e.target] as callback
+        DB.getItem(id, _toggleLi);
       }
     }
   }
@@ -87,14 +88,7 @@ var dbSuccess = (function dbSuccessGenerator() {
     DB.getConditionItem(condition, whetherDone, refresh.part);
   }
 
-  // function _toggleLi(data, targetLi) {
-  //   targetLi.classList.toggle('finished');
-  //   data.finished = !data.finished;  // toggle data.finished
-  //   DB.updateItem(data, showAll);
-  // }
-
-  function _toggleLiGenerator(data) {
-    this.classList.toggle('finished');
+  function _toggleLi(data) {
     data.finished = !data.finished;
     DB.updateItem(data, showAll);
   }

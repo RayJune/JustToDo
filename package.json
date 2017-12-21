@@ -36,7 +36,7 @@
     "uglify-js": "^3.2.2"
   },
   "dependencies": {
-    "indexeddb-crud": "^1.2.10",
+    "indexeddb-crud": "^1.2.12",
     "normalize.css": "^7.0.0"
   }
 }

@@ -3,7 +3,7 @@ var dbFail = (function dbFailGenerator() {
   var refresh = require('../refresh.js');
   var createLi = require('../createLi.js');
   var general = require('./general.js');
-  var _id = -1; // so the first item's id is 0
+  var _id = 0; // so the first item's id is 1
 
   function add() {
     var inputValue = document.querySelector('#input').value;
@@ -120,7 +120,7 @@ var dbFail = (function dbFailGenerator() {
       var listItems = document.querySelectorAll('#list li');
       var element = listItems[keys[index]];
 
-      refresh.appear(element);
+      _elementAppear(element, true);
       if (element.classList.contains('finished')) {
         list.removeChild(list.childNodes[keys[index]]);
         list.appendChild(element);
@@ -144,15 +144,18 @@ var dbFail = (function dbFailGenerator() {
   function _showWhetherDone(whetherDone) {
     Array.prototype.forEach.call(document.querySelectorAll('#list li'), function whetherDoneAppear(element) {
       if (whetherDone) {
-        element.classList.contains('finished') ? refresh.appear(element) : refresh.disappear(element);
+        element.classList.contains('finished') ? _elementAppear(element, true) : _elementAppear(element, false);
       } else {
-        element.classList.contains('finished') ? refresh.disappear(element) : refresh.appear(element);
+        element.classList.contains('finished') ? _elementAppear(element, false) : _elementAppear(element, true);
       }
     });
     _removeRandom();
     general.ifEmpty.addRandom();
   }
 
+  function _elementAppear(element, whether) {
+    element.style.display = whether ? 'block' : 'none';
+  }
 
   return {
     add: add,

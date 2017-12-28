@@ -20,18 +20,10 @@ var refresh = (function refreshGenerator() {
         result.insertBefore(createLi(data), result.firstChild);
 
         return result;
-      }, document.createDocumentFragment()); // brilliant arr.reduce() + documentFragment
+      }, document.createDocumentFragment()); // PUNCHLINE: brilliant arr.reduce() + documentFragment
 
       document.querySelector('#list').appendChild(nodes); // add it to DOM
     }
-  }
-
-  function appear(element) {
-    element.style.display = 'block';
-  }
-
-  function disappear(element) {
-    element.style.display = 'none';
   }
 
   function clear() {
@@ -114,8 +106,6 @@ var refresh = (function refreshGenerator() {
     all: all,
     part: part,
     clear: clear,
-    appear: appear,
-    disappear: disappear,
     random: randomAphorism
   };
 }());

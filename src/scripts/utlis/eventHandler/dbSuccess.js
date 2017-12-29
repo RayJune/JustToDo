@@ -1,7 +1,7 @@
 'use strict';
 var dbSuccess = (function dbSuccessGenerator() {
   var DB = require('indexeddb-crud');
-  var refresh = require('../refresh.js');
+  var refresh = require('../refresh/refresh.js').dbFail;
   var createLi = require('../createLi.js');
   var general = require('./general.js');
 

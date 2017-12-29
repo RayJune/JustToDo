@@ -1,6 +1,6 @@
 'use strict';
 var dbFail = (function dbFailGenerator() {
-  var refresh = require('../refresh.js');
+  var refresh = require('../refresh/refresh.js').dbFail;
   var createLi = require('../createLi.js');
   var general = require('./general.js');
   var _id = 0; // so the first item's id is 1

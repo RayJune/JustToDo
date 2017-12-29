@@ -1,16 +1,17 @@
 'use strict';
-var refresh = (function refreshGenerator() {
-  var createLi = require('./createLi.js');
+var general = (function generalGenerator() {
+  var createLi = require('../createLi.js');
 
   function init(dataArr) {
-    _show(dataArr, _initSentence);
+    _show(_initSentence, dataArr);
   }
 
-  function all(dataArr) {
-    _show(dataArr, randomAphorism);
+  function all(randomAphorism, dataArr) {
+    console.dir(randomAphorism);
+    _show(randomAphorism, dataArr);
   }
 
-  function part(dataArr) {
+  function part(randomAphorism, dataArr) {
     var nodes;
 
     if (!dataArr || dataArr.length === 0) {
@@ -34,24 +35,10 @@ var refresh = (function refreshGenerator() {
     }
   }
 
-  function randomAphorism() {
-    var aphorisms = [
-      'Yesterday You Said Tomorrow',
-      'Why are we here?',
-      'All in, or nothing',
-      'You Never Try, You Never Know',
-      'The unexamined life is not worth living. -- Socrates'
-    ];
-    var randomIndex = Math.floor(Math.random() * aphorisms.length);
-    var text = document.createTextNode(aphorisms[randomIndex]);
-
-    _sentenceGenerator(text);
-  }
-
 
   /* private methods */
 
-  function _show(dataArr, sentenceFunc) {
+  function _show(sentenceFunc, dataArr) {
     if (!dataArr || dataArr.length === 0) {
       sentenceFunc();
     } else {
@@ -88,13 +75,14 @@ var refresh = (function refreshGenerator() {
   function _initSentence() {
     var text = document.createTextNode('Welcome~, try to add your first to-do list : )');
 
-    _sentenceGenerator(text);
+    sentenceGenerator(text);
   }
 
-  function _sentenceGenerator(text) {
+  function sentenceGenerator(text) {
     var li = document.createElement('li');
+    var textNode = document.createTextNode(text);
 
-    li.appendChild(text);
+    li.appendChild(textNode);
     li.className = 'aphorism';
     document.querySelector('#list').appendChild(li);
   }
@@ -106,8 +94,8 @@ var refresh = (function refreshGenerator() {
     all: all,
     part: part,
     clear: clear,
-    random: randomAphorism
+    sentenceGenerator: sentenceGenerator
   };
 }());
 
-module.exports = refresh;
+module.exports = general;

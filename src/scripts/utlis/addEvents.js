@@ -1,10 +1,10 @@
 'use strict';
-var addEvents = (function addEventsGenerator() {
+module.exports = (function addEventsGenerator() {
   function _whetherSuccess(whetherSuccess) {
     function _whetherSuccessHandler(whether) {
+      var list;
       var eventHandler = require('./eventHandler/eventHandler.js');
       var handler = whether ? eventHandler.dbSuccess : eventHandler.dbFail;
-      var list;
 
       handler.showInit();
       // add all eventListener
@@ -19,7 +19,7 @@ var addEvents = (function addEventsGenerator() {
       document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
     }
 
-    return function wrapHandler() {
+    return function addEvents() {
       _whetherSuccessHandler(whetherSuccess);
     };
   }
@@ -29,5 +29,3 @@ var addEvents = (function addEventsGenerator() {
     dbFail: _whetherSuccess(false)
   };
 }());
-
-module.exports = addEvents;

@@ -120,7 +120,7 @@ var dbFail = (function dbFailGenerator() {
       var listItems = document.querySelectorAll('#list li');
       var element = listItems[keys[index]];
 
-      _elementAppear(element, true);
+      _whetherAppear(element, true);
       if (element.classList.contains('finished')) {
         list.removeChild(list.childNodes[keys[index]]);
         list.appendChild(element);
@@ -144,16 +144,16 @@ var dbFail = (function dbFailGenerator() {
   function _showWhetherDone(whetherDone) {
     Array.prototype.forEach.call(document.querySelectorAll('#list li'), function whetherDoneAppear(element) {
       if (whetherDone) {
-        element.classList.contains('finished') ? _elementAppear(element, true) : _elementAppear(element, false);
+        element.classList.contains('finished') ? _whetherAppear(element, true) : _whetherAppear(element, false);
       } else {
-        element.classList.contains('finished') ? _elementAppear(element, false) : _elementAppear(element, true);
+        element.classList.contains('finished') ? _whetherAppear(element, false) : _whetherAppear(element, true);
       }
     });
     _removeRandom();
     general.ifEmpty.addRandom();
   }
 
-  function _elementAppear(element, whether) {
+  function _whetherAppear(element, whether) {
     element.style.display = whether ? 'block' : 'none';
   }
 

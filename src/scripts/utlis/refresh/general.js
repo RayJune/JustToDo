@@ -7,7 +7,6 @@ var general = (function generalGenerator() {
   }
 
   function all(randomAphorism, dataArr) {
-    console.dir(randomAphorism);
     _show(randomAphorism, dataArr);
   }
 
@@ -73,7 +72,7 @@ var general = (function generalGenerator() {
   }
 
   function _initSentence() {
-    var text = document.createTextNode('Welcome~, try to add your first to-do list : )');
+    var text = 'Welcome~, try to add your first to-do list : )';
 
     sentenceGenerator(text);
   }

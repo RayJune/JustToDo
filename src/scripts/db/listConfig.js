@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   name: 'JustToDo',
-  version: '15',
+  version: '17',
   key: 'id',
   storeName: 'list',
   initialData: [

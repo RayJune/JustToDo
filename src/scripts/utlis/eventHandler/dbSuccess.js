@@ -1,15 +1,15 @@
 'use strict';
 var dbSuccess = (function dbSuccessGenerator() {
-  var DB = require('indexeddb-crud');
-  var refresh = require('../refresh/refresh.js').dbFail;
+  var DB = require('../../main.js').listDBHandler;
+  var refresh = require('../refresh/refresh.js').dbSuccess;
   var createLi = require('../createLi.js');
   var general = require('./general.js');
 
   function add() {
-    var inputValue = document.querySelector('#input').value;
     var list;
     var newData;
     var newLi;
+    var inputValue = document.querySelector('#input').value;
 
     if (inputValue === '') {
       window.alert('please input a real data~');

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   name: 'JustToDo',
-  version: '15',
+  version: '18',
   key: 'id',
   storeName: 'aphorism',
   initialData: [

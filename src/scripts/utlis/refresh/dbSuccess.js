@@ -1,27 +1,24 @@
-// module.exports = (function dbSuccessGenerator() {
-//   var general = require('./general.js');
-//   var DB = require('indexeddb-crud');
-//   var aphorismConfig = require('../../db/aphorismConfig.js');
+module.exports = (function dbSuccessGenerator() {
+  var DB = require('../../main.js').aphorismDBHandler;
+  var general = require('./general.js');
 
-//   DB.open(aphorismConfig, _openSuccess);
+  console.log('refresh sccess in');
+  // open DB, and when DB open succeed, invoke initial function
+  function randomAphorism() {
+    var randomIndex = Math.floor(Math.random() * DB.getLength());
 
-//   function _openSuccess() {
-//     console.log('open aphorism success');
-//   }
+    console.dir(DB);
+    console.log(DB.getLength());
+    console.log(randomIndex);
+    DB.getItem(randomIndex, general.sentenceGenerator);
+  }
 
-//   function randomAphorism() {
-//     var randomIndex = Math.floor(Math.random() * DB.getNewKey());
-
-//     DB.getItem(randomIndex, general.sentenceGenerator);
-//   }
-
-//   /* interface */
-//   return {
-//     init: general.init,
-//     all: general.all.bind(null, randomAphorism),
-//     part: general.part.bind(null, randomAphorism),
-//     clear: general.clear,
-//     random: randomAphorism
-//   };
-// }());
-
+  /* interface */
+  return {
+    init: general.init,
+    all: general.all.bind(null, randomAphorism),  // PUNCHLINE: use bind to pass paramter
+    part: general.part.bind(null, randomAphorism),
+    clear: general.clear,
+    random: randomAphorism
+  };
+}());

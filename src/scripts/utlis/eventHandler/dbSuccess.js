@@ -2,13 +2,12 @@
 var dbSuccess = (function dbSuccessGenerator() {
   var DB = require('../../main.js').listDBHandler;
   var refresh = require('../refresh/refresh.js').dbSuccess;
-  var createLi = require('../createLi.js');
+  var liGenerator = require('../liGenerator.js');
   var general = require('./general.js');
 
   function add() {
     var list;
     var newData;
-    var newLi;
     var inputValue = document.querySelector('#input').value;
 
     if (inputValue === '') {
@@ -17,9 +16,8 @@ var dbSuccess = (function dbSuccessGenerator() {
     }
     general.ifEmpty.removeInit();
     newData = general.dataGenerator(DB.getNewKey(), inputValue);
-    newLi = createLi(newData);
     list = document.querySelector('#list');
-    list.insertBefore(newLi, list.firstChild); // push newLi to first
+    list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
     DB.addItem(newData);
 

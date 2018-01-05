@@ -1,7 +1,7 @@
 'use strict';
 var dbFail = (function dbFailGenerator() {
   var refresh = require('../refresh/refresh.js').dbFail;
-  var createLi = require('../createLi.js');
+  var liGenerator = require('../liGenerator.js');
   var general = require('./general.js');
   var _id = 0; // so the first item's id is 1
 
@@ -18,7 +18,7 @@ var dbFail = (function dbFailGenerator() {
     _removeRandom();
     _id += 1;
     newData = general.dataGenerator(_id, inputValue);
-    newLi = createLi(newData);
+    newLi = liGenerator(newData);
     list = document.querySelector('#list');
     list.insertBefore(newLi, list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
@@ -27,9 +27,9 @@ var dbFail = (function dbFailGenerator() {
   }
 
   function _removeRandom() {
+    var keys = Object.keys(listItems);
     var list = document.querySelector('#list');
     var listItems = document.querySelectorAll('#list li');
-    var keys = Object.keys(listItems);
 
     return keys.forEach(function testEveryItem(index) {
       if (listItems[keys[index]].classList.contains('aphorism')) {
@@ -78,8 +78,8 @@ var dbFail = (function dbFailGenerator() {
 
   function _getDOMIndex(id) {
     var i;
-    var listItems = document.querySelectorAll('#list li');
     var keys = Object.keys(listItems);
+    var listItems = document.querySelectorAll('#list li');
 
     for (i in keys) {
       if (listItems[keys[i]].getAttribute('data-id') === id) {
@@ -99,8 +99,8 @@ var dbFail = (function dbFailGenerator() {
   };
 
   function _isAllNone() {
-    var listItems = document.querySelectorAll('#list li');
     var keys = Object.keys(listItems);
+    var listItems = document.querySelectorAll('#list li');
 
     return keys.every(function testEveryItem(index) {
       return listItems[keys[index]].style.display === 'none';

@@ -15,7 +15,6 @@ module.exports = (function dbFailGenerator() {
     general.sentenceGenerator(text);
   }
 
-  /* interface */
   return {
     init: general.init,
     all: general.all.bind(null, randomAphorism),

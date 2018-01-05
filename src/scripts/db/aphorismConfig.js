@@ -1,13 +1,13 @@
 'use strict';
 module.exports = {
   name: 'JustToDo',
-  version: '18',
+  version: '19',
   key: 'id',
   storeName: 'aphorism',
   initialData: [
     {
       "id": 1,
-      "content": "Welcome~, try to add your first to-do list : )"
+      "content": "You're better than that"
     },
     {
       "id": 2,

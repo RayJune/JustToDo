@@ -1,6 +1,6 @@
 'use strict';
 var general = (function generalGenerator() {
-  var createLi = require('../createLi.js');
+  var liGenerator = require('../liGenerator.js');
 
   function init(dataArr) {
     _show(_initSentence, dataArr);
@@ -17,7 +17,7 @@ var general = (function generalGenerator() {
       randomAphorism();
     } else {
       nodes = dataArr.reduce(function nodeGenerator(result, data) {
-        result.insertBefore(createLi(data), result.firstChild);
+        result.insertBefore(liGenerator(data), result.firstChild);
 
         return result;
       }, document.createDocumentFragment()); // PUNCHLINE: brilliant arr.reduce() + documentFragment
@@ -60,9 +60,9 @@ var general = (function generalGenerator() {
     // put the finished item to the bottom
     dataArr.forEach(function classify(data) {
       if (data.finished) {
-        finished.insertBefore(createLi(data), finished.firstChild);
+        finished.insertBefore(liGenerator(data), finished.firstChild);
       } else {
-        unfishied.insertBefore(createLi(data), unfishied.firstChild);
+        unfishied.insertBefore(liGenerator(data), unfishied.firstChild);
       }
     });
     fusion.appendChild(unfishied);
@@ -87,7 +87,6 @@ var general = (function generalGenerator() {
   }
 
 
-  /* interface */
   return {
     init: init,
     all: all,

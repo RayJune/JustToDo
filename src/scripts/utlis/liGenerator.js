@@ -1,5 +1,5 @@
 'use strict';
-var createLi = (function liGenerator() {
+var liGenerator = (function liGenerator() {
   function _decorateLi(li, data) {
     var textDate = document.createTextNode(data.date + ': ');
     var textWrap = document.createElement('span');
@@ -39,4 +39,4 @@ var createLi = (function liGenerator() {
   };
 }());
 
-module.exports = createLi;
+module.exports = liGenerator;

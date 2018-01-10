@@ -1,9 +1,9 @@
 'use strict';
 var liGenerator = (function liGenerator() {
   function _decorateLi(li, data) {
+    var text = document.createTextNode(' ' + data.event);
     var textDate = document.createTextNode(data.date + ': ');
     var textWrap = document.createElement('span');
-    var text = document.createTextNode(' ' + data.event);
 
     // wrap as a node
     textWrap.appendChild(text);

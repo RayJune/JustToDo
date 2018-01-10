@@ -1,12 +1,12 @@
 module.exports = (function dbSuccessGenerator() {
-  var DB = require('../../main.js').aphorismDBHandler;
+  var storeName = 'aphorism';
+  var DB = require('indexeddb-crud');
   var general = require('./general.js');
 
-  // open DB, and when DB open succeed, invoke initial function
   function randomAphorism() {
-    var randomIndex = Math.ceil(Math.random() * DB.getLength());
+    var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
-    DB.getItem(randomIndex, _parseText);
+    DB.getItem(storeName, randomIndex, _parseText);
   }
 
   function _parseText(data) {

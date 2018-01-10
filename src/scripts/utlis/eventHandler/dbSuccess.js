@@ -1,6 +1,7 @@
 'use strict';
 var dbSuccess = (function dbSuccessGenerator() {
-  var DB = require('../../main.js').listDBHandler;
+  var storeName = 'list';
+  var DB = require('indexeddb-crud');
   var refresh = require('../refresh/refresh.js').dbSuccess;
   var liGenerator = require('../liGenerator.js');
   var general = require('./general.js');
@@ -15,11 +16,11 @@ var dbSuccess = (function dbSuccessGenerator() {
       return 0;
     }
     general.ifEmpty.removeInit();
-    newData = general.dataGenerator(DB.getNewKey(), inputValue);
+    newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
     list = document.querySelector('#list');
     list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
-    DB.addItem(newData);
+    DB.addItem(storeName, newData);
 
     return 0;
   }
@@ -39,7 +40,7 @@ var dbSuccess = (function dbSuccessGenerator() {
       if (targetLi.getAttribute('data-id')) {
         targetLi.classList.toggle('finished'); // toggle appearance
         id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-        DB.getItem(id, _toggleLi);
+        DB.getItem(storeName, id, _toggleLi);
       }
     }
   }
@@ -51,24 +52,24 @@ var dbSuccess = (function dbSuccessGenerator() {
     if (e.target.className === 'close') { // use event delegation
       // use previously stored data
       id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
-      DB.removeItem(id, showAll);
+      DB.removeItem(storeName, id, showAll);
     }
   }
 
   function showInit() {
     refresh.clear();
-    DB.getAll(refresh.init);
+    DB.getAll(storeName, refresh.init);
   }
 
   function showAll() {
     refresh.clear();
-    DB.getAll(refresh.all);
+    DB.getAll(storeName, refresh.all);
   }
 
   function showClear() {
     refresh.clear(); // clear nodes visually
     refresh.random();
-    DB.clear(); // clear data indeed
+    DB.clear(storeName); // clear data indeed
   }
 
   function showDone() {
@@ -83,12 +84,12 @@ var dbSuccess = (function dbSuccessGenerator() {
     var condition = 'finished';
 
     refresh.clear();
-    DB.getConditionItem(condition, whetherDone, refresh.part);
+    DB.getWhetherConditionItem(storeName, condition, whetherDone, refresh.part);
   }
 
   function _toggleLi(data) {
     data.finished = !data.finished;
-    DB.updateItem(data, showAll);
+    DB.updateItem(storeName, data, showAll);
   }
 
   return {

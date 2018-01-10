@@ -6,6 +6,9 @@ module.exports = (function addEventsGenerator() {
       var eventHandler = require('./eventHandler/eventHandler.js');
       var handler = whether ? eventHandler.dbSuccess : eventHandler.dbFail;
 
+      if (handler === eventHandler.dbFail) {
+        window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
+      }
       handler.showInit();
       // add all eventListener
       list = document.querySelector('#list');

@@ -1,142 +1,163 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
-var IndexedDBHandler = function IndexedDBHandler(config, openSuccessCallback, openFailCallback) {
-  var that;
+var IndexedDBHandler = (function init() {
+  var _db;
+  var _presentKey = {}; // store multi-objectStore's presentKey
 
-  /* init indexedDB */
+  function open(config, openSuccessCallback, openFailCallback) {
+  // init indexedDB
   // firstly inspect browser's support for indexedDB
-  if (!window.indexedDB) {
-    window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
-    if (openFailCallback) {
-      openFailCallback(); // PUNCHLINE: offer without-DB handler
+    if (!window.indexedDB) {
+      if (openFailCallback) {
+        openFailCallback(); // PUNCHLINE: offer without-DB handler
+      } else {
+        window.alert('\u2714 Your browser doesn\'t support a stable version of IndexedDB. You can install latest Chrome or FireFox to handler it');
+      }
+      return 0;
     }
+    _openHandler(config, openSuccessCallback);
+
     return 0;
   }
-  that = this;
 
-  /* private propeties */
-  that._db;
-  that._presentKey = 0;
-  that._key = config.key;
-  that._storeName = config.storeName;
-
-  _openHandler();
-
-  function _openHandler() {
+  function _openHandler(config, successCallback) {
     var openRequest = window.indexedDB.open(config.name, config.version); // open indexedDB
 
     // an onblocked event is fired until they are closed or reloaded
     openRequest.onblocked = function blockedSchemeUp() {
-    // If some other tab is loaded with the database, then it needs to be closed before we can proceed.
-      // window.alert('Please close all other tabs with this site open');
+      // If some other tab is loaded with the database, then it needs to be closed before we can proceed.
+      window.alert('Please close all other tabs with this site open');
     };
 
     // Creating or updating the version of the database
     openRequest.onupgradeneeded = function schemaUp(e) {
-    // All other databases have been closed. Set everything up.
-      that._db = e.target.result;
-      console.log('onupgradeneeded in');
-      if (!(that._db.objectStoreNames.contains(that._storeName))) {
-        _createStoreHandler();
-      }
+      // All other databases have been closed. Set everything up.
+      _db = e.target.result;
+      console.log('\u2713 onupgradeneeded in');
+      _parseJSONData(config.storeConfig, 'storeName').forEach(function detectStoreName(storeConfig, index) {
+        if (!(_db.objectStoreNames.contains(storeConfig.storeName))) {
+          _createObjectStore(storeConfig);
+        }
+      });
     };
 
     openRequest.onsuccess = function openSuccess(e) {
-      that._db = e.target.result;
-      console.log('\u2713 open ' + that._storeName + '\'s objectStore success');
-      _getPresentKey();
+      var objectStoreList = _parseJSONData(config.storeConfig, 'storeName');
+
+      _db = e.target.result;
+      objectStoreList.forEach(function detectStoreName(storeConfig, index) {
+        if (index === (objectStoreList.length - 1)) {
+          _getPresentKey(storeConfig.storeName, function () {
+            successCallback();
+            console.log('\u2713 open indexedDB success');
+          });
+        } else {
+          _getPresentKey(storeConfig.storeName);
+        }
+      });
     };
 
+    // use error events bubble to handle all error events
     openRequest.onerror = function openError(e) {
-    // window.alert('Pity, fail to load indexedDB. We will offer you the without indexedDB mode');
       window.alert('Something is wrong with indexedDB, for more information, checkout console');
       console.log(e.target.error);
+      throw new Error(e.target.error);
     };
   }
 
-  // set present key value to that._presentKey (the private property)
-  function _getPresentKey() {
-    _getAllRequest().onsuccess = function getAllSuccess(e) {
+  function _createObjectStore(storeConfig) {
+    var objectStore = _db.createObjectStore(storeConfig.storeName, { keyPath: storeConfig.key, autoIncrement: true });
+
+    // Use transaction oncomplete to make sure the object Store creation is finished
+    objectStore.transaction.oncomplete = function addinitialData() {
+      console.log('\u2713 create ' + storeConfig.storeName + '\'s object store succeed');
+      if (storeConfig.initialData) {
+        // Store initial values in the newly created object store.
+        _initialDataHandler(storeConfig.storeName, storeConfig.initialData);
+      }
+    };
+  }
+
+  function _initialDataHandler(storeName, initialData) {
+    var transaction = _db.transaction([storeName], 'readwrite');
+    var objectStore = transaction.objectStore(storeName);
+
+    _parseJSONData(initialData, 'initial').forEach(function addEveryInitialData(data, index) {
+      var addRequest = objectStore.add(data);
+
+      addRequest.onsuccess = function addInitialSuccess() {
+        console.log('\u2713 add initial data[' + index + '] successed');
+      };
+    });
+    transaction.oncomplete = function addAllDataDone() {
+      console.log('\u2713 add all' + storeName  + '\'s initial data done :)');
+      _getPresentKey(storeName);
+    };
+  }
+
+  function _parseJSONData(rawdata, message) {
+    try {
+      var parsedData = JSON.parse(JSON.stringify(rawdata));
+
+      return parsedData;
+    } catch (error) {
+      window.alert('please set correct' + message  + 'array object :)');
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // set present key value to _presentKey (the private property)
+  function _getPresentKey(storeName, successCallback) {
+    var transaction = _db.transaction([storeName]);
+
+    _presentKey[storeName] = 0;
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
       var cursor = e.target.result;
 
       if (cursor) {
-        that._presentKey = cursor.value.id;
+        _presentKey[storeName] = cursor.value.id;
         cursor.continue();
       } else {
-        console.log('\u2713 now ' + that._storeName + '\'s max key is ' +  that._presentKey); // initial value is 0
-        if (openSuccessCallback) {
-          openSuccessCallback();
-          console.log('\u2713 ' + that._storeName + '\'s openSuccessCallback: ' + openSuccessCallback.name + ' finished');
+        console.log('\u2713 now ' + storeName + '\'s max key is ' +  _presentKey[storeName]); // initial value is 0
+        if (successCallback) {
+          successCallback();
+          console.log('\u2713 openSuccessCallback' + ' finished');
         }
       }
     };
   }
 
-  function _createStoreHandler() {
-    var objectStore = that._db.createObjectStore(that._storeName, { keyPath: that._key, autoIncrement: true });
-
-    // Use transaction oncomplete to make sure the objectStore creation is
-    objectStore.transaction.oncomplete = function addinitialData() {
-      console.log('create ' + that._storeName + '\'s objectStore succeed');
-      if (config.initialData) {
-        // Store initial values in the newly created objectStore.
-        try {
-          JSON.parse(JSON.stringify(config.initialData)).forEach(function addEveryInitialData(data, index) {
-            var addRequest = _transactionGenerator().add(data);
-
-            addRequest.onsuccess = function addInitialSuccess() {
-              console.log('add initial data[' + index + '] successed');
-            };
-          });
-        } catch (error) {
-          window.alert('please set correct initial array object data :)');
-          console.log(error);
-          throw error;
-        }
-      }
-    };
+  function getLength(storeName) {
+    return _presentKey[storeName];
   }
 
-  function _transactionGenerator() {
-    return that._db.transaction([that._storeName], 'readwrite').objectStore(that._storeName);
-  }
+  function getNewKey(storeName) {
+    _presentKey[storeName] += 1;
 
-  function _getAllRequest() {
-    return _transactionGenerator().openCursor(IDBKeyRange.lowerBound(1), 'next');
-  }
-};
-
-IndexedDBHandler.prototype = (function prototypeGenerator() {
-  function getLength() {
-    return this._presentKey;
-  }
-
-  function getNewKey() {
-    this._presentKey += 1;
-
-    return this._presentKey;
+    return _presentKey[storeName];
   }
 
   /* CRUD */
 
-  function addItem(newData, successCallback) {
-    var that = this;
-    var addRequest = _whetherWriteTransaction(that._db, that._storeName, true).add(newData);
+  function addItem(storeName, newData, successCallback) {
+    var transaction = _db.transaction([storeName], 'readwrite');
+    var addRequest = transaction.objectStore(storeName).add(newData);
 
     addRequest.onsuccess = function addSuccess() {
-      console.log('\u2713 add ' + that._key + ' = ' + newData[that._key] + ' data succeed :)');
+      console.log('\u2713 add ' + storeName + '\'s '+ addRequest.source.keyPath + ' = ' + newData[addRequest.source.keyPath] + ' data succeed :)');
       if (successCallback) {
         successCallback(newData);
       }
     };
   }
 
-  function getItem(key, successCallback) {
-    var that = this;
-    var getRequest = _whetherWriteTransaction(that._db, that._storeName, false).get(parseInt(key, 10));  // get it by index
+  function getItem(storeName, key, successCallback) {
+    var transaction = _db.transaction([storeName]);
+    var getRequest = transaction.objectStore(storeName).get(parseInt(key, 10));  // get it by index
 
     getRequest.onsuccess = function getSuccess() {
-      console.log('\u2713 get '  + that._key + ' = ' + key + ' data success :)');
+      console.log('\u2713 get ' + storeName + '\'s ' + getRequest.source.keyPath + ' = ' + key + ' data success :)');
       if (successCallback) {
         successCallback(getRequest.result);
       }
@@ -144,11 +165,11 @@ IndexedDBHandler.prototype = (function prototypeGenerator() {
   }
 
   // get conditional data (boolean condition)
-  function getConditionItem(condition, whether, successCallback) {
-    var that = this;
+  function getWhetherConditionItem(storeName, condition, whether, successCallback) {
+    var transaction = _db.transaction([storeName]);
     var result = []; // use an array to storage eligible data
 
-    _getAllRequest(that._db, that._storeName).onsuccess = function getAllSuccess(e) {
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
       var cursor = e.target.result;
 
       if (cursor) {
@@ -162,24 +183,8 @@ IndexedDBHandler.prototype = (function prototypeGenerator() {
           }
         }
         cursor.continue();
-      } else if (successCallback) {
-        successCallback(result);
-      }
-    };
-  }
-
-  function getAll(successCallback) {
-    var that = this;
-    var result = [];
-
-    _getAllRequest(that._db, that._storeName).onsuccess = function getAllSuccess(e) {
-      var cursor = e.target.result;
-
-      if (cursor) {
-        result.push(cursor.value);
-        cursor.continue();
       } else {
-        console.log('\u2713 get all data success :)');
+        console.log('\u2713 get ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
         if (successCallback) {
           successCallback(result);
         }
@@ -187,22 +192,41 @@ IndexedDBHandler.prototype = (function prototypeGenerator() {
     };
   }
 
-  function removeItem(key, successCallback) {
-    var that = this;
-    var deleteRequest = _whetherWriteTransaction(that._db, that._storeName, true).delete(key);
+  function getAll(storeName, successCallback) {
+    var transaction = _db.transaction([storeName]);
+    var result = [];
+
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
+      var cursor = e.target.result;
+
+      if (cursor) {
+        result.push(cursor.value);
+        cursor.continue();
+      } else {
+        console.log('\u2713 get ' + storeName + '\'s ' + 'all data success :)');
+        if (successCallback) {
+          successCallback(result);
+        }
+      }
+    };
+  }
+
+  function removeItem(storeName, key, successCallback) {
+    var transaction = _db.transaction([storeName], 'readwrite');
+    var deleteRequest = transaction.objectStore(storeName).delete(key);
 
     deleteRequest.onsuccess = function deleteSuccess() {
-      console.log('\u2713 remove ' + that._key + ' = ' + key + ' data success :)');
+      console.log('\u2713 remove ' + storeName + '\'s ' + deleteRequest.source.keyPath + ' = ' + key + ' data success :)');
       if (successCallback) {
         successCallback(key);
       }
     };
   }
 
-  function removeConditionItem(condition, whether, successCallback) {
-    var that = this;
+  function removeWhetherConditionItem(storeName, condition, whether, successCallback) {
+    var transaction = _db.transaction([storeName], 'readwrite');
 
-    _getAllRequest(that._db, that._storeName).onsuccess = function getAllSuccess(e) {
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
       var cursor = e.target.result;
 
       if (cursor) {
@@ -216,23 +240,26 @@ IndexedDBHandler.prototype = (function prototypeGenerator() {
           }
         }
         cursor.continue();
-      } else if (successCallback) {
-        successCallback();
+      } else {
+        console.log('\u2713 remove ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
+        if (successCallback) {
+          successCallback();
+        }
       }
     };
   }
 
-  function clear(successCallback) {
-    var that = this;
+  function clear(storeName, successCallback) {
+    var transaction = _db.transaction([storeName], 'readwrite');
 
-    _getAllRequest(that._db, that._storeName).onsuccess = function getAllSuccess(e) {
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
       var cursor = e.target.result;
 
       if (cursor) {
         cursor.delete();
         cursor.continue();
       } else {
-        console.log('\u2713 clear all data success :)');
+        console.log('\u2713 clear ' + storeName + '\'s ' + 'all data success :)');
         if (successCallback) {
           successCallback('clear all data success');
         }
@@ -241,47 +268,32 @@ IndexedDBHandler.prototype = (function prototypeGenerator() {
   }
 
   // update one
-  function updateItem(newData, successCallback) {
-    var that = this;
-    var putRequest = _whetherWriteTransaction(that._db, that._storeName, true).put(newData);
+  function updateItem(storeName, newData, successCallback) {
+    var transaction = _db.transaction([storeName], 'readwrite');
+    var putRequest = transaction.objectStore(storeName).put(newData);
 
     putRequest.onsuccess = function putSuccess() {
-      console.log('\u2713 update ' + that._key + ' = ' + newData[that._key] + ' data success :)');
+      console.log('\u2713 update ' + storeName + '\'s ' + putRequest.source.keyPath + ' = ' + newData[putRequest.source.keyPath] + ' data success :)');
       if (successCallback) {
         successCallback(newData);
       }
     };
   }
 
-  /* private methods */
-  function _whetherWriteTransaction(db, storeName, whetherWrite) {
-    var transaction;
-
-    if (whetherWrite) {
-      transaction = db.transaction([storeName], 'readwrite');
-    } else {
-      transaction = db.transaction([storeName]);
-    }
-
-    return transaction.objectStore(storeName);
+  function _getAllRequest(transaction, storeName) {
+    return transaction.objectStore(storeName).openCursor(IDBKeyRange.lowerBound(1), 'next');
   }
-
-  function _getAllRequest(db, storeName) {
-    return _whetherWriteTransaction(db, storeName, true).openCursor(IDBKeyRange.lowerBound(1), 'next');
-  }
-
 
   return {
-    constructor: IndexedDBHandler,
-    /* public interface */
+    open: open,
     getLength: getLength,
     getNewKey: getNewKey,
     getItem: getItem,
-    getConditionItem: getConditionItem,
+    getWhetherConditionItem: getWhetherConditionItem,
     getAll: getAll,
     addItem: addItem,
     removeItem: removeItem,
-    removeConditionItem: removeConditionItem,
+    removeWhetherConditionItem: removeWhetherConditionItem,
     clear: clear,
     updateItem: updateItem
   };
@@ -293,67 +305,60 @@ module.exports = IndexedDBHandler;
 'use strict';
 module.exports = {
   name: 'JustToDo',
-  version: '19',
-  key: 'id',
-  storeName: 'aphorism',
-  initialData: [
+  version: '23',
+  storeConfig: [
     {
-      "id": 1,
-      "content": "You're better than that"
+      storeName: 'list',
+      key: 'id',
+      initialData: [
+        { id: 0, event: 'JustDemo', finished: true, date: 0 }
+      ]
     },
     {
-      "id": 2,
-      "content": "Yesterday You Said Tomorrow"
-    },
-    {
-      "id": 3,
-      "content": "Why are we here?"
-    },
-    {
-      "id": 4,
-      "content": "All in, or nothing"
-    },
-    {
-      "id": 5,
-      "content": "You Never Try, You Never Know"
-    },
-    {
-      "id": 6,
-      "content": "The unexamined life is not worth living. -- Socrates"
+      storeName: 'aphorism',
+      key: 'id',
+      initialData: [
+        {
+          'id': 1,
+          'content': "You're better than that"
+        },
+        {
+          'id': 2,
+          'content': 'Yesterday You Said Tomorrow'
+        },
+        {
+          'id': 3,
+          'content': 'Why are we here?'
+        },
+        {
+          'id': 4,
+          'content': 'All in, or nothing'
+        },
+        {
+          'id': 5,
+          'content': 'You Never Try, You Never Know'
+        },
+        {
+          'id': 6,
+          'content': 'The unexamined life is not worth living. -- Socrates'
+        }
+      ]
     }
   ]
 };
 
 },{}],3:[function(require,module,exports){
 'use strict';
-module.exports = {
-  name: 'JustToDo',
-  version: '19',
-  key: 'id',
-  storeName: 'list',
-  initialData: [
-    { id: 0, event: 'JustDemo', finished: true, date: 0 }
-  ]
-};
-
-},{}],4:[function(require,module,exports){
-'use strict';
-module.exports = (function init() {
+(function init() {
   var DB = require('indexeddb-crud');
-  var listDBConfig = require('./db/listConfig.js');
-  var aphorismConfig = require('./db/aphorismConfig.js');
+  var DBConfig = require('./db/DBConfig.js');
   var addEvents = require('./utlis/addEvents.js');
-  // open DB, and when DB open succeed, invoke initial function
-  var aphorismDBHandler = new DB(aphorismConfig, function aphorism() { console.log('aphorismDB is ready'); });
-  var listDBHandler = new DB(listDBConfig, addEvents.dbSuccess, addEvents.dbFail);
 
-  return {
-    aphorismDBHandler: aphorismDBHandler,
-    listDBHandler: listDBHandler
-  };
+  // open DB, and when DB open succeed, invoke initial function
+  DB.open(DBConfig, addEvents.dbSuccess, addEvents.dbFail);
 }());
 
-},{"./db/aphorismConfig.js":2,"./db/listConfig.js":3,"./utlis/addEvents.js":5,"indexeddb-crud":1}],5:[function(require,module,exports){
+},{"./db/DBConfig.js":2,"./utlis/addEvents.js":4,"indexeddb-crud":1}],4:[function(require,module,exports){
 'use strict';
 module.exports = (function addEventsGenerator() {
   function _whetherSuccess(whetherSuccess) {
@@ -362,6 +367,9 @@ module.exports = (function addEventsGenerator() {
       var eventHandler = require('./eventHandler/eventHandler.js');
       var handler = whether ? eventHandler.dbSuccess : eventHandler.dbFail;
 
+      if (handler === eventHandler.dbFail) {
+        window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
+      }
       handler.showInit();
       // add all eventListener
       list = document.querySelector('#list');
@@ -386,7 +394,7 @@ module.exports = (function addEventsGenerator() {
   };
 }());
 
-},{"./eventHandler/eventHandler.js":8}],6:[function(require,module,exports){
+},{"./eventHandler/eventHandler.js":7}],5:[function(require,module,exports){
 'use strict';
 var dbFail = (function dbFailGenerator() {
   var refresh = require('../refresh/refresh.js').dbFail;
@@ -561,10 +569,11 @@ var dbFail = (function dbFailGenerator() {
 
 module.exports = dbFail;
 
-},{"../liGenerator.js":10,"../refresh/refresh.js":14,"./general.js":9}],7:[function(require,module,exports){
+},{"../liGenerator.js":9,"../refresh/refresh.js":13,"./general.js":8}],6:[function(require,module,exports){
 'use strict';
 var dbSuccess = (function dbSuccessGenerator() {
-  var DB = require('../../main.js').listDBHandler;
+  var storeName = 'list';
+  var DB = require('indexeddb-crud');
   var refresh = require('../refresh/refresh.js').dbSuccess;
   var liGenerator = require('../liGenerator.js');
   var general = require('./general.js');
@@ -579,11 +588,11 @@ var dbSuccess = (function dbSuccessGenerator() {
       return 0;
     }
     general.ifEmpty.removeInit();
-    newData = general.dataGenerator(DB.getNewKey(), inputValue);
+    newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
     list = document.querySelector('#list');
     list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
-    DB.addItem(newData);
+    DB.addItem(storeName, newData);
 
     return 0;
   }
@@ -603,7 +612,7 @@ var dbSuccess = (function dbSuccessGenerator() {
       if (targetLi.getAttribute('data-id')) {
         targetLi.classList.toggle('finished'); // toggle appearance
         id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-        DB.getItem(id, _toggleLi);
+        DB.getItem(storeName, id, _toggleLi);
       }
     }
   }
@@ -615,24 +624,24 @@ var dbSuccess = (function dbSuccessGenerator() {
     if (e.target.className === 'close') { // use event delegation
       // use previously stored data
       id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
-      DB.removeItem(id, showAll);
+      DB.removeItem(storeName, id, showAll);
     }
   }
 
   function showInit() {
     refresh.clear();
-    DB.getAll(refresh.init);
+    DB.getAll(storeName, refresh.init);
   }
 
   function showAll() {
     refresh.clear();
-    DB.getAll(refresh.all);
+    DB.getAll(storeName, refresh.all);
   }
 
   function showClear() {
     refresh.clear(); // clear nodes visually
     refresh.random();
-    DB.clear(); // clear data indeed
+    DB.clear(storeName); // clear data indeed
   }
 
   function showDone() {
@@ -647,12 +656,12 @@ var dbSuccess = (function dbSuccessGenerator() {
     var condition = 'finished';
 
     refresh.clear();
-    DB.getConditionItem(condition, whetherDone, refresh.part);
+    DB.getWhetherConditionItem(storeName, condition, whetherDone, refresh.part);
   }
 
   function _toggleLi(data) {
     data.finished = !data.finished;
-    DB.updateItem(data, showAll);
+    DB.updateItem(storeName, data, showAll);
   }
 
   return {
@@ -670,7 +679,7 @@ var dbSuccess = (function dbSuccessGenerator() {
 
 module.exports = dbSuccess;
 
-},{"../../main.js":4,"../liGenerator.js":10,"../refresh/refresh.js":14,"./general.js":9}],8:[function(require,module,exports){
+},{"../liGenerator.js":9,"../refresh/refresh.js":13,"./general.js":8,"indexeddb-crud":1}],7:[function(require,module,exports){
 'use strict';
 module.exports = (function handlerGenerator() {
   var dbSuccess = require('./dbSuccess.js');
@@ -682,7 +691,7 @@ module.exports = (function handlerGenerator() {
   };
 }());
 
-},{"./dbFail.js":6,"./dbSuccess.js":7}],9:[function(require,module,exports){
+},{"./dbFail.js":5,"./dbSuccess.js":6}],8:[function(require,module,exports){
 var general = (function generalGenerator() {
   var ifEmpty = {
     removeInit: function removeInit() {
@@ -741,13 +750,13 @@ var general = (function generalGenerator() {
 
 module.exports = general;
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 var liGenerator = (function liGenerator() {
   function _decorateLi(li, data) {
+    var text = document.createTextNode(' ' + data.event);
     var textDate = document.createTextNode(data.date + ': ');
     var textWrap = document.createElement('span');
-    var text = document.createTextNode(' ' + data.event);
 
     // wrap as a node
     textWrap.appendChild(text);
@@ -785,7 +794,7 @@ var liGenerator = (function liGenerator() {
 
 module.exports = liGenerator;
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = (function dbFailGenerator() {
   var general = require('./general.js');
 
@@ -813,16 +822,16 @@ module.exports = (function dbFailGenerator() {
 }());
 
 
-},{"./general.js":13}],12:[function(require,module,exports){
+},{"./general.js":12}],11:[function(require,module,exports){
 module.exports = (function dbSuccessGenerator() {
-  var DB = require('../../main.js').aphorismDBHandler;
+  var storeName = 'aphorism';
+  var DB = require('indexeddb-crud');
   var general = require('./general.js');
 
-  // open DB, and when DB open succeed, invoke initial function
   function randomAphorism() {
-    var randomIndex = Math.ceil(Math.random() * DB.getLength());
+    var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
-    DB.getItem(randomIndex, _parseText);
+    DB.getItem(storeName, randomIndex, _parseText);
   }
 
   function _parseText(data) {
@@ -840,7 +849,7 @@ module.exports = (function dbSuccessGenerator() {
   };
 }());
 
-},{"../../main.js":4,"./general.js":13}],13:[function(require,module,exports){
+},{"./general.js":12,"indexeddb-crud":1}],12:[function(require,module,exports){
 'use strict';
 var general = (function generalGenerator() {
   var liGenerator = require('../liGenerator.js');
@@ -941,6 +950,6 @@ var general = (function generalGenerator() {
 
 module.exports = general;
 
-},{"../liGenerator.js":10}],14:[function(require,module,exports){
-arguments[4][8][0].apply(exports,arguments)
-},{"./dbFail.js":11,"./dbSuccess.js":12,"dup":8}]},{},[4]);
+},{"../liGenerator.js":9}],13:[function(require,module,exports){
+arguments[4][7][0].apply(exports,arguments)
+},{"./dbFail.js":10,"./dbSuccess.js":11,"dup":7}]},{},[3]);

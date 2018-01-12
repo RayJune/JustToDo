@@ -7,9 +7,8 @@ var dbFail = (function dbFailGenerator() {
 
   function add() {
     var inputValue = document.querySelector('#input').value;
-    var list;
     var newData;
-    var newLi;
+    var list;
 
     if (inputValue === '') {
       window.alert('please input a real data~');
@@ -18,9 +17,8 @@ var dbFail = (function dbFailGenerator() {
     _removeRandom();
     _id += 1;
     newData = general.dataGenerator(_id, inputValue);
-    newLi = liGenerator(newData);
     list = document.querySelector('#list');
-    list.insertBefore(newLi, list.firstChild); // push newLi to first
+    list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
 
     return 0;
@@ -164,9 +162,10 @@ var dbFail = (function dbFailGenerator() {
     removeLi: removeLi,
     showInit: showInit,
     showAll: showAll,
-    showClear: showClear,
     showDone: showDone,
-    showTodo: showTodo
+    showTodo: showTodo,
+    // showClearDone: showClearDone,
+    showClear: showClear
   };
 }());
 

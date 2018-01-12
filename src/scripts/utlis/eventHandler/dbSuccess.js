@@ -45,6 +45,11 @@ var dbSuccess = (function dbSuccessGenerator() {
     }
   }
 
+  function _toggleLi(data) {
+    data.finished = !data.finished;
+    DB.updateItem(storeName, data, showAll);
+  }
+
   // li's [x]'s delete
   function removeLi(e) {
     var id;
@@ -66,12 +71,6 @@ var dbSuccess = (function dbSuccessGenerator() {
     DB.getAll(storeName, refresh.all);
   }
 
-  function showClear() {
-    refresh.clear(); // clear nodes visually
-    refresh.random();
-    DB.clear(storeName); // clear data indeed
-  }
-
   function showDone() {
     _showWhetherDone(true);
   }
@@ -87,9 +86,19 @@ var dbSuccess = (function dbSuccessGenerator() {
     DB.getWhetherConditionItem(storeName, condition, whetherDone, refresh.part);
   }
 
-  function _toggleLi(data) {
-    data.finished = !data.finished;
-    DB.updateItem(storeName, data, showAll);
+  function showClearDone() {
+    var condition = 'finished';
+
+    refresh.clear();
+    DB.removeWhetherConditionItem(storeName, condition, true, function showLeftData() {
+      DB.getAll(storeName, refresh.part);
+    });
+  }
+
+  function showClear() {
+    refresh.clear(); // clear nodes visually
+    refresh.random();
+    DB.clear(storeName); // clear data indeed
   }
 
   return {
@@ -99,9 +108,10 @@ var dbSuccess = (function dbSuccessGenerator() {
     removeLi: removeLi,
     showInit: showInit,
     showAll: showAll,
-    showClear: showClear,
     showDone: showDone,
-    showTodo: showTodo
+    showTodo: showTodo,
+    showClearDone: showClearDone,
+    showClear: showClear
   };
 }());
 

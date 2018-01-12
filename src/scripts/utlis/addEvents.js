@@ -19,6 +19,7 @@ module.exports = (function addEventsGenerator() {
       document.querySelector('#showDone').addEventListener('click', handler.showDone, false);
       document.querySelector('#showTodo').addEventListener('click', handler.showTodo, false);
       document.querySelector('#showAll').addEventListener('click', handler.showAll, false);
+      document.querySelector('#showClearDone').addEventListener('click', handler.showClearDone, false);
       document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
     }
 

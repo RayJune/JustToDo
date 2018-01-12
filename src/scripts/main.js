@@ -5,5 +5,5 @@
   var addEvents = require('./utlis/addEvents.js');
 
   // open DB, and when DB open succeed, invoke initial function
-  DB.open(DBConfig, addEvents.dbSuccess, addEvents.dbFail);
+  DB.open(DBConfig, addEvents.dbFail, addEvents.dbFail);
 }());

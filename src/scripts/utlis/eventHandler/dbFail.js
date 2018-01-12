@@ -15,22 +15,20 @@ var dbFail = (function dbFailGenerator() {
       window.alert('please input a real data~');
       return 0;
     }
-    _removeRandom();
+    list = document.querySelector('#list');
+    _removeRandom(list);
     _id += 1;
     newData = general.dataGenerator(_id, inputValue);
-    list = document.querySelector('#list');
     list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
     document.querySelector('#input').value = '';  // reset input's values
 
     return 0;
   }
 
-  function _removeRandom() {
-    var list = document.querySelector('#list');
+  function _removeRandom(list) {
     var listItems = list.childNodes;
 
     _forEach.call(listItems, function whetherHasRandom(item) {
-      // console.log(index);
       if (item.classList.contains('aphorism')) {
         list.removeChild(item);
       }
@@ -74,6 +72,7 @@ var dbFail = (function dbFailGenerator() {
     var list = document.querySelector('#list');
     var listItems = list.childNodes;
     var id = element.parentNode.getAttribute('data-id');
+
     try {
       _forEach.call(listItems, function whetherHasRandom(item) {
         if (item.getAttribute('data-id') === id) {
@@ -90,12 +89,12 @@ var dbFail = (function dbFailGenerator() {
   general.ifEmpty.addRandom = function addRandom() {
     var list = document.querySelector('#list');
 
-    if (!list.firstChild || _isAllNone(list)) {
+    if (!list.hasChildNodes() || _allDisappear(list)) {
       refresh.random();
     }
   };
 
-  function _isAllNone(list) {
+  function _allDisappear(list) {
     var listItems = list.childNodes;
 
     return Array.prototype.every.call(listItems, function whetherHasRandom(item) {
@@ -130,17 +129,31 @@ var dbFail = (function dbFailGenerator() {
   }
 
   function _showWhetherDone(whetherDone) {
-    var listItems = document.querySelector('#list').childNodes;
+    var list = document.querySelector('#list');
+    var listItems = list.childNodes;
 
+    _removeRandom(list);
     _forEach.call(listItems, function whetherDoneAppear(item) {
       item.classList.contains('finished') ? _whetherAppear(item, whetherDone) : _whetherAppear(item, !whetherDone);
     });
-    _removeRandom();
     general.ifEmpty.addRandom();
   }
 
   function _whetherAppear(element, whether) {
     element.style.display = whether ? 'block' : 'none';
+  }
+
+  function showClearDone() {
+    var list = document.querySelector('#list');
+    var listItems = list.childNodes;
+
+    _removeRandom(list);
+    _forEach.call(listItems, function clearDoneItems(item) {
+      if (item.classList.contains('finished')) {
+        list.removeChild(item);
+      }
+    });
+    general.ifEmpty.addRandom();
   }
 
   function showClear() {
@@ -157,7 +170,7 @@ var dbFail = (function dbFailGenerator() {
     showAll: showAll,
     showDone: showDone,
     showTodo: showTodo,
-    // showClearDone: showClearDone,
+    showClearDone: showClearDone,
     showClear: showClear
   };
 }());

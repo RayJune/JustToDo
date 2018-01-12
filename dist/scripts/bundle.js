@@ -34,27 +34,16 @@ var IndexedDBHandler = (function init() {
       // All other databases have been closed. Set everything up.
       _db = e.target.result;
       console.log('\u2713 onupgradeneeded in');
-      _parseJSONData(config.storeConfig, 'storeName').forEach(function detectStoreName(storeConfig, index) {
-        if (!(_db.objectStoreNames.contains(storeConfig.storeName))) {
-          _createObjectStore(storeConfig);
-        }
-      });
+      _createObjectStoreHandler(config.storeConfig);
     };
 
     openRequest.onsuccess = function openSuccess(e) {
-      var objectStoreList = _parseJSONData(config.storeConfig, 'storeName');
-
       _db = e.target.result;
-      objectStoreList.forEach(function detectStoreName(storeConfig, index) {
-        if (index === (objectStoreList.length - 1)) {
-          _getPresentKey(storeConfig.storeName, function () {
-            successCallback();
-            console.log('\u2713 open indexedDB success');
-          });
-        } else {
-          _getPresentKey(storeConfig.storeName);
-        }
-      });
+      _db.onversionchange = function versionchangeHandler() {
+        _db.close();
+        window.alert('A new version of this page is ready. Please reload');
+      };
+      _openSuccessCallbackHandler(config.storeConfig, successCallback);
     };
 
     // use error events bubble to handle all error events
@@ -65,11 +54,56 @@ var IndexedDBHandler = (function init() {
     };
   }
 
+  function _openSuccessCallbackHandler(configStoreConfig, successCallback) {
+    var objectStoreList = _parseJSONData(configStoreConfig, 'storeName');
+
+    objectStoreList.forEach(function detectStoreName(storeConfig, index) {
+      if (index === (objectStoreList.length - 1)) {
+        _getPresentKey(storeConfig.storeName, function () {
+          successCallback();
+          console.log('\u2713 open indexedDB success');
+        });
+      } else {
+        _getPresentKey(storeConfig.storeName);
+      }
+    });
+  }
+
+  // set present key value to _presentKey (the private property)
+  function _getPresentKey(storeName, successCallback) {
+    var transaction = _db.transaction([storeName]);
+
+    _presentKey[storeName] = 0;
+    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
+      var cursor = e.target.result;
+
+      if (cursor) {
+        _presentKey[storeName] = cursor.value.id;
+        cursor.continue();
+      }
+    };
+    transaction.oncomplete = function completeGetPresentKey() {
+      console.log('\u2713 now ' + storeName + '\'s max key is ' +  _presentKey[storeName]); // initial value is 0
+      if (successCallback) {
+        successCallback();
+        console.log('\u2713 openSuccessCallback' + ' finished');
+      }
+    };
+  }
+
+  function _createObjectStoreHandler(configStoreConfig) {
+    _parseJSONData(configStoreConfig, 'storeName').forEach(function detectStoreName(storeConfig) {
+      if (!(_db.objectStoreNames.contains(storeConfig.storeName))) {
+        _createObjectStore(storeConfig);
+      }
+    });
+  }
+
   function _createObjectStore(storeConfig) {
-    var objectStore = _db.createObjectStore(storeConfig.storeName, { keyPath: storeConfig.key, autoIncrement: true });
+    var store = _db.createObjectStore(storeConfig.storeName, { keyPath: storeConfig.key, autoIncrement: true });
 
     // Use transaction oncomplete to make sure the object Store creation is finished
-    objectStore.transaction.oncomplete = function addinitialData() {
+    store.transaction.oncomplete = function addinitialData() {
       console.log('\u2713 create ' + storeConfig.storeName + '\'s object store succeed');
       if (storeConfig.initialData) {
         // Store initial values in the newly created object store.
@@ -107,27 +141,6 @@ var IndexedDBHandler = (function init() {
     }
   }
 
-  // set present key value to _presentKey (the private property)
-  function _getPresentKey(storeName, successCallback) {
-    var transaction = _db.transaction([storeName]);
-
-    _presentKey[storeName] = 0;
-    _getAllRequest(transaction, storeName).onsuccess = function getAllSuccess(e) {
-      var cursor = e.target.result;
-
-      if (cursor) {
-        _presentKey[storeName] = cursor.value.id;
-        cursor.continue();
-      } else {
-        console.log('\u2713 now ' + storeName + '\'s max key is ' +  _presentKey[storeName]); // initial value is 0
-        if (successCallback) {
-          successCallback();
-          console.log('\u2713 openSuccessCallback' + ' finished');
-        }
-      }
-    };
-  }
-
   function getLength(storeName) {
     return _presentKey[storeName];
   }
@@ -145,7 +158,7 @@ var IndexedDBHandler = (function init() {
     var addRequest = transaction.objectStore(storeName).add(newData);
 
     addRequest.onsuccess = function addSuccess() {
-      console.log('\u2713 add ' + storeName + '\'s '+ addRequest.source.keyPath + ' = ' + newData[addRequest.source.keyPath] + ' data succeed :)');
+      console.log('\u2713 add ' + storeName + '\'s ' + addRequest.source.keyPath + ' = ' + newData[addRequest.source.keyPath] + ' data succeed :)');
       if (successCallback) {
         successCallback(newData);
       }
@@ -183,11 +196,12 @@ var IndexedDBHandler = (function init() {
           }
         }
         cursor.continue();
-      } else {
-        console.log('\u2713 get ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
-        if (successCallback) {
-          successCallback(result);
-        }
+      }
+    };
+    transaction.oncomplete = function completeAddAll() {
+      console.log('\u2713 get ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
+      if (successCallback) {
+        successCallback(result);
       }
     };
   }
@@ -202,11 +216,12 @@ var IndexedDBHandler = (function init() {
       if (cursor) {
         result.push(cursor.value);
         cursor.continue();
-      } else {
-        console.log('\u2713 get ' + storeName + '\'s ' + 'all data success :)');
-        if (successCallback) {
-          successCallback(result);
-        }
+      }
+    };
+    transaction.oncomplete = function completeGetAll() {
+      console.log('\u2713 get ' + storeName + '\'s ' + 'all data success :)');
+      if (successCallback) {
+        successCallback(result);
       }
     };
   }
@@ -240,11 +255,12 @@ var IndexedDBHandler = (function init() {
           }
         }
         cursor.continue();
-      } else {
-        console.log('\u2713 remove ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
-        if (successCallback) {
-          successCallback();
-        }
+      }
+    };
+    transaction.oncomplete = function completeRemoveWhether() {
+      console.log('\u2713 remove ' + storeName + '\'s ' + condition + ' : ' + whether  + ' data success :)');
+      if (successCallback) {
+        successCallback();
       }
     };
   }
@@ -258,11 +274,12 @@ var IndexedDBHandler = (function init() {
       if (cursor) {
         cursor.delete();
         cursor.continue();
-      } else {
-        console.log('\u2713 clear ' + storeName + '\'s ' + 'all data success :)');
-        if (successCallback) {
-          successCallback('clear all data success');
-        }
+      }
+    };
+    transaction.oncomplete = function completeClear() {
+      console.log('\u2713 clear ' + storeName + '\'s ' + 'all data success :)');
+      if (successCallback) {
+        successCallback('clear all data success');
       }
     };
   }
@@ -341,6 +358,10 @@ module.exports = {
         {
           'id': 6,
           'content': 'The unexamined life is not worth living. -- Socrates'
+        },
+        {
+          'id': 7,
+          'content': 'There is only one thing we say to lazy: NOT TODAY'
         }
       ]
     }
@@ -351,14 +372,14 @@ module.exports = {
 'use strict';
 (function init() {
   var DB = require('indexeddb-crud');
-  var DBConfig = require('./db/DBConfig.js');
+  var DBConfig = require('./db/config.js');
   var addEvents = require('./utlis/addEvents.js');
 
   // open DB, and when DB open succeed, invoke initial function
   DB.open(DBConfig, addEvents.dbSuccess, addEvents.dbFail);
 }());
 
-},{"./db/DBConfig.js":2,"./utlis/addEvents.js":4,"indexeddb-crud":1}],4:[function(require,module,exports){
+},{"./db/config.js":2,"./utlis/addEvents.js":4,"indexeddb-crud":1}],4:[function(require,module,exports){
 'use strict';
 module.exports = (function addEventsGenerator() {
   function _whetherSuccess(whetherSuccess) {
@@ -394,7 +415,14 @@ module.exports = (function addEventsGenerator() {
   };
 }());
 
-},{"./eventHandler/eventHandler.js":7}],5:[function(require,module,exports){
+},{"./eventHandler/eventHandler.js":8}],5:[function(require,module,exports){
+module.exports = function clearChildNodes(root) {
+  var temp = root.cloneNode(false);
+
+  root.parentNode.replaceChild(temp, root);
+};
+
+},{}],6:[function(require,module,exports){
 'use strict';
 var dbFail = (function dbFailGenerator() {
   var refresh = require('../refresh/refresh.js').dbFail;
@@ -569,7 +597,7 @@ var dbFail = (function dbFailGenerator() {
 
 module.exports = dbFail;
 
-},{"../liGenerator.js":9,"../refresh/refresh.js":13,"./general.js":8}],6:[function(require,module,exports){
+},{"../liGenerator.js":10,"../refresh/refresh.js":14,"./general.js":9}],7:[function(require,module,exports){
 'use strict';
 var dbSuccess = (function dbSuccessGenerator() {
   var storeName = 'list';
@@ -679,9 +707,9 @@ var dbSuccess = (function dbSuccessGenerator() {
 
 module.exports = dbSuccess;
 
-},{"../liGenerator.js":9,"../refresh/refresh.js":13,"./general.js":8,"indexeddb-crud":1}],7:[function(require,module,exports){
+},{"../liGenerator.js":10,"../refresh/refresh.js":14,"./general.js":9,"indexeddb-crud":1}],8:[function(require,module,exports){
 'use strict';
-module.exports = (function handlerGenerator() {
+module.exports = (function eventHandlerGenerator() {
   var dbSuccess = require('./dbSuccess.js');
   var dbFail = require('./dbFail.js');
 
@@ -691,7 +719,7 @@ module.exports = (function handlerGenerator() {
   };
 }());
 
-},{"./dbFail.js":5,"./dbSuccess.js":6}],8:[function(require,module,exports){
+},{"./dbFail.js":6,"./dbSuccess.js":7}],9:[function(require,module,exports){
 var general = (function generalGenerator() {
   var ifEmpty = {
     removeInit: function removeInit() {
@@ -750,7 +778,7 @@ var general = (function generalGenerator() {
 
 module.exports = general;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 var liGenerator = (function liGenerator() {
   function _decorateLi(li, data) {
@@ -794,7 +822,7 @@ var liGenerator = (function liGenerator() {
 
 module.exports = liGenerator;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = (function dbFailGenerator() {
   var general = require('./general.js');
 
@@ -804,7 +832,8 @@ module.exports = (function dbFailGenerator() {
       'Why are we here?',
       'All in, or nothing',
       'You Never Try, You Never Know',
-      'The unexamined life is not worth living. -- Socrates'
+      'The unexamined life is not worth living. -- Socrates',
+      'There is only one thing we say to lazy: NOT TODAY'
     ];
     var randomIndex = Math.floor(Math.random() * aphorisms.length);
     var text = aphorisms[randomIndex];
@@ -822,7 +851,7 @@ module.exports = (function dbFailGenerator() {
 }());
 
 
-},{"./general.js":12}],11:[function(require,module,exports){
+},{"./general.js":13}],12:[function(require,module,exports){
 module.exports = (function dbSuccessGenerator() {
   var storeName = 'aphorism';
   var DB = require('indexeddb-crud');
@@ -849,65 +878,41 @@ module.exports = (function dbSuccessGenerator() {
   };
 }());
 
-},{"./general.js":12,"indexeddb-crud":1}],12:[function(require,module,exports){
+},{"./general.js":13,"indexeddb-crud":1}],13:[function(require,module,exports){
 'use strict';
 var general = (function generalGenerator() {
   var liGenerator = require('../liGenerator.js');
+  var clearChildNodes = require('../clearChildNodes.js');
 
   function init(dataArr) {
-    _show(_initSentence, dataArr);
+    _show(_initSentence, _showAll, dataArr);
   }
 
-  function all(randomAphorism, dataArr) {
-    _show(randomAphorism, dataArr);
-  }
-
-  function part(randomAphorism, dataArr) {
-    var nodes;
-
+  function _show(showSentenceFunc, showFunc, dataArr) {
     if (!dataArr || dataArr.length === 0) {
-      randomAphorism();
+      showSentenceFunc();
     } else {
-      nodes = dataArr.reduce(function nodeGenerator(result, data) {
-        result.insertBefore(liGenerator(data), result.firstChild);
-
-        return result;
-      }, document.createDocumentFragment()); // PUNCHLINE: brilliant arr.reduce() + documentFragment
-
-      document.querySelector('#list').appendChild(nodes); // add it to DOM
+      showFunc(dataArr);
     }
   }
 
-  function clear() {
-    var root = document.querySelector('#list');
+  function _initSentence() {
+    var text = 'Welcome~, try to add your first to-do list : )';
 
-    while (root.hasChildNodes()) {
-      root.removeChild(root.firstChild); // the best way to clean childNodes
-    }
+    sentenceHandler(text);
   }
 
-
-  /* private methods */
-
-  function _show(sentenceFunc, dataArr) {
-    if (!dataArr || dataArr.length === 0) {
-      sentenceFunc();
-    } else {
-      _showRefresh(dataArr);
-    }
-  }
-
-  function _showRefresh(dataArr) {
+  function _showAll(dataArr) {
     var result = _classifyData(dataArr);
 
     document.querySelector('#list').appendChild(result); // add it to DOM
   }
 
   function _classifyData(dataArr) {
-    // use fragment to reduce DOM operate
+    // PUNCHLINE: use fragment to reduce DOM operate
     var unfishied = document.createDocumentFragment();
     var finished = document.createDocumentFragment();
-    var fusion = document.createDocumentFragment();
+    var mix = document.createDocumentFragment();
 
     // put the finished item to the bottom
     dataArr.forEach(function classify(data) {
@@ -917,19 +922,35 @@ var general = (function generalGenerator() {
         unfishied.insertBefore(liGenerator(data), unfishied.firstChild);
       }
     });
-    fusion.appendChild(unfishied);
-    fusion.appendChild(finished);
+    mix.appendChild(unfishied);
+    mix.appendChild(finished);
 
-    return fusion;
+    return mix;
   }
 
-  function _initSentence() {
-    var text = 'Welcome~, try to add your first to-do list : )';
-
-    sentenceGenerator(text);
+  function all(randomAphorism, dataArr) {
+    _show(randomAphorism, _showAll, dataArr);
   }
 
-  function sentenceGenerator(text) {
+  function part(randomAphorism, dataArr) {
+    _show(randomAphorism, _showpart, dataArr);
+  }
+
+  function _showpart(dataArr) {
+    var nodes = dataArr.reduce(function nodeGenerator(result, data) {
+      result.insertBefore(liGenerator(data), result.firstChild);
+
+      return result;
+    }, document.createDocumentFragment()); // PUNCHLINE: brilliant arr.reduce() + documentFragment
+
+    document.querySelector('#list').appendChild(nodes); // add it to DOM
+  }
+
+  function clear() {
+    clearChildNodes(document.querySelector('#list'));
+  }
+
+  function sentenceHandler(text) {
     var li = document.createElement('li');
     var textNode = document.createTextNode(text);
 
@@ -944,12 +965,22 @@ var general = (function generalGenerator() {
     all: all,
     part: part,
     clear: clear,
-    sentenceGenerator: sentenceGenerator
+    sentenceHandler: sentenceHandler
   };
 }());
 
 module.exports = general;
 
-},{"../liGenerator.js":9}],13:[function(require,module,exports){
-arguments[4][7][0].apply(exports,arguments)
-},{"./dbFail.js":10,"./dbSuccess.js":11,"dup":7}]},{},[3]);
+},{"../clearChildNodes.js":5,"../liGenerator.js":10}],14:[function(require,module,exports){
+'use strict';
+module.exports = (function refreshGenerator() {
+  var dbSuccess = require('./dbSuccess.js');
+  var dbFail = require('./dbFail.js');
+
+  return {
+    dbSuccess: dbSuccess,
+    dbFail: dbFail
+  };
+}());
+
+},{"./dbFail.js":11,"./dbSuccess.js":12}]},{},[3]);

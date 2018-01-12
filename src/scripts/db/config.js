@@ -37,6 +37,10 @@ module.exports = {
         {
           'id': 6,
           'content': 'The unexamined life is not worth living. -- Socrates'
+        },
+        {
+          'id': 7,
+          'content': 'There is only one thing we say to lazy: NOT TODAY'
         }
       ]
     }

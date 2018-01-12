@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (function handlerGenerator() {
+module.exports = (function eventHandlerGenerator() {
   var dbSuccess = require('./dbSuccess.js');
   var dbFail = require('./dbFail.js');
 

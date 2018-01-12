@@ -12,7 +12,7 @@ module.exports = (function dbSuccessGenerator() {
   function _parseText(data) {
     var text = data.content;
 
-    general.sentenceGenerator(text);
+    general.sentenceHandler(text);
   }
 
   return {

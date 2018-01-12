@@ -13,7 +13,7 @@ module.exports = (function dbFailGenerator() {
     var randomIndex = Math.floor(Math.random() * aphorisms.length);
     var text = aphorisms[randomIndex];
 
-    general.sentenceGenerator(text);
+    general.sentenceHandler(text);
   }
 
   return {

@@ -1,5 +1,6 @@
 module.exports = function clearChildNodes(root) {
-  var temp = root.cloneNode(false);
-
-  root.parentNode.replaceChild(temp, root);
+  while (root.hasChildNodes()) { // or root.firstChild or root.lastChild
+    root.removeChild(root.firstChild);
+  }
+  // or root.innerHTML = ''
 };

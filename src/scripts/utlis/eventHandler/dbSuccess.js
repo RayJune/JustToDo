@@ -2,7 +2,7 @@
 var dbSuccess = (function dbSuccessGenerator() {
   var storeName = 'list';
   var DB = require('indexeddb-crud');
-  var refresh = require('../refresh/refresh.js').dbSuccess;
+  var refresh = require('../refresh/dbSuccess');
   var liGenerator = require('../liGenerator.js');
   var general = require('./general.js');
 

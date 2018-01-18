@@ -17,19 +17,13 @@ var dbSuccess = (function dbSuccessGenerator() {
   }
 
   function _addHandler(inputValue) {
-    var list = document.querySelector('#list');
     var newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
-    var newNode = document.createElement('div');
+    var rendered = itemGenerator(newData);
 
     general.ifEmpty.removeInit();
-    newNode.innerHTML = itemGenerator(newData); // PUNCHLINE: newNode.innerHTML
-    list.insertBefore(newNode, list.firstChild); // push newLi to first
-    _resetInput();
+    document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
+    general.resetInput();
     DB.addItem(storeName, newData);
-  }
-
-  function _resetInput() {
-    document.querySelector('#input').value = '';
   }
 
   function enterAdd(e) {
@@ -62,11 +56,24 @@ var dbSuccess = (function dbSuccessGenerator() {
     var id;
 
     if (e.target.className === 'close') { // use event delegation
+      // delete visually
+      document.querySelector('#list').removeChild(e.target.parentNode);
+      general.ifEmpty.addRandom();
       // use previously stored data
       id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
-      DB.removeItem(storeName, id, showAll);
+      // delete actually
+      DB.removeItem(storeName, id);
     }
   }
+
+  // for Semantic
+  general.ifEmpty.addRandom = function addRandom() {
+    var list = document.querySelector('#list');
+
+    if (!list.hasChildNodes()) {
+      refresh.random();
+    }
+  };
 
   function showInit() {
     DB.getAll(storeName, refresh.init);

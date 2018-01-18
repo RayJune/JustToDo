@@ -9,6 +9,10 @@ var general = (function generalGenerator() {
     }
   };
 
+  function resetInput() {
+    document.querySelector('#input').value = '';
+  }
+
   function dataGenerator(key, value) {
     return {
       id: key,
@@ -50,6 +54,7 @@ var general = (function generalGenerator() {
 
   return {
     ifEmpty: ifEmpty,
+    resetInput: resetInput,
     dataGenerator: dataGenerator
   };
 }());

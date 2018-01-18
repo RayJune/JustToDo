@@ -24,11 +24,7 @@ var dbFail = (function dbFailGenerator() {
     _id += 1;
     newData = general.dataGenerator(_id, inputValue);
     list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
-    _resetInput();
-  }
-
-  function _resetInput() {
-    document.querySelector('#input').value = '';
+    general.resetInput();
   }
 
   function _removeRandom(list) {

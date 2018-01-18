@@ -19,7 +19,8 @@
 - [x] 使用 gulp 包来组建 npm 的 workflow
 - [x] 抛弃 gulp，**构建 npm workflow 的本质就是 npm scripts**，用 npm scripts 重构 workflow (主要是使用 commonJS 以及 压缩 JS 和 CSS)
 - [x] 提供 without indexedDB mode
-- [ ] 使用懒加载策略加载 without indexedDB mode
+- [x] 使用懒加载策略加载 without indexedDB mode
+- [x] 使用 JavaScript templete engine 将 HTML 和 JavaScript 分离，提升渲染效率(using handlebars, prebuild scheme)
 - [ ] 添加返回顶部的按钮
 - [ ] 把 webpack 拿来当做普通的 shell 一样使用
 - [ ] 用 ES6 来重构代码

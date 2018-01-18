@@ -4,6 +4,7 @@
   "description": "就是去做",
   "main": ".eslintrc.js",
   "scripts": {
+    "handlebars": "cd templete && handlebars li.handlebars -f template.js && cd ..",
     "prebuild": "npm run clean",
     "clean": "rm -rf dist/**/*",
     "build": "npm run build:scripts && npm run build:styles",

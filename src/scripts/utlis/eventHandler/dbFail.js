@@ -1,28 +1,34 @@
 'use strict';
 var dbFail = (function dbFailGenerator() {
-  var refresh = require('../refresh/dbFail');
-  var liGenerator = require('../liGenerator.js');
+  var refresh = require('../refresh/dbFail.js');
+  var itemGenerator = require('../templete/itemGenerator.js');
   var general = require('./general.js');
   var _id = 0; // so the first item's id is 1
   var _forEach = Array.prototype.forEach; // simplify
 
   function add() {
     var inputValue = document.querySelector('#input').value;
-    var newData;
-    var list;
 
     if (inputValue === '') {
       window.alert('please input a real data~');
-      return 0;
+    } else {
+      addHandler(inputValue);
     }
-    list = document.querySelector('#list');
+  }
+
+  function addHandler(inputValue) {
+    var newData;
+    var list = document.querySelector('#list');
+
     _removeRandom(list);
     _id += 1;
     newData = general.dataGenerator(_id, inputValue);
-    list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
-    document.querySelector('#input').value = '';  // reset input's values
+    list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
+    _resetInput();
+  }
 
-    return 0;
+  function _resetInput() {
+    document.querySelector('#input').value = '';
   }
 
   function _removeRandom(list) {
@@ -103,7 +109,6 @@ var dbFail = (function dbFailGenerator() {
   }
 
   function showInit() {
-    refresh.clear();
     refresh.init();
   }
 

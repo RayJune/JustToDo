@@ -3,26 +3,33 @@ var dbSuccess = (function dbSuccessGenerator() {
   var storeName = 'list';
   var DB = require('indexeddb-crud');
   var refresh = require('../refresh/dbSuccess');
-  var liGenerator = require('../liGenerator.js');
+  var itemGenerator = require('../templete/itemGenerator.js');
   var general = require('./general.js');
 
   function add() {
-    var list;
-    var newData;
     var inputValue = document.querySelector('#input').value;
 
     if (inputValue === '') {
       window.alert('please input a real data~');
-      return 0;
+    } else {
+      _addHandler(inputValue);
     }
-    general.ifEmpty.removeInit();
-    newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
-    list = document.querySelector('#list');
-    list.insertBefore(liGenerator(newData), list.firstChild); // push newLi to first
-    document.querySelector('#input').value = '';  // reset input's values
-    DB.addItem(storeName, newData);
+  }
 
-    return 0;
+  function _addHandler(inputValue) {
+    var list = document.querySelector('#list');
+    var newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
+    var newNode = document.createElement('div');
+
+    general.ifEmpty.removeInit();
+    newNode.innerHTML = itemGenerator(newData); // PUNCHLINE: newNode.innerHTML
+    list.insertBefore(newNode, list.firstChild); // push newLi to first
+    _resetInput();
+    DB.addItem(storeName, newData);
+  }
+
+  function _resetInput() {
+    document.querySelector('#input').value = '';
   }
 
   function enterAdd(e) {
@@ -62,12 +69,10 @@ var dbSuccess = (function dbSuccessGenerator() {
   }
 
   function showInit() {
-    refresh.clear();
     DB.getAll(storeName, refresh.init);
   }
 
   function showAll() {
-    refresh.clear();
     DB.getAll(storeName, refresh.all);
   }
 
@@ -82,14 +87,12 @@ var dbSuccess = (function dbSuccessGenerator() {
   function _showWhetherDone(whetherDone) {
     var condition = 'finished';
 
-    refresh.clear();
     DB.getWhetherConditionItem(storeName, condition, whetherDone, refresh.part);
   }
 
   function showClearDone() {
     var condition = 'finished';
 
-    refresh.clear();
     DB.removeWhetherConditionItem(storeName, condition, true, function showLeftData() {
       DB.getAll(storeName, refresh.part);
     });

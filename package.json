@@ -5,8 +5,8 @@
   "main": ".eslintrc.js",
   "scripts": {
     "prebuild": "npm run clean",
-    "build": "npm run build:scripts && npm run build:styles",
     "clean": "rm -rf dist/**/*",
+    "build": "npm run build:scripts && npm run build:styles",
     "build:scripts": "npm run build:scripts:main && npm run build:scripts:lazyLoad",
     "prebuild:scripts:main": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js --debug",
     "build:scripts:main": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js",
@@ -39,6 +39,7 @@
     "uglify-js": "^3.2.2"
   },
   "dependencies": {
+    "handlebars": "^4.0.11",
     "indexeddb-crud": "^3.2.0",
     "normalize.css": "^7.0.0"
   }

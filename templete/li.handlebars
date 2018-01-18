@@ -1,0 +1,20 @@
+{{#if sentence}}
+  <li class="aphorism">{{sentence}}</li>
+{{else}}
+  {{#each listItems}}
+    {{#if finished}}
+      <li class="finished" data-id={{id}}>
+        {{date}} : 
+        <span>{{event}}</span>
+        <span class="close">×</span>
+      </li>
+    {{else}}
+      <li data-id={{id}}>
+        {{date}} : 
+        <span>{{event}}</span>
+        <span class="close">×</span>
+      </li>
+    {{/if}}
+  {{/each}}
+{{/if}}
+{{!-- cd templete && handlebars li.handlebars -m -f template.js && cd .. --}}

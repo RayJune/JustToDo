@@ -4,15 +4,15 @@
 
 #### 首页
 
-![首页](markdownImages/1.jpg)
+![首页](markdownImages/1.png)
 
 #### 添加 item
 
-![todolist](markdownImages/2.jpg)
+![todolist](markdownImages/2.png)
 
 #### 随机名言警句
 
-![随机名言警句](markdownImages/3.jpg)
+![随机名言警句](markdownImages/3.png)
 
 ### 主要功能
 

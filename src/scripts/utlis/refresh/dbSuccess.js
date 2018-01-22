@@ -1,28 +1,35 @@
-'use strict';
-var refresh = (function dbSuccessGenerator() {
-  var storeName = 'aphorism';
-  var DB = require('indexeddb-crud');
-  var general = require('./general');
+import DB from 'indexeddb-crud';
+import General from './general';
+
+const Refresh = (() => {
+  const storeName = 'aphorism';
 
   function randomAphorism() {
-    var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
+    const randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
     DB.getItem(storeName, randomIndex, _parseText);
   }
 
   function _parseText(data) {
-    var text = data.content;
+    const text = data.content;
 
-    general.sentenceHandler(text);
+    General.sentenceHandler(text);
   }
 
   return {
-    init: general.init,
-    all: general.all.bind(null, randomAphorism),  // PUNCHLINE: use bind to pass paramter
-    part: general.part.bind(null, randomAphorism),
-    clear: general.clear,
-    random: randomAphorism
+    init: General.init,
+    all: General.all.bind(null, randomAphorism), // PUNCHLINE: use bind to pass paramter
+    part: General.part.bind(null, randomAphorism),
+    clear: General.clear,
+    random: randomAphorism,
   };
-}());
+  // return {
+  //   init: General.init,
+  //   all: () => General.all(randomAphorism),
+  //   part: () => General.part(randomAphorism),
+  //   clear: General.clear,
+  //   random: randomAphorism,
+  // };
+})();
 
-module.exports = refresh;
+export default Refresh;

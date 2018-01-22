@@ -1,6 +1,5 @@
-'use strict';
 function lazyLoadWithoutDB() {
-  var element = document.createElement('script');
+  const element = document.createElement('script');
 
   element.type = 'text/javascript';
   element.async = true;
@@ -8,4 +7,4 @@ function lazyLoadWithoutDB() {
   document.body.appendChild(element);
 }
 
-module.exports = lazyLoadWithoutDB;
+export default lazyLoadWithoutDB;

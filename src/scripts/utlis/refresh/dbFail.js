@@ -1,29 +1,35 @@
-'use strict';
-var refresh = (function dbFailGenerator() {
-  var general = require('./general');
+import General from './general';
 
+const Refresh = (() => {
   function randomAphorism() {
-    var aphorisms = [
+    const aphorisms = [
       'Yesterday You Said Tomorrow',
       'Why are we here?',
       'All in, or nothing',
       'You Never Try, You Never Know',
       'The unexamined life is not worth living. -- Socrates',
-      'There is only one thing we say to lazy: NOT TODAY'
+      'There is only one thing we say to lazy: NOT TODAY',
     ];
-    var randomIndex = Math.floor(Math.random() * aphorisms.length);
-    var text = aphorisms[randomIndex];
+    const randomIndex = Math.floor(Math.random() * aphorisms.length);
+    const text = aphorisms[randomIndex];
 
-    general.sentenceHandler(text);
+    General.sentenceHandler(text);
   }
 
   return {
-    init: general.init,
-    all: general.all.bind(null, randomAphorism),
-    part: general.part.bind(null, randomAphorism),
-    clear: general.clear,
-    random: randomAphorism
+    init: General.init,
+    all: General.all.bind(null, randomAphorism),
+    part: General.part.bind(null, randomAphorism),
+    clear: General.clear,
+    random: randomAphorism,
   };
-}());
+  // return {
+  //   init: General.init,
+  //   all: () => General.all(randomAphorism),
+  //   part: () => General.part(randomAphorism),
+  //   clear: General.clear,
+  //   random: randomAphorism,
+  // };
+})();
 
-module.exports = refresh;
+export default Refresh;

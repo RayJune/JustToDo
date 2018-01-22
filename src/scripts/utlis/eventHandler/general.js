@@ -1,15 +1,14 @@
-'use strict';
-var general = (function generalGenerator() {
-  var getFormatDate = require('../getFormatDate');
+import getFormatDate from '../getFormatDate';
 
-  var ifEmpty = {
+const General = (() => {
+  const ifEmpty = {
     removeInit: function removeInit() {
-      var list = document.querySelector('#list');
+      const list = document.querySelector('#list');
 
       if (list.firstChild.className === 'aphorism') {
         list.removeChild(list.firstChild);
       }
-    }
+    },
   };
 
   function resetInput() {
@@ -21,15 +20,15 @@ var general = (function generalGenerator() {
       id: key,
       event: value,
       finished: false,
-      date: getFormatDate('MM月dd日hh:mm') + ' '
+      date: getFormatDate('MM月dd日hh:mm'),
     };
   }
 
   return {
-    ifEmpty: ifEmpty,
-    resetInput: resetInput,
-    dataGenerator: dataGenerator
+    ifEmpty,
+    resetInput,
+    dataGenerator,
   };
-}());
+})();
 
-module.exports = general;
+export default General;

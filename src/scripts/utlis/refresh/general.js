@@ -1,9 +1,8 @@
-'use strict';
-var general = (function generalGenerator() {
-  var itemGenerator = require('../templete/itemGenerator');
-  var sentenceGenerator = require('../templete/sentenceGenerator');
-  var clearChildNodes = require('../clearChildNodes');
+import itemGenerator from '../templete/itemGenerator';
+import sentenceGenerator from '../templete/sentenceGenerator';
+import clearChildNodes from '../clearChildNodes';
 
+const General = (() => {
   function init(dataArr) {
     _show(dataArr, _initSentence, _renderAll);
   }
@@ -17,7 +16,7 @@ var general = (function generalGenerator() {
   }
 
   function _initSentence() {
-    var text = 'Welcome~, try to add your first to-do list : )';
+    const text = 'Welcome~, try to add your first to-do list : )';
 
     document.querySelector('#list').innerHTML = sentenceGenerator(text);
   }
@@ -27,19 +26,17 @@ var general = (function generalGenerator() {
   }
 
   function _renderAll(dataArr) {
-    var classifiedData = _classifyData(dataArr);
+    const classifiedData = _classifyData(dataArr);
 
     return itemGenerator(classifiedData);
   }
 
   function _classifyData(dataArr) {
-    var finished = [];
-    var unfishied = [];
+    const finished = [];
+    const unfishied = [];
 
     // put the finished item to the bottom
-    dataArr.forEach(function classify(data) {
-      data.finished ? finished.push(data) : unfishied.push(data);
-    });
+    dataArr.forEach(data => (data.finished ? finished.push(data) : unfishied.push(data)));
 
     return unfishied.concat(finished);
   }
@@ -57,19 +54,19 @@ var general = (function generalGenerator() {
   }
 
   function sentenceHandler(text) {
-    var rendered = sentenceGenerator(text);
+    const rendered = sentenceGenerator(text);
 
     document.querySelector('#list').innerHTML = rendered;
   }
 
 
   return {
-    init: init,
-    all: all,
-    part: part,
-    clear: clear,
-    sentenceHandler: sentenceHandler
+    init,
+    all,
+    part,
+    clear,
+    sentenceHandler,
   };
-}());
+})();
 
-module.exports = general;
+export default General;

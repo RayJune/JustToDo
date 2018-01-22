@@ -1,6 +1,3 @@
-'use strict';
-(function withoutDB() {
-  var addEvents = require('./utlis/addEvents/dbFail');
+import addEvents from './utlis/addEvents/dbFail';
 
-  addEvents();
-}());
+addEvents();

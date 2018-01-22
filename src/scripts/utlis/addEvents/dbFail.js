@@ -1,12 +1,9 @@
-'use strict';
-var addEvents = (function dbFailGenerator() {
-  var eventHandler = require('../eventHandler/dbFail');
-  var generator = require('./generator');
+import generator from './generator';
+import EventHandler from '../eventHandler/dbFail';
 
-  return function handler() {
-    window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
-    generator(eventHandler);
-  };
-}());
+function addEvents() {
+  window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
+  generator(EventHandler);
+}
 
-module.exports = addEvents;
+export default addEvents;

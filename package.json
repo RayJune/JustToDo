@@ -5,16 +5,15 @@
   "main": ".eslintrc.js",
   "scripts": {
     "handlebars": "cd templete && handlebars li.handlebars -f template.js && cd ..",
-    "prebuild": "npm run clean",
+    "build": "npm run bable && npm run build:scripts && npm run build:styles",
     "clean": "rm -rf dist/**/*",
-    "build": "npm run build:scripts && npm run build:styles",
+    "prebuild:scripts": "babel src/scripts -d build/scripts -s",
     "build:scripts": "npm run build:scripts:main && npm run build:scripts:lazyLoad",
-    "prebuild:scripts:main": "browserify ./src/scripts/main.js -o ./dist/scripts/bundle.js --debug",
     "build:scripts:main": "uglifyjs ./dist/scripts/bundle.js -m -c -o ./dist/scripts/bundle.min.js",
-    "prebuild:scripts:lazyLoad": "browserify ./src/scripts/withoutDB.js -o ./dist/scripts/lazyLoad.js --debug",
     "build:scripts:lazyLoad": "uglifyjs ./dist/scripts/lazyLoad.js -m -c -o ./dist/scripts/lazyLoad.min.js",
     "prebuild:styles": "postcss src/styles/*.css --use autoprefixer -r --no-map",
-    "build:styles": "cleancss -o ./dist/styles/main.min.css ./src/styles/main.css"
+    "build:styles": "cleancss -o ./dist/styles/main.min.css ./src/styles/main.css",
+    "lint": "eslint src/scripts/*.js --fix"
   },
   "repository": {
     "type": "git",
@@ -28,12 +27,12 @@
   "homepage": "https://github.com/RayJune/JustToDo#readme",
   "devDependencies": {
     "autoprefixer": "^7.2.3",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.3",
-    "browserify": "^14.4.0",
+    "babel-preset-env": "^1.6.1",
     "clean-css-cli": "^4.1.10",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-react": "^7.3.0",
     "postcss-cli": "^4.1.1",

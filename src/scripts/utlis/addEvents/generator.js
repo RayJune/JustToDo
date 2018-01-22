@@ -1,10 +1,7 @@
-'use strict';
 function generator(handler) {
-  var list;
-
   handler.showInit();
   // add all eventListener
-  list = document.querySelector('#list');
+  const list = document.querySelector('#list');
   list.addEventListener('click', handler.clickLi, false);
   list.addEventListener('click', handler.removeLi, false);
   document.addEventListener('keydown', handler.enterAdd, false);
@@ -16,4 +13,4 @@ function generator(handler) {
   document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
 }
 
-module.exports = generator;
+export default generator;

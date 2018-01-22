@@ -1,7 +1,8 @@
-module.exports = (function dbSuccessGenerator() {
+'use strict';
+var refresh = (function dbSuccessGenerator() {
   var storeName = 'aphorism';
   var DB = require('indexeddb-crud');
-  var general = require('./general.js');
+  var general = require('./general');
 
   function randomAphorism() {
     var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
@@ -23,3 +24,5 @@ module.exports = (function dbSuccessGenerator() {
     random: randomAphorism
   };
 }());
+
+module.exports = refresh;

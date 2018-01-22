@@ -1,8 +1,8 @@
 'use strict';
 var general = (function generalGenerator() {
-  var itemGenerator = require('../templete/itemGenerator.js');
-  var sentenceGenerator = require('../templete/sentenceGenerator.js');
-  var clearChildNodes = require('../clearChildNodes.js');
+  var itemGenerator = require('../templete/itemGenerator');
+  var sentenceGenerator = require('../templete/sentenceGenerator');
+  var clearChildNodes = require('../clearChildNodes');
 
   function init(dataArr) {
     _show(dataArr, _initSentence, _renderAll);

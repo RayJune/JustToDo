@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function itemGenerator(dataArr) {
+function itemGenerator(dataArr) {
   var result = dataArr;
   var rendered;
   var template = Handlebars.templates.li;
@@ -10,4 +10,6 @@ module.exports = function itemGenerator(dataArr) {
   rendered = template({listItems: result});
 
   return rendered.trim();
-};
+}
+
+module.exports = itemGenerator;

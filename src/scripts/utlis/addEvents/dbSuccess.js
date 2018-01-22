@@ -1,9 +1,11 @@
 'use strict';
-module.exports = (function addEventsDBSuccess() {
+var addEvents = (function dbSuccessGenerator() {
   var eventHandler = require('../eventHandler/dbSuccess');
-  var general = require('./general.js');
+  var generator = require('./generator');
 
-  return function addEvents() {
-    general(eventHandler);
+  return function handler() {
+    generator(eventHandler);
   };
 }());
+
+module.exports = addEvents;

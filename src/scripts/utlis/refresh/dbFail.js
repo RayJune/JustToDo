@@ -1,5 +1,6 @@
-module.exports = (function dbFailGenerator() {
-  var general = require('./general.js');
+'use strict';
+var refresh = (function dbFailGenerator() {
+  var general = require('./general');
 
   function randomAphorism() {
     var aphorisms = [
@@ -25,3 +26,4 @@ module.exports = (function dbFailGenerator() {
   };
 }());
 
+module.exports = refresh;

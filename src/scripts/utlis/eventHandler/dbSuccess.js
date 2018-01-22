@@ -1,10 +1,10 @@
 'use strict';
-var dbSuccess = (function dbSuccessGenerator() {
+var eventHandler = (function dbSuccessGenerator() {
   var storeName = 'list';
   var DB = require('indexeddb-crud');
   var refresh = require('../refresh/dbSuccess');
-  var itemGenerator = require('../templete/itemGenerator.js');
-  var general = require('./general.js');
+  var itemGenerator = require('../templete/itemGenerator');
+  var general = require('./general');
 
   function add() {
     var inputValue = document.querySelector('#input').value;
@@ -125,4 +125,4 @@ var dbSuccess = (function dbSuccessGenerator() {
   };
 }());
 
-module.exports = dbSuccess;
+module.exports = eventHandler;

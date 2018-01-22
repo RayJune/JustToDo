@@ -1,8 +1,8 @@
 'use strict';
-var dbFail = (function dbFailGenerator() {
-  var refresh = require('../refresh/dbFail.js');
-  var itemGenerator = require('../templete/itemGenerator.js');
-  var general = require('./general.js');
+var eventHandler = (function dbFailGenerator() {
+  var refresh = require('../refresh/dbFail');
+  var itemGenerator = require('../templete/itemGenerator');
+  var general = require('./general');
   var _id = 0; // so the first item's id is 1
   var _forEach = Array.prototype.forEach; // simplify
 
@@ -176,4 +176,4 @@ var dbFail = (function dbFailGenerator() {
   };
 }());
 
-module.exports = dbFail;
+module.exports = eventHandler;

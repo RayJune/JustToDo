@@ -1,4 +1,5 @@
-module.exports = function addEventsGenerator(handler) {
+'use strict';
+function generator(handler) {
   var list;
 
   handler.showInit();
@@ -13,4 +14,6 @@ module.exports = function addEventsGenerator(handler) {
   document.querySelector('#showAll').addEventListener('click', handler.showAll, false);
   document.querySelector('#showClearDone').addEventListener('click', handler.showClearDone, false);
   document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
-};
+}
+
+module.exports = generator;

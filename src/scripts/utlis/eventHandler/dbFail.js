@@ -5,7 +5,17 @@ import itemGenerator from '../templete/itemGenerator';
 const EventHandler = (() => {
   let _id = 0; // so the first item's id is 1
 
-  const _removeRandom = function _removeRandom(list) {
+  function add() {
+    const inputValue = document.querySelector('#input').value;
+
+    if (inputValue === '') {
+      window.alert('please input a real data~');
+    } else {
+      addHandler(inputValue);
+    }
+  }
+
+  function _removeRandom(list) {
     const listItems = list.childNodes;
 
     [...listItems].forEach((item) => {
@@ -13,7 +23,7 @@ const EventHandler = (() => {
         list.removeChild(item);
       }
     });
-  };
+  }
   // or use for...in
   // for (const index in listItems) {
   //   if (listItems.hasOwnProperty(index)) {
@@ -23,7 +33,7 @@ const EventHandler = (() => {
   //   }
   // }
 
-  const addHandler = function addHandler(inputValue) {
+  function addHandler(inputValue) {
     const list = document.querySelector('#list');
 
     _removeRandom(list);
@@ -31,29 +41,15 @@ const EventHandler = (() => {
     const newData = General.dataGenerator(_id, inputValue);
     list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
     General.resetInput();
-  };
+  }
 
-  const add = function add() {
-    const inputValue = document.querySelector('#input').value;
-
-    if (inputValue === '') {
-      window.alert('please input a real data~');
-    } else {
-      addHandler(inputValue);
-    }
-  };
-
-  const enterAdd = function enterAdd(e) {
+  function enterAdd(e) {
     if (e.keyCode === 13) {
       add();
     }
-  };
-
-  function _whetherAppear(element, whether) {
-    element.style.display = whether ? 'block' : 'none';
   }
 
-  const showAll = function showAll() {
+  function showAll() {
     const list = document.querySelector('#list');
     const listItems = list.childNodes;
 
@@ -64,9 +60,13 @@ const EventHandler = (() => {
         list.appendChild(item); // PUNCHLINE: drop done item
       }
     });
-  };
+  }
 
-  const clickLi = function clickLi(e) {
+  function _whetherAppear(element, whether) {
+    element.style.display = whether ? 'block' : 'none';
+  }
+
+  function clickLi(e) {
     const targetLi = e.target;
     // use event delegation
 
@@ -74,13 +74,13 @@ const EventHandler = (() => {
       targetLi.classList.toggle('finished');
       showAll();
     }
-  };
+  }
 
   // li's [x]'s delete
   function removeLi(e) {
     if (e.target.className === 'close') { // use event delegation
       _removeLiHandler(e.target);
-      addRandom();
+      _addRandom();
     }
   }
 
@@ -102,8 +102,7 @@ const EventHandler = (() => {
     }
   }
 
-  // for Semantic
-  function addRandom() {
+  function _addRandom() {
     const list = document.querySelector('#list');
 
     if (!list.hasChildNodes() || _allDisappear(list)) {
@@ -137,7 +136,7 @@ const EventHandler = (() => {
     [...listItems].forEach((item) => {
       item.classList.contains('finished') ? _whetherAppear(item, whetherDone) : _whetherAppear(item, !whetherDone);
     });
-    addRandom();
+    _addRandom();
   }
 
   function showClearDone() {
@@ -150,7 +149,7 @@ const EventHandler = (() => {
         list.removeChild(item);
       }
     });
-    addRandom();
+    _addRandom();
   }
 
   function showClear() {

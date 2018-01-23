@@ -1,7 +1,12 @@
-function generator(handler) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function addEventsGenerator(handler) {
   handler.showInit();
   // add all eventListener
-  const list = document.querySelector('#list');
+  var list = document.querySelector('#list');
   list.addEventListener('click', handler.clickLi, false);
   list.addEventListener('click', handler.removeLi, false);
   document.addEventListener('keydown', handler.enterAdd, false);
@@ -13,4 +18,5 @@ function generator(handler) {
   document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
 }
 
-export default generator;
+exports.default = addEventsGenerator;
+//# sourceMappingURL=addEventsGenerator.js.map

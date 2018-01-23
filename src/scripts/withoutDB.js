@@ -1,3 +1,3 @@
-import addEvents from './utlis/addEvents/dbFail';
+import addEvents from './utlis/dbFail/addEvents';
 
 addEvents();

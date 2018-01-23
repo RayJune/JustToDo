@@ -385,17 +385,17 @@ module.exports = {
 },{"../../templete/template":15,"./db/config":2,"./utlis/addEvents/dbSuccess":4,"./utlis/lazyLoadWithoutDB":10,"indexeddb-crud":1}],4:[function(require,module,exports){
 'use strict';
 var addEvents = (function dbSuccessGenerator() {
-  var eventHandler = require('../eventHandler/dbSuccess');
+  var eventsHandler = require('../eventsHandler/dbSuccess');
   var generator = require('./generator');
 
   return function handler() {
-    generator(eventHandler);
+    generator(eventsHandler);
   };
 }());
 
 module.exports = addEvents;
 
-},{"../eventHandler/dbSuccess":7,"./generator":5}],5:[function(require,module,exports){
+},{"../eventsHandler/dbSuccess":7,"./generator":5}],5:[function(require,module,exports){
 'use strict';
 function generator(handler) {
   var list;
@@ -429,7 +429,7 @@ module.exports = clearChildNodes;
 
 },{}],7:[function(require,module,exports){
 'use strict';
-var eventHandler = (function dbSuccessGenerator() {
+var eventsHandler = (function dbSuccessGenerator() {
   var storeName = 'list';
   var DB = require('indexeddb-crud');
   var refresh = require('../refresh/dbSuccess');
@@ -555,7 +555,7 @@ var eventHandler = (function dbSuccessGenerator() {
   };
 }());
 
-module.exports = eventHandler;
+module.exports = eventsHandler;
 
 },{"../refresh/dbSuccess":11,"../templete/itemGenerator":13,"./general":8,"indexeddb-crud":1}],8:[function(require,module,exports){
 'use strict';

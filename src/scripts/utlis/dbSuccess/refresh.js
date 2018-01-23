@@ -1,24 +1,24 @@
-import General from './general';
+import DB from 'indexeddb-crud';
+import General from '../dbGeneral/refreshGeneral';
 
 const Refresh = (() => {
+  const storeName = 'aphorism';
+
   function randomAphorism() {
-    const aphorisms = [
-      'Yesterday You Said Tomorrow',
-      'Why are we here?',
-      'All in, or nothing',
-      'You Never Try, You Never Know',
-      'The unexamined life is not worth living. -- Socrates',
-      'There is only one thing we say to lazy: NOT TODAY',
-    ];
-    const randomIndex = Math.floor(Math.random() * aphorisms.length);
-    const text = aphorisms[randomIndex];
+    const randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
+
+    DB.getItem(storeName, randomIndex, _parseText);
+  }
+
+  function _parseText(data) {
+    const text = data.content;
 
     General.sentenceHandler(text);
   }
 
   return {
     init: General.init,
-    all: General.all.bind(null, randomAphorism),
+    all: General.all.bind(null, randomAphorism), // PUNCHLINE: use bind to pass paramter
     part: General.part.bind(null, randomAphorism),
     clear: General.clear,
     random: randomAphorism,

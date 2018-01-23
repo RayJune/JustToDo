@@ -1,16 +1,6 @@
 import getFormatDate from '../getFormatDate';
 
-const General = (() => {
-  const ifEmpty = {
-    removeInit: function removeInit() {
-      const list = document.querySelector('#list');
-
-      if (list.firstChild.className === 'aphorism') {
-        list.removeChild(list.firstChild);
-      }
-    },
-  };
-
+const eventsHandlerGeneral = (() => {
   function resetInput() {
     document.querySelector('#input').value = '';
   }
@@ -25,10 +15,9 @@ const General = (() => {
   }
 
   return {
-    ifEmpty,
     resetInput,
     dataGenerator,
   };
 })();
 
-export default General;
+export default eventsHandlerGeneral;

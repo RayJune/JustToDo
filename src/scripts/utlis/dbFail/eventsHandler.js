@@ -1,8 +1,8 @@
-import Refresh from '../refresh/dbFail';
-import General from './general';
+import Refresh from '../dbFail/refresh';
+import General from '../dbGeneral/eventsHandlerGeneral';
 import itemGenerator from '../templete/itemGenerator';
 
-const EventHandler = (() => {
+const eventsHandler = (() => {
   let _id = 0; // so the first item's id is 1
 
   function add() {
@@ -13,6 +13,16 @@ const EventHandler = (() => {
     } else {
       addHandler(inputValue);
     }
+  }
+
+  function addHandler(inputValue) {
+    const list = document.querySelector('#list');
+
+    _removeRandom(list);
+    _id += 1;
+    const newData = General.dataGenerator(_id, inputValue);
+    list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
+    General.resetInput();
   }
 
   function _removeRandom(list) {
@@ -32,16 +42,6 @@ const EventHandler = (() => {
   //     }
   //   }
   // }
-
-  function addHandler(inputValue) {
-    const list = document.querySelector('#list');
-
-    _removeRandom(list);
-    _id += 1;
-    const newData = General.dataGenerator(_id, inputValue);
-    list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
-    General.resetInput();
-  }
 
   function enterAdd(e) {
     if (e.keyCode === 13) {
@@ -63,7 +63,7 @@ const EventHandler = (() => {
   }
 
   function _whetherAppear(element, whether) {
-    element.style.display = whether ? 'block' : 'none';
+    element.style.display = whether ? 'block' : 'none'; // FIXME: eslint error
   }
 
   function clickLi(e) {
@@ -133,7 +133,7 @@ const EventHandler = (() => {
     const listItems = list.childNodes;
 
     _removeRandom(list);
-    [...listItems].forEach((item) => {
+    [...listItems].forEach((item) => { // FIXME: eslint error
       item.classList.contains('finished') ? _whetherAppear(item, whetherDone) : _whetherAppear(item, !whetherDone);
     });
     _addRandom();
@@ -171,4 +171,4 @@ const EventHandler = (() => {
   };
 })();
 
-export default EventHandler;
+export default eventsHandler;

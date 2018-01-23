@@ -10,7 +10,7 @@ var _getFormatDate2 = _interopRequireDefault(_getFormatDate);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var General = function () {
+var eventsHandlerGeneral = function () {
   function resetInput() {
     document.querySelector('#input').value = '';
   }
@@ -30,5 +30,5 @@ var General = function () {
   };
 }();
 
-exports.default = General;
-//# sourceMappingURL=general.js.map
+exports.default = eventsHandlerGeneral;
+//# sourceMappingURL=eventsHandlerGeneral.js.map

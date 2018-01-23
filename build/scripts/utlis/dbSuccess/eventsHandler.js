@@ -8,13 +8,13 @@ var _indexeddbCrud = require('indexeddb-crud');
 
 var _indexeddbCrud2 = _interopRequireDefault(_indexeddbCrud);
 
-var _dbSuccess = require('../refresh/dbSuccess');
+var _refresh = require('../dbSuccess/refresh');
 
-var _dbSuccess2 = _interopRequireDefault(_dbSuccess);
+var _refresh2 = _interopRequireDefault(_refresh);
 
-var _general = require('./general');
+var _eventsHandlerGeneral = require('../dbGeneral/eventsHandlerGeneral');
 
-var _general2 = _interopRequireDefault(_general);
+var _eventsHandlerGeneral2 = _interopRequireDefault(_eventsHandlerGeneral);
 
 var _itemGenerator = require('../templete/itemGenerator');
 
@@ -36,12 +36,12 @@ var eventsHandler = function () {
   }
 
   function _addHandler(inputValue) {
-    var newData = _general2.default.dataGenerator(_indexeddbCrud2.default.getNewKey(storeName), inputValue);
+    var newData = _eventsHandlerGeneral2.default.dataGenerator(_indexeddbCrud2.default.getNewKey(storeName), inputValue);
     var rendered = (0, _itemGenerator2.default)(newData);
 
     removeInit();
     document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
-    _general2.default.resetInput();
+    _eventsHandlerGeneral2.default.resetInput();
     _indexeddbCrud2.default.addItem(storeName, newData);
   }
 
@@ -65,6 +65,7 @@ var eventsHandler = function () {
 
     if (!targetLi.classList.contains('aphorism')) {
       if (targetLi.getAttribute('data-id')) {
+        // test whether is x
         targetLi.classList.toggle('finished'); // toggle appearance
         var id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
         _indexeddbCrud2.default.getItem(storeName, id, _toggleLi);
@@ -98,16 +99,16 @@ var eventsHandler = function () {
     var list = document.querySelector('#list');
 
     if (!list.hasChildNodes()) {
-      _dbSuccess2.default.random();
+      _refresh2.default.random();
     }
   }
 
   function showInit() {
-    _indexeddbCrud2.default.getAll(storeName, _dbSuccess2.default.init);
+    _indexeddbCrud2.default.getAll(storeName, _refresh2.default.init);
   }
 
   function showAll() {
-    _indexeddbCrud2.default.getAll(storeName, _dbSuccess2.default.all);
+    _indexeddbCrud2.default.getAll(storeName, _refresh2.default.all);
   }
 
   function showDone() {
@@ -121,20 +122,20 @@ var eventsHandler = function () {
   function _showWhetherDone(whetherDone) {
     var condition = 'finished';
 
-    _indexeddbCrud2.default.getWhetherConditionItem(storeName, condition, whetherDone, _dbSuccess2.default.part);
+    _indexeddbCrud2.default.getWhetherConditionItem(storeName, condition, whetherDone, _refresh2.default.part);
   }
 
   function showClearDone() {
     var condition = 'finished';
 
     _indexeddbCrud2.default.removeWhetherConditionItem(storeName, condition, true, function () {
-      _indexeddbCrud2.default.getAll(storeName, _dbSuccess2.default.part);
+      _indexeddbCrud2.default.getAll(storeName, _refresh2.default.part);
     });
   }
 
   function showClear() {
-    _dbSuccess2.default.clear(); // clear nodes visually
-    _dbSuccess2.default.random();
+    _refresh2.default.clear(); // clear nodes visually
+    _refresh2.default.random();
     _indexeddbCrud2.default.clear(storeName); // clear data indeed
   }
 
@@ -153,4 +154,4 @@ var eventsHandler = function () {
 }();
 
 exports.default = eventsHandler;
-//# sourceMappingURL=dbSuccess.js.map
+//# sourceMappingURL=eventsHandler.js.map

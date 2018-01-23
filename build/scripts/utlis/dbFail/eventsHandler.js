@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _dbFail = require('../refresh/dbFail');
+var _refresh = require('../dbFail/refresh');
 
-var _dbFail2 = _interopRequireDefault(_dbFail);
+var _refresh2 = _interopRequireDefault(_refresh);
 
-var _general = require('./general');
+var _eventsHandlerGeneral = require('../dbGeneral/eventsHandlerGeneral');
 
-var _general2 = _interopRequireDefault(_general);
+var _eventsHandlerGeneral2 = _interopRequireDefault(_eventsHandlerGeneral);
 
 var _itemGenerator = require('../templete/itemGenerator');
 
@@ -38,9 +38,9 @@ var eventsHandler = function () {
 
     _removeRandom(list);
     _id += 1;
-    var newData = _general2.default.dataGenerator(_id, inputValue);
+    var newData = _eventsHandlerGeneral2.default.dataGenerator(_id, inputValue);
     list.insertBefore((0, _itemGenerator2.default)(newData), list.firstChild); // push newLi to first
-    _general2.default.resetInput();
+    _eventsHandlerGeneral2.default.resetInput();
   }
 
   function _removeRandom(list) {
@@ -125,7 +125,7 @@ var eventsHandler = function () {
     var list = document.querySelector('#list');
 
     if (!list.hasChildNodes() || _allDisappear(list)) {
-      _dbFail2.default.random();
+      _refresh2.default.random();
     }
   }
 
@@ -138,7 +138,7 @@ var eventsHandler = function () {
   }
 
   function showInit() {
-    _dbFail2.default.init();
+    _refresh2.default.init();
   }
 
   function showDone() {
@@ -174,8 +174,8 @@ var eventsHandler = function () {
   }
 
   function showClear() {
-    _dbFail2.default.clear(); // clear nodes visually
-    _dbFail2.default.random();
+    _refresh2.default.clear(); // clear nodes visually
+    _refresh2.default.random();
   }
 
   return {
@@ -193,4 +193,4 @@ var eventsHandler = function () {
 }();
 
 exports.default = eventsHandler;
-//# sourceMappingURL=dbFail.js.map
+//# sourceMappingURL=eventsHandler.js.map

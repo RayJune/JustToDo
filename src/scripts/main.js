@@ -1,7 +1,7 @@
 import { open as openDB } from 'indexeddb-crud';
 import config from './db/config';
 import templete from '../../templete/template';
-import addEvents from './utlis/addEvents/dbSuccess';
+import addEvents from './utlis/dbSuccess/addEvents';
 import lazyLoadWithoutDB from './utlis/lazyLoadWithoutDB';
 
 

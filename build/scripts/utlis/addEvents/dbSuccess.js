@@ -8,7 +8,7 @@ var _generator = require('./generator');
 
 var _generator2 = _interopRequireDefault(_generator);
 
-var _dbSuccess = require('../eventHandler/dbSuccess');
+var _dbSuccess = require('../eventsHandler/dbSuccess');
 
 var _dbSuccess2 = _interopRequireDefault(_dbSuccess);
 

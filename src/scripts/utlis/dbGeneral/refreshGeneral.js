@@ -2,7 +2,7 @@ import itemGenerator from '../templete/itemGenerator';
 import sentenceGenerator from '../templete/sentenceGenerator';
 import clearChildNodes from '../clearChildNodes';
 
-const General = (() => {
+const refreshGeneral = (() => {
   function init(dataArr) {
     _show(dataArr, _initSentence, _renderAll);
   }
@@ -69,4 +69,4 @@ const General = (() => {
   };
 })();
 
-export default General;
+export default refreshGeneral;

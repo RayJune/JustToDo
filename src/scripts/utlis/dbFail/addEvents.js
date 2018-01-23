@@ -1,9 +1,9 @@
-import generator from './generator';
-import EventHandler from '../eventHandler/dbFail';
+import addEventsGenerator from '../dbGeneral/addEventsGenerator';
+import eventsHandler from '../dbFail/eventsHandler';
 
 function addEvents() {
   window.alert('Your browser doesn\'t support a stable version of IndexedDB. We will offer you the without indexedDB mode');
-  generator(EventHandler);
+  addEventsGenerator(eventsHandler);
 }
 
 export default addEvents;

@@ -10,9 +10,9 @@ var _template = require('../../templete/template');
 
 var _template2 = _interopRequireDefault(_template);
 
-var _dbSuccess = require('./utlis/addEvents/dbSuccess');
+var _addEvents = require('./utlis/dbSuccess/addEvents');
 
-var _dbSuccess2 = _interopRequireDefault(_dbSuccess);
+var _addEvents2 = _interopRequireDefault(_addEvents);
 
 var _lazyLoadWithoutDB = require('./utlis/lazyLoadWithoutDB');
 
@@ -22,5 +22,5 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _template2.default)();
 // open DB, and when DB open succeed, invoke initial function
-(0, _indexeddbCrud.open)(_config2.default, _dbSuccess2.default, _lazyLoadWithoutDB2.default);
+(0, _indexeddbCrud.open)(_config2.default, _addEvents2.default, _lazyLoadWithoutDB2.default);
 //# sourceMappingURL=main.js.map

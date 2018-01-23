@@ -1,9 +1,9 @@
 import DB from 'indexeddb-crud';
-import Refresh from '../refresh/dbSuccess';
-import General from './general';
+import Refresh from '../dbSuccess/refresh';
+import General from '../dbGeneral/eventsHandlerGeneral';
 import itemGenerator from '../templete/itemGenerator';
 
-const EventHandler = (() => {
+const eventsHandler = (() => {
   const storeName = 'list';
 
   function add() {
@@ -20,10 +20,18 @@ const EventHandler = (() => {
     const newData = General.dataGenerator(DB.getNewKey(storeName), inputValue);
     const rendered = itemGenerator(newData);
 
-    General.ifEmpty.removeInit();
+    removeInit();
     document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
     General.resetInput();
     DB.addItem(storeName, newData);
+  }
+
+  function removeInit() {
+    const list = document.querySelector('#list');
+
+    if (list.firstChild.className === 'aphorism') {
+      list.removeChild(list.firstChild);
+    }
   }
 
   function enterAdd(e) {
@@ -37,7 +45,7 @@ const EventHandler = (() => {
     // use event delegation
 
     if (!targetLi.classList.contains('aphorism')) {
-      if (targetLi.getAttribute('data-id')) {
+      if (targetLi.getAttribute('data-id')) { // test whether is x
         targetLi.classList.toggle('finished'); // toggle appearance
         const id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
         DB.getItem(storeName, id, _toggleLi);
@@ -124,4 +132,4 @@ const EventHandler = (() => {
   };
 })();
 
-export default EventHandler;
+export default eventsHandler;

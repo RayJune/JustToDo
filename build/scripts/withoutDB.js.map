@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../src/scripts/withoutDB.js"],"names":[],"mappings":";;AAAA;;;;;;AAEA","file":"withoutDB.js","sourcesContent":["import addEvents from './utlis/addEvents/dbFail';\n\naddEvents();\n"]}
+{"version":3,"sources":["../../src/scripts/withoutDB.js"],"names":[],"mappings":";;AAAA;;;;;;AAEA","file":"withoutDB.js","sourcesContent":["import addEvents from './utlis/dbFail/addEvents';\n\naddEvents();\n"]}

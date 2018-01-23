@@ -38,7 +38,7 @@ var refreshGeneral = (function generalGenerator() {
 
     // put the finished item to the bottom
     dataArr.forEach(function classify(data) {
-      data.finished ? finished.push(data) : unfishied.push(data);
+      data.finished ? finished.unshift(data) : unfishied.unshift(data);
     });
 
     return unfishied.concat(finished);
@@ -49,7 +49,7 @@ var refreshGeneral = (function generalGenerator() {
   }
 
   function _renderPart(dataArr) {
-    return itemGenerator(dataArr);
+    return itemGenerator(dataArr.reverse());
   }
 
   function clear() {

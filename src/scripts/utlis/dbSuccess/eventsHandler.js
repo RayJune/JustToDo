@@ -4,7 +4,6 @@ var eventsHandler = (function dbSuccessGenerator() {
   var refresh = require('../dbSuccess/refresh');
   var general = require('../dbGeneral/eventsHandlerGeneral');
   var itemGenerator = require('../templete/itemGenerator');
-  var storeName = 'list';
 
   function add() {
     var inputValue = document.querySelector('#input').value;
@@ -17,13 +16,14 @@ var eventsHandler = (function dbSuccessGenerator() {
   }
 
   function _addHandler(inputValue) {
-    var newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
+    var newData = general.dataGenerator(DB.getNewKey(), inputValue);
     var rendered = itemGenerator(newData);
 
+    // console.log(DB.getNewKey());
     removeInit();
     document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
     general.resetInput();
-    DB.addItem(storeName, newData);
+    DB.addItem(newData);
   }
 
   function removeInit() {
@@ -49,14 +49,14 @@ var eventsHandler = (function dbSuccessGenerator() {
       if (targetLi.getAttribute('data-id')) {
         targetLi.classList.toggle('finished'); // toggle appearance
         id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
-        DB.getItem(storeName, id, _toggleLi);
+        DB.getItem(id, _toggleLi);
       }
     }
   }
 
   function _toggleLi(data) {
     data.finished = !data.finished;
-    DB.updateItem(storeName, data, showAll);
+    DB.updateItem(data, showAll);
   }
 
   // li's [x]'s delete
@@ -70,7 +70,7 @@ var eventsHandler = (function dbSuccessGenerator() {
       // use previously stored data
       id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
       // delete actually
-      DB.removeItem(storeName, id);
+      DB.removeItem(id);
     }
   }
 
@@ -81,14 +81,14 @@ var eventsHandler = (function dbSuccessGenerator() {
     if (!list.hasChildNodes()) {
       refresh.random();
     }
-  };
+  }
 
   function showInit() {
-    DB.getAll(storeName, refresh.init);
+    DB.getAll(refresh.init);
   }
 
   function showAll() {
-    DB.getAll(storeName, refresh.all);
+    DB.getAll(refresh.all);
   }
 
   function showDone() {
@@ -102,21 +102,21 @@ var eventsHandler = (function dbSuccessGenerator() {
   function _showWhetherDone(whetherDone) {
     var condition = 'finished';
 
-    DB.getWhetherConditionItem(storeName, condition, whetherDone, refresh.part);
+    DB.getWhetherConditionItem(condition, whetherDone, refresh.part);
   }
 
   function showClearDone() {
     var condition = 'finished';
 
-    DB.removeWhetherConditionItem(storeName, condition, true, function showLeftData() {
-      DB.getAll(storeName, refresh.part);
+    DB.removeWhetherConditionItem(condition, true, function showLeftData() {
+      DB.getAll(refresh.part);
     });
   }
 
   function showClear() {
     refresh.clear(); // clear nodes visually
     refresh.random();
-    DB.clear(storeName); // clear data indeed
+    DB.clear(); // clear data indeed
   }
 
   return {

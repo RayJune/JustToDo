@@ -2,12 +2,12 @@
 var refresh = (function dbSuccessGenerator() {
   var DB = require('indexeddb-crud');
   var general = require('../dbGeneral/refreshGeneral');
-  var storeName = 'aphorism';
 
   function randomAphorism() {
+    var storeName = 'aphorism';
     var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
-    DB.getItem(storeName, randomIndex, _parseText);
+    DB.getItem(randomIndex, _parseText, storeName);
   }
 
   function _parseText(data) {

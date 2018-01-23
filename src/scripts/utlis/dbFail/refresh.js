@@ -19,8 +19,6 @@ var refresh = (function dbFailGenerator() {
 
   return {
     init: general.init,
-    all: general.all.bind(null, randomAphorism),
-    part: general.part.bind(null, randomAphorism),
     clear: general.clear,
     random: randomAphorism
   };

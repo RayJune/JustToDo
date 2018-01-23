@@ -1,8 +1,8 @@
 'use strict';
 var refresh = (function dbSuccessGenerator() {
-  var storeName = 'aphorism';
   var DB = require('indexeddb-crud');
-  var general = require('./general');
+  var general = require('../dbGeneral/refreshGeneral');
+  var storeName = 'aphorism';
 
   function randomAphorism() {
     var randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));

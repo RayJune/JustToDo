@@ -1,10 +1,10 @@
 'use strict';
-var eventHandler = (function dbSuccessGenerator() {
-  var storeName = 'list';
+var eventsHandler = (function dbSuccessGenerator() {
   var DB = require('indexeddb-crud');
-  var refresh = require('../refresh/dbSuccess');
+  var refresh = require('../dbSuccess/refresh');
+  var general = require('../dbGeneral/eventsHandlerGeneral');
   var itemGenerator = require('../templete/itemGenerator');
-  var general = require('./general');
+  var storeName = 'list';
 
   function add() {
     var inputValue = document.querySelector('#input').value;
@@ -20,10 +20,18 @@ var eventHandler = (function dbSuccessGenerator() {
     var newData = general.dataGenerator(DB.getNewKey(storeName), inputValue);
     var rendered = itemGenerator(newData);
 
-    general.ifEmpty.removeInit();
+    removeInit();
     document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
     general.resetInput();
     DB.addItem(storeName, newData);
+  }
+
+  function removeInit() {
+    var list = document.querySelector('#list');
+
+    if (list.firstChild.className === 'aphorism') {
+      list.removeChild(list.firstChild);
+    }
   }
 
   function enterAdd(e) {
@@ -58,7 +66,7 @@ var eventHandler = (function dbSuccessGenerator() {
     if (e.target.className === 'close') { // use event delegation
       // delete visually
       document.querySelector('#list').removeChild(e.target.parentNode);
-      general.ifEmpty.addRandom();
+      _addRandom();
       // use previously stored data
       id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
       // delete actually
@@ -67,7 +75,7 @@ var eventHandler = (function dbSuccessGenerator() {
   }
 
   // for Semantic
-  general.ifEmpty.addRandom = function addRandom() {
+  function _addRandom() {
     var list = document.querySelector('#list');
 
     if (!list.hasChildNodes()) {
@@ -125,4 +133,4 @@ var eventHandler = (function dbSuccessGenerator() {
   };
 }());
 
-module.exports = eventHandler;
+module.exports = eventsHandler;

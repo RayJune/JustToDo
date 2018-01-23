@@ -1,6 +1,6 @@
 'use strict';
 var refresh = (function dbFailGenerator() {
-  var general = require('./general');
+  var general = require('../dbGeneral/refreshGeneral');
 
   function randomAphorism() {
     var aphorisms = [

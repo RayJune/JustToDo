@@ -1,7 +1,7 @@
 'use strict';
-var general = (function generalGenerator() {
-  var itemGenerator = require('../templete/itemGenerator');
+var refreshGeneral = (function generalGenerator() {
   var sentenceGenerator = require('../templete/sentenceGenerator');
+  var itemGenerator = require('../templete/itemGenerator');
   var clearChildNodes = require('../clearChildNodes');
 
   function init(dataArr) {
@@ -72,4 +72,4 @@ var general = (function generalGenerator() {
   };
 }());
 
-module.exports = general;
+module.exports = refreshGeneral;

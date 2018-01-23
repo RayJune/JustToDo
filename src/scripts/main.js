@@ -2,7 +2,7 @@
 (function init() {
   var DB = require('indexeddb-crud');
   var config = require('./db/config');
-  var addEvents = require('./utlis/addEvents/dbSuccess');
+  var addEvents = require('./utlis/dbSuccess/addEvents');
   var lazyLoadWithoutDB = require('./utlis/lazyLoadWithoutDB');
   var templete = require('../../templete/template');
 

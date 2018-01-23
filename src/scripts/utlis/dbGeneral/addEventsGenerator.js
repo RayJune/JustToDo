@@ -1,5 +1,5 @@
 'use strict';
-function generator(handler) {
+function addEventsGenerator(handler) {
   var list;
 
   handler.showInit();
@@ -16,4 +16,4 @@ function generator(handler) {
   document.querySelector('#showClear').addEventListener('click', handler.showClear, false);
 }
 
-module.exports = generator;
+module.exports = addEventsGenerator;

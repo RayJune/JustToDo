@@ -1,8 +1,8 @@
 'use strict';
-var eventHandler = (function dbFailGenerator() {
-  var refresh = require('../refresh/dbFail');
+var eventsHandler = (function dbFailGenerator() {
+  var refresh = require('../dbFail/refresh');
+  var general = require('../dbGeneral/refreshGeneral');
   var itemGenerator = require('../templete/itemGenerator');
-  var general = require('./general');
   var _id = 0; // so the first item's id is 1
   var _forEach = Array.prototype.forEach; // simplify
 
@@ -65,7 +65,7 @@ var eventHandler = (function dbFailGenerator() {
   function removeLi(e) {
     if (e.target.className === 'close') { // use event delegation
       _removeLiHandler(e.target);
-      general.ifEmpty.addRandom();
+      _addRandom();
     }
   }
 
@@ -87,14 +87,13 @@ var eventHandler = (function dbFailGenerator() {
     }
   }
 
-  // for Semantic
-  general.ifEmpty.addRandom = function addRandom() {
+  function _addRandom() {
     var list = document.querySelector('#list');
 
     if (!list.hasChildNodes() || _allDisappear(list)) {
       refresh.random();
     }
-  };
+  }
 
   function _allDisappear(list) {
     var listItems = list.childNodes;
@@ -137,7 +136,7 @@ var eventHandler = (function dbFailGenerator() {
     _forEach.call(listItems, function whetherDoneAppear(item) {
       item.classList.contains('finished') ? _whetherAppear(item, whetherDone) : _whetherAppear(item, !whetherDone);
     });
-    general.ifEmpty.addRandom();
+    _addRandom();
   }
 
   function _whetherAppear(element, whether) {
@@ -154,7 +153,7 @@ var eventHandler = (function dbFailGenerator() {
         list.removeChild(item);
       }
     });
-    general.ifEmpty.addRandom();
+    _addRandom();
   }
 
   function showClear() {
@@ -176,4 +175,4 @@ var eventHandler = (function dbFailGenerator() {
   };
 }());
 
-module.exports = eventHandler;
+module.exports = eventsHandler;

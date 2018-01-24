@@ -1,13 +1,12 @@
-'use strict';
-var eventsHandler = (function dbFailGenerator() {
-  var refresh = require('../dbFail/refresh');
-  var general = require('../dbGeneral/refreshGeneral');
-  var itemGenerator = require('../templete/itemGenerator');
-  var _id = 0; // so the first item's id is 1
-  var _forEach = Array.prototype.forEach; // simplify
+import Refresh from '../dbFail/refresh';
+import General from '../dbGeneral/eventsHandlerGeneral';
+import itemGenerator from '../templete/itemGenerator';
+
+const eventsHandler = (() => {
+  let _id = 0; // so the first item's id is 1
 
   function add() {
-    var inputValue = document.querySelector('#input').value;
+    const inputValue = document.querySelector('#input').value;
 
     if (inputValue === '') {
       window.alert('please input a real data~');
@@ -17,33 +16,32 @@ var eventsHandler = (function dbFailGenerator() {
   }
 
   function addHandler(inputValue) {
-    var newData;
-    var list = document.querySelector('#list');
+    const list = document.querySelector('#list');
 
     _removeRandom(list);
     _id += 1;
-    newData = general.dataGenerator(_id, inputValue);
+    const newData = General.dataGenerator(_id, inputValue);
     list.insertBefore(itemGenerator(newData), list.firstChild); // push newLi to first
-    general.resetInput();
+    General.resetInput();
   }
 
   function _removeRandom(list) {
-    var listItems = list.childNodes;
+    const listItems = list.childNodes;
 
-    _forEach.call(listItems, function whetherHasRandom(item) {
+    [...listItems].forEach((item) => {
       if (item.classList.contains('aphorism')) {
         list.removeChild(item);
       }
     });
-    // or use for...in
-    // for (var index in listItems) {
-    //   if (listItems.hasOwnProperty(index)) {
-    //     if (listItems[index].classList.contains('aphorism')) {
-    //       list.removeChild(listItems[index]);
-    //     }
-    //   }
-    // }
   }
+  // or use for...in
+  // for (const index in listItems) {
+  //   if (listItems.hasOwnProperty(index)) {
+  //     if (listItems[index].classList.contains('aphorism')) {
+  //       list.removeChild(listItems[index]);
+  //     }
+  //   }
+  // }
 
   function enterAdd(e) {
     if (e.keyCode === 13) {
@@ -51,8 +49,27 @@ var eventsHandler = (function dbFailGenerator() {
     }
   }
 
+  function showAll() {
+    const list = document.querySelector('#list');
+    const listItems = list.childNodes;
+
+    [...listItems].forEach((item) => {
+      _whetherAppear(item, true);
+      if (item.classList.contains('finished')) {
+        list.removeChild(item);
+        list.appendChild(item); // PUNCHLINE: drop done item
+      }
+    });
+  }
+
+  /* eslint-disable no-param-reassign  */
+  function _whetherAppear(element, whether) {
+    element.style.display = whether ? 'block' : 'none'; // FIXME: eslint error
+  }
+  /* eslint-enable no-param-reassign  */
+
   function clickLi(e) {
-    var targetLi = e.target;
+    const targetLi = e.target;
     // use event delegation
 
     if (targetLi.getAttribute('data-id')) {
@@ -71,12 +88,12 @@ var eventsHandler = (function dbFailGenerator() {
 
   function _removeLiHandler(element) {
     // use previously stored data
-    var list = document.querySelector('#list');
-    var listItems = list.childNodes;
-    var id = element.parentNode.getAttribute('data-id');
+    const list = document.querySelector('#list');
+    const listItems = list.childNodes;
+    const id = element.parentNode.getAttribute('data-id');
 
     try {
-      _forEach.call(listItems, function whetherHasRandom(item) {
+      [...listItems].forEach((item) => {
         if (item.getAttribute('data-id') === id) {
           list.removeChild(item);
         }
@@ -88,36 +105,21 @@ var eventsHandler = (function dbFailGenerator() {
   }
 
   function _addRandom() {
-    var list = document.querySelector('#list');
+    const list = document.querySelector('#list');
 
     if (!list.hasChildNodes() || _allDisappear(list)) {
-      refresh.random();
+      Refresh.random();
     }
   }
 
   function _allDisappear(list) {
-    var listItems = list.childNodes;
+    const listItems = list.childNodes;
 
-    return Array.prototype.every.call(listItems, function whetherHasRandom(item) {
-      return item.style.display === 'none';
-    });
+    return Array.prototype.every.call(listItems, item => item.style.display === 'none');
   }
 
   function showInit() {
-    refresh.init();
-  }
-
-  function showAll() {
-    var list = document.querySelector('#list');
-    var listItems = list.childNodes;
-
-    _forEach.call(listItems, function appearAll(item) {
-      _whetherAppear(item, true);
-      if (item.classList.contains('finished')) {
-        list.removeChild(item);
-        list.appendChild(item); // PUNCHLINE: drop done item
-      }
-    });
+    Refresh.init();
   }
 
   function showDone() {
@@ -129,26 +131,22 @@ var eventsHandler = (function dbFailGenerator() {
   }
 
   function _showWhetherDone(whetherDone) {
-    var list = document.querySelector('#list');
-    var listItems = list.childNodes;
+    const list = document.querySelector('#list');
+    const listItems = list.childNodes;
 
     _removeRandom(list);
-    _forEach.call(listItems, function whetherDoneAppear(item) {
+    [...listItems].forEach((item) => { // FIXME: eslint error
       item.classList.contains('finished') ? _whetherAppear(item, whetherDone) : _whetherAppear(item, !whetherDone);
     });
     _addRandom();
   }
 
-  function _whetherAppear(element, whether) {
-    element.style.display = whether ? 'block' : 'none';
-  }
-
   function showClearDone() {
-    var list = document.querySelector('#list');
-    var listItems = list.childNodes;
+    const list = document.querySelector('#list');
+    const listItems = list.childNodes;
 
     _removeRandom(list);
-    _forEach.call(listItems, function clearDoneItems(item) {
+    [...listItems].forEach((item) => {
       if (item.classList.contains('finished')) {
         list.removeChild(item);
       }
@@ -157,22 +155,22 @@ var eventsHandler = (function dbFailGenerator() {
   }
 
   function showClear() {
-    refresh.clear(); // clear nodes visually
-    refresh.random();
+    Refresh.clear(); // clear nodes visually
+    Refresh.random();
   }
 
   return {
-    add: add,
-    enterAdd: enterAdd,
-    clickLi: clickLi,
-    removeLi: removeLi,
-    showInit: showInit,
-    showAll: showAll,
-    showDone: showDone,
-    showTodo: showTodo,
-    showClearDone: showClearDone,
-    showClear: showClear
+    add,
+    enterAdd,
+    clickLi,
+    removeLi,
+    showInit,
+    showAll,
+    showDone,
+    showTodo,
+    showClearDone,
+    showClear,
   };
-}());
+})();
 
-module.exports = eventsHandler;
+export default eventsHandler;

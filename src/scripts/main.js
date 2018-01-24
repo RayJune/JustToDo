@@ -1,12 +1,10 @@
-'use strict';
-(function init() {
-  var DB = require('indexeddb-crud');
-  var config = require('./db/config');
-  var addEvents = require('./utlis/dbSuccess/addEvents');
-  var lazyLoadWithoutDB = require('./utlis/lazyLoadWithoutDB');
-  var templete = require('../../templete/template');
+import { open as openDB } from 'indexeddb-crud';
+import config from './db/config';
+import templete from '../../templete/template';
+import addEvents from './utlis/dbSuccess/addEvents';
+import lazyLoadWithoutDB from './utlis/lazyLoadWithoutDB';
 
-  templete();
-  // open DB, and when DB open succeed, invoke initial function
-  DB.open(config, addEvents, lazyLoadWithoutDB);
-}());
+
+templete();
+// open DB, and when DB open succeed, invoke initial function
+openDB(config, addEvents, lazyLoadWithoutDB);

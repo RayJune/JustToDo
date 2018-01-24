@@ -1,11 +1,8 @@
-'use strict';
-var addEvents = (function dbSuccessGenerator() {
-  var addEventsGenerator = require('../dbGeneral/addEventsGenerator');
-  var eventsHandler = require('../dbSuccess/eventsHandler');
+import addEventsGenerator from '../dbGeneral/addEventsGenerator';
+import eventsHandler from '../dbSuccess/eventsHandler';
 
-  return function handler() {
-    addEventsGenerator(eventsHandler);
-  };
-}());
+function addEvents() {
+  addEventsGenerator(eventsHandler);
+}
 
-module.exports = addEvents;
+export default addEvents;

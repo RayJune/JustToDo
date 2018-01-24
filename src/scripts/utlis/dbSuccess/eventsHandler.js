@@ -1,12 +1,11 @@
-'use strict';
-var eventsHandler = (function dbSuccessGenerator() {
-  var DB = require('indexeddb-crud');
-  var refresh = require('../dbSuccess/refresh');
-  var general = require('../dbGeneral/eventsHandlerGeneral');
-  var itemGenerator = require('../templete/itemGenerator');
+import DB from 'indexeddb-crud';
+import Refresh from '../dbSuccess/refresh';
+import General from '../dbGeneral/eventsHandlerGeneral';
+import itemGenerator from '../templete/itemGenerator';
 
+const eventsHandler = (() => {
   function add() {
-    var inputValue = document.querySelector('#input').value;
+    const inputValue = document.querySelector('#input').value;
 
     if (inputValue === '') {
       window.alert('please input a real data~');
@@ -16,18 +15,17 @@ var eventsHandler = (function dbSuccessGenerator() {
   }
 
   function _addHandler(inputValue) {
-    var newData = general.dataGenerator(DB.getNewKey(), inputValue);
-    var rendered = itemGenerator(newData);
+    const newData = General.dataGenerator(DB.getNewKey(), inputValue);
+    const rendered = itemGenerator(newData);
 
-    // console.log(DB.getNewKey());
     removeInit();
     document.querySelector('#list').insertAdjacentHTML('afterbegin', rendered); // PUNCHLINE: use insertAdjacentHTML
-    general.resetInput();
+    General.resetInput();
     DB.addItem(newData);
   }
 
   function removeInit() {
-    var list = document.querySelector('#list');
+    const list = document.querySelector('#list');
 
     if (list.firstChild.className === 'aphorism') {
       list.removeChild(list.firstChild);
@@ -41,34 +39,36 @@ var eventsHandler = (function dbSuccessGenerator() {
   }
 
   function clickLi(e) {
-    var id;
-    var targetLi = e.target;
+    const targetLi = e.target;
     // use event delegation
 
     if (!targetLi.classList.contains('aphorism')) {
-      if (targetLi.getAttribute('data-id')) {
+      if (targetLi.getAttribute('data-id')) { // test whether is x
         targetLi.classList.toggle('finished'); // toggle appearance
-        id = parseInt(targetLi.getAttribute('data-id'), 10); // use previously stored data-id attribute
+
+        // use previously stored data-id attribute
+        const id = parseInt(targetLi.getAttribute('data-id'), 10);
+
         DB.getItem(id, _toggleLi);
       }
     }
   }
 
   function _toggleLi(data) {
-    data.finished = !data.finished;
-    DB.updateItem(data, showAll);
+    const newData = data;
+
+    newData.finished = !data.finished;
+    DB.updateItem(newData, showAll);
   }
 
   // li's [x]'s delete
   function removeLi(e) {
-    var id;
-
     if (e.target.className === 'close') { // use event delegation
       // delete visually
       document.querySelector('#list').removeChild(e.target.parentNode);
       _addRandom();
       // use previously stored data
-      id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
+      const id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
       // delete actually
       DB.removeItem(id);
     }
@@ -76,19 +76,19 @@ var eventsHandler = (function dbSuccessGenerator() {
 
   // for Semantic
   function _addRandom() {
-    var list = document.querySelector('#list');
+    const list = document.querySelector('#list');
 
     if (!list.hasChildNodes()) {
-      refresh.random();
+      Refresh.random();
     }
   }
 
   function showInit() {
-    DB.getAll(refresh.init);
+    DB.getAll(Refresh.init);
   }
 
   function showAll() {
-    DB.getAll(refresh.all);
+    DB.getAll(Refresh.all);
   }
 
   function showDone() {
@@ -100,37 +100,37 @@ var eventsHandler = (function dbSuccessGenerator() {
   }
 
   function _showWhetherDone(whetherDone) {
-    var condition = 'finished';
+    const condition = 'finished';
 
-    DB.getWhetherConditionItem(condition, whetherDone, refresh.part);
+    DB.getWhetherConditionItem(condition, whetherDone, Refresh.part);
   }
 
   function showClearDone() {
-    var condition = 'finished';
+    const condition = 'finished';
 
-    DB.removeWhetherConditionItem(condition, true, function showLeftData() {
-      DB.getAll(refresh.part);
+    DB.removeWhetherConditionItem(condition, true, () => {
+      DB.getAll(Refresh.part);
     });
   }
 
   function showClear() {
-    refresh.clear(); // clear nodes visually
-    refresh.random();
+    Refresh.clear(); // clear nodes visually
+    Refresh.random();
     DB.clear(); // clear data indeed
   }
 
   return {
-    add: add,
-    enterAdd: enterAdd,
-    clickLi: clickLi,
-    removeLi: removeLi,
-    showInit: showInit,
-    showAll: showAll,
-    showDone: showDone,
-    showTodo: showTodo,
-    showClearDone: showClearDone,
-    showClear: showClear
+    add,
+    enterAdd,
+    clickLi,
+    removeLi,
+    showInit,
+    showAll,
+    showDone,
+    showTodo,
+    showClearDone,
+    showClear,
   };
-}());
+})();
 
-module.exports = eventsHandler;
+export default eventsHandler;

@@ -1,4 +1,3 @@
-'use strict';
 function clearChildNodes(root) {
   while (root.hasChildNodes()) { // or root.firstChild or root.lastChild
     root.removeChild(root.firstChild);
@@ -6,4 +5,4 @@ function clearChildNodes(root) {
   // or root.innerHTML = ''
 }
 
-module.exports = clearChildNodes;
+export default clearChildNodes;

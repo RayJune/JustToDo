@@ -1,4 +1,4 @@
-module.exports = function() {
+function template () {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['li'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -40,3 +40,5 @@ templates['li'] = template({"1":function(container,depth0,helpers,partials,data)
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.sentence : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "");
 },"useData":true});
 };
+
+export default template;

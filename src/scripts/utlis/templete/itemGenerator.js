@@ -1,15 +1,13 @@
-'use strict';
 function itemGenerator(dataArr) {
-  var result = dataArr;
-  var rendered;
-  var template = Handlebars.templates.li;
+  const template = Handlebars.templates.li;
+  let result = dataArr;
 
   if (!Array.isArray(dataArr)) {
     result = [dataArr];
   }
-  rendered = template({listItems: result});
+  const rendered = template({ listItems: result });
 
   return rendered.trim();
 }
 
-module.exports = itemGenerator;
+export default itemGenerator;

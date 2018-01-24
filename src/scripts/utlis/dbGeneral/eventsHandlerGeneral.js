@@ -1,7 +1,6 @@
-'use strict';
-var eventsHandlerGeneral = (function generalGenerator() {
-  var getFormatDate = require('../getFormatDate');
+import getFormatDate from '../getFormatDate';
 
+const eventsHandlerGeneral = (() => {
   function resetInput() {
     document.querySelector('#input').value = '';
   }
@@ -11,14 +10,14 @@ var eventsHandlerGeneral = (function generalGenerator() {
       id: key,
       event: value,
       finished: false,
-      date: getFormatDate('MM月dd日hh:mm') + ' '
+      date: getFormatDate('MM月dd日hh:mm'),
     };
   }
 
   return {
-    resetInput: resetInput,
-    dataGenerator: dataGenerator
+    resetInput,
+    dataGenerator,
   };
-}());
+})();
 
-module.exports = eventsHandlerGeneral;
+export default eventsHandlerGeneral;

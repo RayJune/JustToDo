@@ -62,9 +62,11 @@ const eventsHandler = (() => {
     });
   }
 
+  /* eslint-disable no-param-reassign  */
   function _whetherAppear(element, whether) {
     element.style.display = whether ? 'block' : 'none'; // FIXME: eslint error
   }
+  /* eslint-enable no-param-reassign  */
 
   function clickLi(e) {
     const targetLi = e.target;

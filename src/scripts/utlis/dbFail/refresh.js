@@ -18,18 +18,9 @@ const Refresh = (() => {
 
   return {
     init: General.init,
-    all: General.all.bind(null, randomAphorism),
-    part: General.part.bind(null, randomAphorism),
     clear: General.clear,
     random: randomAphorism,
   };
-  // return {
-  //   init: General.init,
-  //   all: () => General.all(randomAphorism),
-  //   part: () => General.part(randomAphorism),
-  //   clear: General.clear,
-  //   random: randomAphorism,
-  // };
 })();
 
 export default Refresh;

@@ -2,12 +2,11 @@ import DB from 'indexeddb-crud';
 import General from '../dbGeneral/refreshGeneral';
 
 const Refresh = (() => {
-  const storeName = 'aphorism';
-
   function randomAphorism() {
+    const storeName = 'aphorism';
     const randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
-    DB.getItem(storeName, randomIndex, _parseText);
+    DB.getItem(randomIndex, _parseText, storeName);
   }
 
   function _parseText(data) {
@@ -25,6 +24,7 @@ const Refresh = (() => {
   };
   // return {
   //   init: General.init,
+  //   FIXME: why this method can't work
   //   all: () => General.all(randomAphorism),
   //   part: () => General.part(randomAphorism),
   //   clear: General.clear,

@@ -36,7 +36,7 @@ const refreshGeneral = (() => {
     const unfishied = [];
 
     // put the finished item to the bottom
-    dataArr.forEach(data => (data.finished ? finished.push(data) : unfishied.push(data)));
+    dataArr.forEach(data => (data.finished ? finished.unshift(data) : unfishied.unshift(data)));
 
     return unfishied.concat(finished);
   }
@@ -46,7 +46,7 @@ const refreshGeneral = (() => {
   }
 
   function _renderPart(dataArr) {
-    return itemGenerator(dataArr);
+    return itemGenerator(dataArr.reverse());
   }
 
   function clear() {

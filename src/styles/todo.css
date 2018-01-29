@@ -1,10 +1,13 @@
 /* 用来设置 sticky footer */
+
 .content-area {
-  min-height: calc(100% - 7.5rem); /*  减去 footer  */
+  min-height: calc(100% - 7.5rem);
+  /* 减去 footer */
   margin-top: 15.6rem;
 }
 
 /* 操作区样式 */
+
 .operate-area {
   margin-left: auto;
   margin-right: auto;
@@ -14,13 +17,29 @@
   font-size: 2rem;
   word-wrap: break-word;
   background-color: #fff;
+  overflow: scroll;
 }
 
 h2 {
   margin-top: 1rem;
 }
 
+.add-area {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
 /* 输入框样式 */
+
 #input {
   display: inline-block;
   width: 70%;
@@ -28,13 +47,13 @@ h2 {
   height: 2.7rem;
   padding: 0.36rem;
   margin-right: 1rem;
-  margin-bottom: 2rem;
   border-radius: 0.3rem;
-  -webkit-box-shadow: inset 0 0.1rem 0.1rem rgba(0,0,0,.075);
-          box-shadow: inset 0 0.1rem 0.1rem rgba(0,0,0,.075);
+  -webkit-box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, .075);
+  box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, .075);
 }
 
 /* button 的统一样式 */
+
 button {
   cursor: pointer;
   padding: 0.8rem 0;
@@ -44,32 +63,18 @@ button {
   border-radius: 0.6rem;
   color: #fff;
   background-color: #164;
-  -webkit-transition:background-color 0.66s;
-  transition:background-color 0.66s;
+  -webkit-transition: background-color 0.66s;
+  transition: background-color 0.66s;
 }
+
 button:hover {
   background-color: #0D8;
 }
 
-/* 除了 add button 外，其他四个 button 的样式 */
-.buttons {
-  width: 62%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
 /* 列表样式 */
+
 ul {
+  overflow: scroll;
   list-style: none;
   margin: 3.6rem auto 1rem;
   padding: 2rem;
@@ -82,13 +87,15 @@ li {
   padding: 1.2rem 0.8rem 1.2rem 4rem;
   background: #eee;
   font-size: 1.66rem;
-  position: relative; /* for .close */
+  position: relative;
+  /* for .close */
   -webkit-transition: 0.2s;
   transition: 0.2s;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none; /* 用户不能选中文本 */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* 用户不能选中文本 */
 }
 
 li span {
@@ -97,16 +104,19 @@ li span {
 }
 
 /* 奇数时使用不同的颜色 */
+
 li:nth-child(odd) {
   background: #f9f9f9;
 }
 
 /* hover时背景色改变 */
+
 li:hover {
   background: #ddd;
 }
 
 /* 当被选中，文字中加横线 */
+
 li.finished {
   background: #888;
   color: #fff;
@@ -114,6 +124,7 @@ li.finished {
 }
 
 /* 为被选中的li增加 “对勾” 图标 */
+
 li.finished::before {
   content: '';
   position: absolute;
@@ -123,7 +134,7 @@ li.finished::before {
   top: 1.5rem;
   left: 1.6rem;
   -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
   height: 1.5rem;
   width: 0.7rem;
 }
@@ -137,12 +148,14 @@ li.aphorism {
 }
 
 /* 关闭按钮样式 */
+
 .close {
   position: absolute;
   right: 0;
   top: 0;
   padding: 1.2rem 1.6rem 1.2rem 1.6rem
 }
+
 .close:hover {
   background-color: #0D8;
   color: #fff;

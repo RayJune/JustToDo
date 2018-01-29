@@ -63,7 +63,7 @@ nav a:hover {
 }
 .subscribe {
 	float: right;
-	margin-right: 7%;
+	margin-right: calc(8rem + 8%);
 }
 
 .page-title {

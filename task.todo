@@ -13,6 +13,7 @@
 - [x] 提供 without indexedDB mode
 - [x] 使用懒加载策略加载 without indexedDB mode
 - [x] 使用 JavaScript templete engine 将 HTML 和 JavaScript 分离，提升渲染效率(using handlebars, prebuild scheme)
+- [ ] 增加 github ribbion，并进行修改 (transform)
 - [ ] 添加返回顶部的按钮
 - [ ] 把 webpack 拿来当做普通的 shell 一样使用
 - [ ] 用 ES6 来重构代码

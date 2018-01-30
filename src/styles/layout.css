@@ -1,45 +1,17 @@
-:root {
-	font-size: 62.5%;
-	height: 100%;
-	-webkit-box-sizing: border-box;
-	        box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  -webkit-box-sizing: inherit;
-          box-sizing: inherit;
-}
-
-body {
-	height: calc(100% - 15.6rem); /* 减去 header */
-	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-	font-size: 1.6rem;
-	line-height: 1.6;
-	color: #3A4145;
-	background: #ECF0F1;
-}
-
 header {
 	height: 3.8rem;
 	line-height: 3.8rem;
 	background-color: #456;
 	color: #fff;
+	/* use fixed position */
 	position: fixed;
 	top: 0;
 	z-index: 100;
 	width: 100%;
+	padding-bottom: 11.8rem;
 }
 
-a {
-	text-decoration: none;
-	color: #2c3e50;
-	-webkit-transition:color 0.36s;
-	transition:color 0.36s;
-}
-a:hover {
-	color: #0D8;
-}
-
+/* header nav */
 nav a {
 	font-size: 1.66rem;
 	color: #fff;
@@ -52,7 +24,7 @@ nav a:hover {
 	color: #fff;
 }
 
-/* 导航栏上三个元素的位置设置 */
+/* 3 element in nav，use float */
 .design {
 	float: left;
 	margin-left: 5%;
@@ -63,13 +35,15 @@ nav a:hover {
 }
 .subscribe {
 	float: right;
+	/* use calc because of the github ribbion(position absolute element) */
 	margin-right: calc(8rem + 8%);
 }
 
+/* header title */
 .page-title {
 	margin-left: auto;
 	margin-right: auto;
-	font-family: "STFangsong","Songti TC","simsun",Arial,serif;
+	font-family: "STFangsong", "Songti TC", "simsun", Arial, serif;
 	font-weight: bold;
 	text-align: center;
   background-color: #fff;
@@ -83,16 +57,9 @@ nav a:hover {
 	transition:color 0.88s;
 }
 
+/* sticky footer */
 footer {
 	height: 7.5rem;
 	padding: 1rem 3.6rem 1.6rem 1rem;
 	line-height: 1.5;
-}
-
-.clearfix::before, .clearfix::after {
-	display: table;
-	content: " ";
-}
-.clearfix::after {
-	clear: both;
 }

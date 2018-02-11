@@ -10,6 +10,12 @@ html {
           box-sizing: inherit;
 }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .clearfix::before, .clearfix::after {
 	display: table;
 	content: " ";
@@ -35,4 +41,8 @@ a {
 }
 a:hover {
 	color: #0D8;
+}
+
+p {
+	margin: 0;
 }

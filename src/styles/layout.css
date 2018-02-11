@@ -11,6 +11,10 @@ header {
 	padding-bottom: 11.8rem;
 }
 
+.github-corner {
+	top: calc((3.8rem - 43) / 2);
+}
+
 /* header nav */
 nav a {
 	font-size: 1.66rem;

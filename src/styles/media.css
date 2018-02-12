@@ -1,0 +1,38 @@
+@media (max-width: 415px) { 
+	.operate-area {
+		height: 25.46rem;
+	}
+
+	#input {
+		width: 110%;
+	}
+
+	#add {
+    width: 6rem;
+    margin-right: 0;
+	}
+
+  .buttons {
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+  }
+
+	button {
+    font-size: 1.36rem;
+    margin-right: 0;
+    width: 48%;
+	}
+
+  #showClearDone {
+    width: 98%;
+  }
+
+	.subscribe {
+		margin-right: 9rem;
+  }
+  
+  li.aphorism {
+    font-size: 1.8rem;
+  }
+}

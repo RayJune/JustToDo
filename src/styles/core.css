@@ -6,6 +6,7 @@
 }
 
 .operate-area {
+  overflow-y: scroll;
   margin-left: auto;
   margin-right: auto;
   padding: 0.8rem 2rem 0.66rem;
@@ -27,8 +28,6 @@ h2 {
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -47,12 +46,37 @@ h2 {
   box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, .075);
 }
 
+#input:focus {
+  border-color: #0D8;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+
+.buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  /* use flexbox */
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
 button {
   cursor: pointer;
   padding: 0.8rem 0;
   font-size: 1.56rem;
   line-height: 1;
   width: 10rem;
+  margin-right: 1rem;
+  margin-top: 0.2rem;
   border-radius: 0.6rem;
   color: #fff;
   background-color: #164;

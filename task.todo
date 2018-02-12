@@ -13,10 +13,11 @@
 - [x] 提供 without indexedDB mode
 - [x] 使用懒加载策略加载 without indexedDB mode
 - [x] 使用 JavaScript templete engine 将 HTML 和 JavaScript 分离，提升渲染效率(using handlebars, prebuild scheme)
-- [ ] 增加 github ribbion，并进行修改 (transform)
+- [x] 用 ES6 来重构代码
+- [x] 增加 github ribbion，并进行修改 (transform, svg)
+- [x] 利用 media query 和 flexbox 针对 mobile 进行优化，关注应用的 responsiveness
 - [ ] 添加返回顶部的按钮
 - [ ] 把 webpack 拿来当做普通的 shell 一样使用
-- [ ] 用 ES6 来重构代码
 - [ ] 实现完整的功能集 （比如给 todo 增加tags），参考 todoist.com
 - [ ] 引入 jQuery，利用插件集成来实现效果，比如 Tag editor，in place editing
 - [ ] 关注应用的 responsiveness，利用 css 框架做出更专业的效果

@@ -14,6 +14,12 @@
 
 ![随机名言警句](markdownImages/3.png)
 
+#### 针对 mobile 进行优化
+
+![mobile 1](markdownImages/4.png)
+
+![mobile 2](markdownImages/5.png)
+
 ### 主要功能
 
 * 使用 indexedDB 提供存储 todolist item 和随机出现的名言警句（用自己的 [indexeddb-crud](https://www.npmjs.com/package/indexeddb-crud) package 来操作 indexedDB）

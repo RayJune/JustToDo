@@ -78,7 +78,8 @@ const eventsHandler = (() => {
   function _addRandom() {
     const list = document.querySelector('#list');
 
-    if (!list.hasChildNodes()) {
+    // because of the handlerbas.templete, add this inspect
+    if (!list.lastChild || list.lastChild.nodeName === '#text') {
       Refresh.random();
     }
   }

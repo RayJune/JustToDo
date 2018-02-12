@@ -40,7 +40,15 @@ nav a:hover {
 .subscribe {
 	float: right;
 	/* use calc because of the github ribbion(position absolute element) */
-	margin-right: calc(8rem + 8%);
+	margin-right: calc(6rem + 8%);
+}
+.github-corner svg {
+	-webkit-transform: rotate(-45deg);
+	        transform: rotate(-45deg);
+	position: absolute; 
+	top: -0.36rem; 
+	border: 0; 
+	right: 5%;
 }
 
 /* header title */

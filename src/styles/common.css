@@ -1,5 +1,5 @@
 html {
-	font-size: 62.5%;
+	font-size: 62.5%; /* for rem */
 	height: 100%;
 	-webkit-box-sizing: border-box;
 	        box-sizing: border-box;
@@ -10,18 +10,10 @@ html {
           box-sizing: inherit;
 }
 
-.clearfix:after {
+.clearfix::after {
   content: "";
   display: table;
   clear: both;
-}
-
-.clearfix::before, .clearfix::after {
-	display: table;
-	content: " ";
-}
-.clearfix::after {
-	clear: both;
 }
 
 body {

@@ -1,7 +1,28 @@
 @media (max-width: 415px) { 
+  header {
+    padding-bottom: 9.8rem;
+  }
+  
+  .page-title {
+    height: 6rem;
+  }
+  .page-title a {
+    font-weight: 100;
+    line-height: 6rem;
+    font-size: 3.6rem;
+  }
+
+  main {
+    padding-top: 12.6rem;
+  }
+  
 	.operate-area {
 		height: 25.46rem;
 	}
+
+  .add-area {
+    margin-bottom: 1.2rem;
+  }
 
 	#input {
 		width: 110%;
@@ -21,6 +42,7 @@
 	button {
     font-size: 1.36rem;
     margin-right: 0;
+    margin-top: 0.5rem;
     width: 48%;
 	}
 

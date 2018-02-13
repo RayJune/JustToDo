@@ -24,7 +24,8 @@ h2 {
 .add-area {
   display: -webkit-box;
   display: -ms-flexbox;
-  /* use flexbox */
+  /* use flexbox to align elements vertically */
+  /* although can use vertical-align: middle on #input, but I need flexbox's flexibility */
   display: flex;
   -webkit-box-align: end;
       -ms-flex-align: end;

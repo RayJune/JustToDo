@@ -4,21 +4,21 @@
 
 #### 首页
 
-![首页](markdownImages/1.png)
+![首页](READEME_images/1.png)
 
 #### 添加 item
 
-![todolist](markdownImages/2.png)
+![todolist](READEME_images/2.png)
 
 #### 随机名言警句
 
-![随机名言警句](markdownImages/3.png)
+![随机名言警句](READEME_images/3.png)
 
 #### 针对 mobile 进行优化
 
-![mobile 1](markdownImages/4.png)
+![mobile 1](READEME_images/4.png)
 
-![mobile 2](markdownImages/5.png)
+![mobile 2](READEME_images/5.png)
 
 ### 主要功能
 

@@ -22,7 +22,7 @@
 
 ### 主要功能
 
-* 使用 indexedDB 提供存储 todolist item 和随机出现的名言警句（用自己的 [indexeddb-crud](https://www.npmjs.com/package/indexeddb-crud) package 来操作 indexedDB）
+* 使用 indexedDB 提供存储 todolist item 和随机出现的名言警句（用自己的 [indexeddb-crud](https://www.npmjs.com/package/indexeddb-crud) npm package 来操作 indexedDB）
 * 如果用户的浏览器不支持 indexedDB 则自动转换为 without indexedDB mode（[这部分代码利用 lazy load 的方式来加载](https://github.com/RayJune/JustToDo/blob/gh-pages/src/scripts/utlis/lazyLoadWithoutDB.js)）
 * 列表 item 为空则随机出现名言警句
 
@@ -46,7 +46,7 @@
 
 ### 感谢
 
-* [Garrik-Liu的todolist](https://github.com/Garrik-Liu/practises-web/tree/master/cases/12.toDoList)
-* [Liugq5713的todolist](https://github.com/Liugq5713/Todolist)
+* [Garrik-Liu 的 todolist](https://github.com/Garrik-Liu/practises-web/tree/master/cases/12.toDoList)
+* [Liugq5713 的 todolist](https://github.com/Liugq5713/Todolist)
 
 参考/模仿了两位 first commit 的代码，向两位表示感谢：）

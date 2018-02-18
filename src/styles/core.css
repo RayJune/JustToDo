@@ -28,8 +28,8 @@ h2 {
   /* although can use vertical-align: middle on #input, but I need flexbox's flexibility */
   display: flex;
   -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
+  -ms-flex-align: end;
+  align-items: flex-end;
   margin-bottom: 2rem;
 }
 
@@ -46,10 +46,10 @@ h2 {
 }
 
 #input:focus {
-  border-color: #0D8;
+  border-color: var(--light-color);
   outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
-          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
 }
 
 button {
@@ -62,13 +62,13 @@ button {
   margin-top: 0.2rem;
   border-radius: 0.6rem;
   color: #fff;
-  background-color: #164;
+  background-color: var(--main-color);
   -webkit-transition: background-color 0.66s;
   transition: background-color 0.66s;
 }
 
 button:hover {
-  background-color: #0D8;
+  background-color: var(--light-color);
 }
 
 .buttons {
@@ -84,7 +84,7 @@ button:hover {
   -ms-flex-align: center;
   align-items: center;
   -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 ul {
@@ -110,6 +110,7 @@ li {
   -ms-user-select: none;
   user-select: none;
 }
+
 li:hover {
   background: #ddd;
 }
@@ -120,17 +121,21 @@ li span {
 }
 
 /* use different colors when odd */
+
 li:nth-child(odd) {
   background: #f9f9f9;
 }
 
 /* when finished, add line-through decoration */
+
 li.finished {
   background: #888;
   color: #fff;
   text-decoration: line-through;
 }
+
 /* add check mark for finished li */
+
 li.finished::before {
   content: '';
   position: absolute;
@@ -154,13 +159,15 @@ li.aphorism {
 }
 
 /* li's close symbol style */
+
 .close {
   position: absolute;
   right: 0;
   top: 0;
   padding: 1.2rem 1.6rem 1.2rem 1.6rem
 }
+
 .close:hover {
-  background-color: #0D8;
+  background-color: var(--light-color);
   color: #fff;
 }

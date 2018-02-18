@@ -16,60 +16,68 @@ header {
 }
 
 /* header nav */
+
 nav a {
 	font-size: 1.66rem;
 	color: #fff;
 	border-radius: 0.6rem;
-	-webkit-transition:background-color 0.66s;
-	transition:background-color 0.66s;
+	-webkit-transition: background-color 0.66s;
+	transition: background-color 0.66s;
 }
+
 nav a:hover {
-	background-color: #0D8;
+	background-color: var(--light-color);
 	color: #fff;
 }
 
 /* 3 element in nav，use float */
+
 .design {
 	float: left;
 	margin-left: 5%;
 }
+
 .about {
 	float: left;
 	margin-left: 3%;
 }
+
 .subscribe {
 	float: right;
 	/* use calc because of the github ribbion(position absolute element) */
 	margin-right: calc(6rem + 8%);
 }
+
 .github-corner svg {
 	-webkit-transform: rotate(-45deg);
-	        transform: rotate(-45deg);
-	position: absolute; 
-	top: -0.36rem; 
-	border: 0; 
+	transform: rotate(-45deg);
+	position: absolute;
+	top: -0.36rem;
+	border: 0;
 	right: 5%;
 }
 
 /* header title */
+
 .page-title {
 	margin-left: auto;
 	margin-right: auto;
 	font-family: "STFangsong", "Songti TC", "simsun", Arial, serif;
 	font-weight: bold;
 	text-align: center;
-  background-color: #fff;
+	background-color: #fff;
 	height: 8rem;
 }
 
 .page-title a {
 	line-height: 8rem;
 	font-size: 5rem;
-	-webkit-transition:color 0.88s;
-	transition:color 0.88s;
+	-webkit-transition: color 0.88s;
+	transition: color 0.88s;
 }
 
 /* sticky footer */
+
 footer {
 	height: 6.5rem;
 	padding: 1rem 3.6rem 1.6rem 1rem;

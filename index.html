@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Just To Do</title>
-    <link rel="stylesheet" type="text/css" href="./dist/styles/main.min.css">
-  </head>
-  <body>
-    <header>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Just To Do</title>
+  <link rel="stylesheet" type="text/css" href="./dist/styles/main.min.css">
+</head>
+
+<body>
+  <header>
       <nav class="clearfix" role="navigation">        
         <a href="https://github.com/RayJune/JustToDo#%E9%A1%B5%E9%9D%A2%E8%AE%BE%E8%AE%A1%E7%90%66%E5%BF%B5" class="design">设计理念</a>
         <a href="https://www.rayjune.me/about" class="about">关于</a>
@@ -18,32 +20,39 @@
       <div class="page-title"><a href="https://www.rayjune.me">就是去做</a></div>
     </header>
 
-    <main role="main">
-      <div class="operate-area">
-        <h2>Just Do It</h2>
-        <div class="add-area">
-          <input id="input" autofocus type="text" placeholder="Just do something, bro">
-          <button id="add">添加</button>
-        </div>
-
-        <div class="buttons">
-          <button id="showDone">已完成</button>
-          <button id="showTodo">未完成</button>
-          <button id="showAll">显示所有</button>
-          <button id="showClearDone">删除已完成</button>
-          <button id="showClear">删除所有</button>
-        </div>
+  <main role="main">
+    <div class="operate-area">
+      <h2>Just Do It</h2>
+      <div class="add-area">
+        <input id="input" autofocus type="text" placeholder="Just do something, bro">
+        <button id="add">添加</button>
       </div>
 
-      <ul id="list">
-      </ul>
-    </main>
+      <div class="buttons">
+        <button id="showDone">已完成</button>
+        <button id="showTodo">未完成</button>
+        <button id="showAll">显示所有</button>
+        <button id="showClearDone">删除已完成</button>
+        <button id="showClear">删除所有</button>
+      </div>
+    </div>
 
-    <footer>
-      <a href="https://github.com/RayJune/JustToDo">就是去做</a> &copy; 2017 All rights reserved.
-      <p>Created by <strong><span><a href="https://github.com/rayjune">RayJune</a></span></strong></p>
-    </footer>
-    <script src="./lib/handlebars/handlebars.runtime.min.js"></script>
-    <script src="./dist/scripts/bundle.min.js"></script>
-  </body>
+    <ul id="list">
+    </ul>
+  </main>
+
+  <footer>
+    <a href="https://github.com/RayJune/JustToDo">就是去做</a> &copy; 2017 All rights reserved.
+    <p>Created by
+      <strong>
+        <span>
+          <a href="https://github.com/rayjune">RayJune</a>
+        </span>
+      </strong>
+    </p>
+  </footer>
+  <script src="./lib/handlebars/handlebars.runtime.min.js"></script>
+  <script src="./dist/scripts/bundle.min.js"></script>
+</body>
+
 </html>

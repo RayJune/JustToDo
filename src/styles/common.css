@@ -1,19 +1,27 @@
-html {
-	font-size: 62.5%; /* for rem */
-	height: 100%;
-	-webkit-box-sizing: border-box;
-	        box-sizing: border-box;
+:root {
+	--main-color: #164;
+	--light-color: #0D8;
 }
 
-*, *:before, *:after {
-  -webkit-box-sizing: inherit;
-          box-sizing: inherit;
+html {
+	font-size: 62.5%;
+	/* for rem */
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	-webkit-box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 .clearfix::after {
-  content: "";
-  display: table;
-  clear: both;
+	content: "";
+	display: table;
+	clear: both;
 }
 
 body {
@@ -28,11 +36,12 @@ body {
 a {
 	text-decoration: none;
 	color: #2c3e50;
-	-webkit-transition:color 0.36s;
-	transition:color 0.36s;
+	-webkit-transition: color 0.36s;
+	transition: color 0.36s;
 }
+
 a:hover {
-	color: #0D8;
+	color: var(--light-color);
 }
 
 p {

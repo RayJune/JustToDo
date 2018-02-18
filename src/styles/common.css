@@ -4,11 +4,14 @@
 }
 
 html {
-	font-size: 62.5%;
-	/* for rem */
-	height: 100%;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
+	/* for percent height */
+	height: 100%;
+	/* for rem calculate */
+	font-size: 62.5%;
+	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+	color: #3A4145;
 }
 
 *,
@@ -18,18 +21,10 @@ html {
 	box-sizing: inherit;
 }
 
-.clearfix::after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
 body {
 	height: 100%;
-	font-family: Georgia, 'Source Han Sans CN', 'Xin Gothic', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 	font-size: 1.6rem;
 	line-height: 1.6;
-	color: #3A4145;
 	background: #ECF0F1;
 }
 
@@ -46,4 +41,10 @@ a:hover {
 
 p {
 	margin: 0;
+}
+
+.clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
 }

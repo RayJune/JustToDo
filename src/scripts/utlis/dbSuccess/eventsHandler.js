@@ -38,16 +38,14 @@ const eventsHandler = (() => {
     }
   }
 
-  function clickLi(e) {
-    const targetLi = e.target;
+  function clickLi({ target }) {
     // use event delegation
-
-    if (!targetLi.classList.contains('aphorism')) {
-      if (targetLi.getAttribute('data-id')) { // test whether is x
-        targetLi.classList.toggle('finished'); // toggle appearance
+    if (!target.classList.contains('aphorism')) {
+      if (target.getAttribute('data-id')) { // test whether is x
+        target.classList.toggle('finished'); // toggle appearance
 
         // use previously stored data-id attribute
-        const id = parseInt(targetLi.getAttribute('data-id'), 10);
+        const id = parseInt(target.getAttribute('data-id'), 10);
 
         DB.getItem(id, _toggleLi);
       }
@@ -62,13 +60,13 @@ const eventsHandler = (() => {
   }
 
   // li's [x]'s delete
-  function removeLi(e) {
-    if (e.target.className === 'close') { // use event delegation
+  function removeLi({ target }) {
+    if (target.className === 'close') { // use event delegation
       // delete visually
-      document.querySelector('#list').removeChild(e.target.parentNode);
+      document.querySelector('#list').removeChild(target.parentNode);
       _addRandom();
       // use previously stored data
-      const id = parseInt(e.target.parentNode.getAttribute('data-id'), 10);
+      const id = parseInt(target.parentNode.getAttribute('data-id'), 10);
       // delete actually
       DB.removeItem(id);
     }

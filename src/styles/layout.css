@@ -2,7 +2,7 @@ header {
 	height: 3.8rem;
 	line-height: 3.8rem;
 	background-color: #456;
-	color: #fff;
+	color: white;
 	/* use fixed position */
 	position: fixed;
 	top: 0;
@@ -19,7 +19,7 @@ header {
 
 nav a {
 	font-size: 1.66rem;
-	color: #fff;
+	color: white;
 	border-radius: 0.6rem;
 	-webkit-transition: background-color 0.66s;
 	transition: background-color 0.66s;
@@ -27,7 +27,7 @@ nav a {
 
 nav a:hover {
 	background-color: var(--light-color);
-	color: #fff;
+	color: white;
 }
 
 /* 3 element in nav，use float */
@@ -65,7 +65,7 @@ nav a:hover {
 	font-family: "STFangsong", "Songti TC", "simsun", Arial, serif;
 	font-weight: bold;
 	text-align: center;
-	background-color: #fff;
+	background-color: white;
 	height: 8rem;
 }
 

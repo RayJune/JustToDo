@@ -68,20 +68,18 @@ const eventsHandler = (() => {
   }
   /* eslint-enable no-param-reassign  */
 
-  function clickLi(e) {
-    const targetLi = e.target;
+  function clickLi({ target }) {
     // use event delegation
-
-    if (targetLi.getAttribute('data-id')) {
-      targetLi.classList.toggle('finished');
+    if (target.getAttribute('data-id')) {
+      target.classList.toggle('finished');
       showAll();
     }
   }
 
   // li's [x]'s delete
-  function removeLi(e) {
-    if (e.target.className === 'close') { // use event delegation
-      _removeLiHandler(e.target);
+  function removeLi({ target }) {
+    if (target.className === 'close') { // use event delegation
+      _removeLiHandler(target);
       _addRandom();
     }
   }

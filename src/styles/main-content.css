@@ -1,24 +1,16 @@
-main {
-  /* for including position fixed header */
-  padding-top: 15.6rem;
-  /* for sticky footer */
-  min-height: calc(100% - 7.5rem);
-}
-
 .operate-area {
-  overflow-y: scroll;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0.8rem 2rem 0.66rem;
-  width: 66%;
   height: 22.46rem;
   font-size: 2rem;
+  /* remember the sequence: top right bottom left */
+  padding: 0.8rem 2.5rem 0.66rem;
+  overflow-y: scroll;
   word-wrap: break-word;
   background-color: white;
 }
 
-h2 {
+.operate-area h2 {
   margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .add-area {
@@ -41,7 +33,7 @@ h2 {
   padding: 0.36rem;
   margin-right: 1rem;
   border-radius: 0.3rem;
-  -webkit-box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, .075);
+  -webkit-box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, .075);
 }
 
@@ -54,10 +46,10 @@ h2 {
 
 button {
   cursor: pointer;
-  padding: 0.8rem 0;
+  width: 11rem;
   font-size: 1.56rem;
   line-height: 1;
-  width: 11rem;
+  padding: 0.8rem 0;
   margin-right: 1rem;
   margin-top: 0.2rem;
   border-radius: 0.6rem;
@@ -74,7 +66,6 @@ button:hover {
 .buttons {
   display: -webkit-box;
   display: -ms-flexbox;
-  /* use flexbox */
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
@@ -89,20 +80,20 @@ button:hover {
 
 ul {
   list-style: none;
-  margin: 3.6rem auto 1rem;
   padding: 2rem;
-  width: 66%;
+  margin-top: 3.6rem;
+  margin-bottom: 1rem;
   background-color: white;
 }
 
 li {
   cursor: pointer;
-  padding: 1.2rem 0.8rem 1.2rem 4rem;
   overflow-x: scroll;
-  background: #eee;
   font-size: 1.66rem;
+  padding: 1.2rem 0.8rem 1.2rem 4rem;
   /* position: relative for .close */
   position: relative;
+  background: #eee;
   -webkit-transition: 0.2s;
   transition: 0.2s;
   -webkit-user-select: none;
@@ -139,22 +130,21 @@ li.finished {
 li.finished::before {
   content: '';
   position: absolute;
+  top: 1.5rem;
+  left: 1.6rem;
+  height: 1.5rem;
+  width: 0.7rem;
   border-color: white;
   border-style: solid;
   border-width: 0 0.1rem 0.1rem 0;
-  top: 1.5rem;
-  left: 1.6rem;
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  height: 1.5rem;
-  width: 0.7rem;
 }
 
 li.aphorism {
   cursor: default;
   font-size: 2rem;
   text-align: center;
-  color: #456;
   font-style: italic;
 }
 

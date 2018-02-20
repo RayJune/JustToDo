@@ -4,6 +4,7 @@
   "description": "就是去做",
   "main": ".eslintrc.js",
   "scripts": {
+    "dev": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser 'Firefox Developer Edition'",
     "handlebars": "cd src/templete && handlebars li.handlebars -f template.js && cd ..",
     "build": "npm run build:scripts && npm run build:styles",
     "clean": "rm -rf dist/**/*",
@@ -32,6 +33,7 @@
     "babel-eslint": "^7.2.3",
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
+    "browser-sync": "^2.23.6",
     "browserify": "^15.2.0",
     "clean-css-cli": "^4.1.10",
     "eslint": "^4.13.1",

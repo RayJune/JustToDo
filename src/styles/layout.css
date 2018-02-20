@@ -1,80 +1,32 @@
-header {
-	height: 3.8rem;
-	line-height: 3.8rem;
-	background-color: #456;
-	color: white;
-	/* use fixed position */
-	position: fixed;
-	top: 0;
-	z-index: 100;
-	width: 100%;
-	padding-bottom: 11.8rem;
+@import url(header.css);
+@import url(main-content.css);
+
+/* wrapper */
+
+.wrapper {
+	/* use grid to implement sticky footer */
+	display: grid;
+	grid-template-rows: 1fr auto;
+	min-height: 100%;
 }
 
-.github-corner {
-	top: calc((3.8rem - 43px) / 2);
-}
+/* header */
 
-/* header nav */
+/* see header.css */
 
-nav a {
-	font-size: 1.66rem;
-	color: white;
-	border-radius: 0.6rem;
-	-webkit-transition: background-color 0.66s;
-	transition: background-color 0.66s;
-}
+/* main */
 
-nav a:hover {
-	background-color: var(--light-color);
-	color: white;
-}
-
-/* 3 element in nav，use float */
-
-.design {
-	float: left;
-	margin-left: 5%;
-}
-
-.about {
-	float: left;
-	margin-left: 3%;
-}
-
-.subscribe {
-	float: right;
-	/* use calc because of the github ribbion(position absolute element) */
-	margin-right: calc(6rem + 8%);
-}
-
-.github-corner svg {
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
-	position: absolute;
-	top: -0.36rem;
-	border: 0;
-	right: 5%;
-}
-
-/* header title */
-
-.page-title {
+main {
+	width: 66%;
 	margin-left: auto;
-	margin-right: auto;
-	font-family: "STFangsong", "Songti TC", "simsun", Arial, serif;
-	font-weight: bold;
-	text-align: center;
-	background-color: white;
-	height: 8rem;
+  margin-right: auto;
+  /* for including position fixed header */
+  padding-top: 15.6rem;
 }
 
-.page-title a {
-	line-height: 8rem;
-	font-size: 5rem;
-	-webkit-transition: color 0.88s;
-	transition: color 0.88s;
-}
+/* main content */
+
+/* see main-content.css */
 
 /* sticky footer */
 
@@ -82,4 +34,6 @@ footer {
 	height: 6.5rem;
 	padding: 1rem 3.6rem 1.6rem 1rem;
 	line-height: 1.5;
+	/* use grid to implement sticky footer */
+  grid-row: 2 / 3;
 }

@@ -1,8 +1,18 @@
 @media (max-width: 415px) { 
+  /* adjust header */
+
   header {
     padding-bottom: 9.8rem;
   }
   
+  .subscribe {
+		margin-right: 8rem;
+  }
+  
+  .github-corner svg {
+    right: 0.5rem;
+  }
+
   .page-title {
     height: 6rem;
   }
@@ -11,6 +21,8 @@
     line-height: 6rem;
     font-size: 3.6rem;
   }
+
+  /* adjust main */
 
   main {
     padding-top: 12.6rem;
@@ -21,11 +33,11 @@
 	}
 
   .add-area {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.3rem;
   }
 
 	#input {
-		width: 110%;
+		width: 80%;
 	}
 
 	#add {
@@ -43,7 +55,7 @@
     font-size: 1.36rem;
     margin-right: 0;
     margin-top: 0.5rem;
-    width: 48%;
+    width: 46%;
 	}
 
   #showAll {
@@ -53,16 +65,8 @@
     width: 100%;
   }
 
-  .operate-area, ul{
+  main {
     width: 86%;
-  }
-
-	.subscribe {
-		margin-right: 8rem;
-  }
-  
-  .github-corner svg {
-    right: .5rem;
   }
 
   li {

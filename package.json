@@ -14,7 +14,7 @@
     "prebuild:scripts:lazyLoad": "browserify ./src/scripts/withoutDB.js -t babelify -o ./dist/scripts/lazyLoad.js --debug",
     "build:scripts:lazyLoad": "uglifyjs ./dist/scripts/lazyLoad.js -m -c -o ./dist/scripts/lazyLoad.min.js",
     "prebuild:styles": "postcss src/styles/*.css --use autoprefixer -r --no-map",
-    "build:styles": "cleancss -o ./dist/styles/main.min.css ./src/styles/main.css",
+    "build:styles": "cleancss -o ./dist/styles/main.min.css ./src/styles/style.css",
     "lint": "eslint src/scripts/*.js --fix"
   },
   "repository": {

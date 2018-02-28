@@ -1,6 +1,3 @@
-@import url(header.css);
-@import url(main-content.css);
-
 /* wrapper */
 
 .wrapper {
@@ -9,10 +6,6 @@
 	grid-template-rows: 1fr auto;
 	min-height: 100%;
 }
-
-/* header */
-
-/* see header.css */
 
 /* main */
 
@@ -23,10 +16,6 @@ main {
   /* for including position fixed header */
   padding-top: 15.6rem;
 }
-
-/* main content */
-
-/* see main-content.css */
 
 /* sticky footer */
 

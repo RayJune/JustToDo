@@ -47,7 +47,8 @@ const eventsHandler = (() => {
         // use previously stored data-id attribute
         const id = parseInt(target.getAttribute('data-id'), 10);
 
-        DB.getItem(id, _toggleLi);
+        DB.getItem(id)
+          .then(_toggleLi);
       }
     }
   }
@@ -56,7 +57,8 @@ const eventsHandler = (() => {
     const newData = data;
 
     newData.finished = !data.finished;
-    DB.updateItem(newData, showAll);
+    DB.updateItem(newData)
+      .then(showAll);
   }
 
   // li's [x]'s delete
@@ -83,11 +85,13 @@ const eventsHandler = (() => {
   }
 
   function showInit() {
-    DB.getAll(Refresh.init);
+    DB.getAll()
+      .then(Refresh.init);
   }
 
   function showAll() {
-    DB.getAll(Refresh.all);
+    DB.getAll()
+      .then(Refresh.all);
   }
 
   function showDone() {
@@ -101,21 +105,22 @@ const eventsHandler = (() => {
   function _showWhetherDone(whetherDone) {
     const condition = 'finished';
 
-    DB.getWhetherConditionItem(condition, whetherDone, Refresh.part);
+    DB.getWhetherConditionItem(condition, whetherDone)
+      .then(Refresh.part);
   }
 
   function showClearDone() {
     const condition = 'finished';
 
-    DB.removeWhetherConditionItem(condition, true, () => {
-      DB.getAll(Refresh.part);
-    });
+    DB.removeWhetherConditionItem(condition, true)
+      .then(DB.getAll)
+      .then(Refresh.part);
   }
 
   function showClear() {
     Refresh.clear(); // clear nodes visually
-    Refresh.random();
-    DB.clear(); // clear data indeed
+    DB.clear()
+      .then(Refresh.random); // clear data indeed
   }
 
   return {

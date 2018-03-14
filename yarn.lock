@@ -2286,9 +2286,9 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
 
-indexeddb-crud@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/indexeddb-crud/-/indexeddb-crud-4.0.9.tgz#472684e4ab5a94ccbcc43bfc525859cc32fcf6e4"
+indexeddb-crud@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/indexeddb-crud/-/indexeddb-crud-5.0.0.tgz#6b2b298a689d4bd25a19ea449ba454e933cc159d"
 
 indexof@0.0.1:
   version "0.0.1"

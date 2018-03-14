@@ -6,7 +6,8 @@ const Refresh = (() => {
     const storeName = 'aphorism';
     const randomIndex = Math.ceil(Math.random() * DB.getLength(storeName));
 
-    DB.getItem(randomIndex, _parseText, storeName);
+    DB.getItem(randomIndex, storeName)
+      .then(_parseText);
   }
 
   function _parseText(data) {

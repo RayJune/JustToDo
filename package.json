@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "handlebars": "^4.0.11",
-    "indexeddb-crud": "^4.0.6",
+    "indexeddb-crud": "^4.0.9",
     "normalize.css": "^7.0.0"
   }
 }

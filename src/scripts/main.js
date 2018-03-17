@@ -7,6 +7,7 @@ import lazyLoadWithoutDB from './utlis/lazyLoadWithoutDB';
 
 templete();
 // open DB, and when DB open succeed, invoke initial function
+// when failed, change to withoutDB mode
 openDB(config)
   .then(addEvents)
   .catch(lazyLoadWithoutDB);

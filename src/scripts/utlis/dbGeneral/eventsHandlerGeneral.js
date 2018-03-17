@@ -1,23 +1,20 @@
 import getFormatDate from '../getFormatDate';
 
-const eventsHandlerGeneral = (() => {
-  function resetInput() {
-    document.querySelector('#input').value = '';
-  }
+function resetInput() {
+  document.querySelector('#input').value = '';
+}
 
-  function dataGenerator(key, value) {
-    return {
-      id: key,
-      event: value,
-      finished: false,
-      date: getFormatDate('MM月dd日hh:mm'),
-    };
-  }
-
+function dataGenerator(key, value) {
   return {
-    resetInput,
-    dataGenerator,
+    id: key,
+    event: value,
+    finished: false,
+    date: getFormatDate('MM月dd日hh:mm'),
   };
-})();
+}
 
-export default eventsHandlerGeneral;
+
+export default {
+  resetInput,
+  dataGenerator,
+};

@@ -44,7 +44,7 @@
     "uglify-js": "^3.2.2"
   },
   "dependencies": {
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.1.2",
     "indexeddb-crud": "^5.3.0",
     "normalize.css": "^7.0.0"
   }
